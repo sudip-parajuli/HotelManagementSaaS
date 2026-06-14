@@ -1,0 +1,11 @@
+-r base.txt
+
+# Production ASGI server
+gunicorn==22.0.0
+uvicorn[standard]==0.30.1
+
+# Monitoring
+sentry-sdk==2.6.0
+
+# Security
+django-ratelimit==4.1.0

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Payslip — {{ entry.staff.user.get_full_name }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: 'Outfit', 'Inter', sans-serif;
+                font-size: 8pt;
+                color: #888;
+            }
+        }
+        body {
+            font-family: 'Outfit', 'Inter', sans-serif;
+            color: #333;
+            margin: 0;
+            font-size: 10pt;
+            line-height: 1.5;
+        }
+        .header {
+            border-bottom: 2px solid #1a365d;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .company-name {
+            font-size: 20pt;
+            font-weight: bold;
+            color: #1a365d;
+            margin: 0 0 5px 0;
+        }
+        .company-tag {
+            font-size: 9pt;
+            color: #666;
+            margin: 0;
+        }
+        .payslip-title {
+            text-align: right;
+            font-size: 16pt;
+            font-weight: bold;
+            color: #2b6cb0;
+            margin: 0;
+            float: right;
+            text-transform: uppercase;
+        }
+        .clear {
+            clear: both;
+        }
+        .meta-container {
+            margin-bottom: 25px;
+        }
+        .meta-col {
+            width: 48%;
+            float: left;
+        }
+        .meta-col.right {
+            float: right;
+            text-align: right;
+        }
+        .meta-label {
+            font-weight: bold;
+            color: #4a5568;
+            display: inline-block;
+            width: 150px;
+        }
+        .meta-value {
+            color: #2d3748;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+        .table th {
+            background-color: #f7fafc;
+            border-bottom: 2px solid #e2e8f0;
+            color: #4a5568;
+            font-weight: bold;
+            text-align: left;
+            padding: 8px 12px;
+        }
+        .table td {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            vertical-align: top;
+        }
+        .table .num {
+            text-align: right;
+        }
+        .section-header {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #1a365d;
+            background: #ebf8ff;
+            padding: 6px 12px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .summary-container {
+            margin-top: 30px;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 15px;
+        }
+        .net-pay-box {
+            background-color: #ebf8ff;
+            border: 1px solid #bee3f8;
+            border-radius: 4px;
+            padding: 15px;
+            width: 250px;
+            float: right;
+            text-align: center;
+        }
+        .net-pay-amount {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #2b6cb0;
+            margin-top: 5px;
+        }
+        .qr-container {
+            float: left;
+            width: 150px;
+            text-align: center;
+        }
+        .qr-image {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 5px;
+        }
+        .qr-text {
+            font-size: 7pt;
+            color: #718096;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="payslip-title">Salary Payslip</div>
+        <div class="company-name">{{ company_name }}</div>
+        <div class="company-tag">SIA Enterprises Multi-Tenant Hospitality Operations</div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="meta-container">
+        <div class="meta-col">
+            <p><span class="meta-label">Employee Name:</span> <span class="meta-value">{{ entry.staff.user.get_full_name }}</span></p>
+            <p><span class="meta-label">Designation:</span> <span class="meta-value">{{ entry.staff.designation }}</span></p>
+            <p><span class="meta-label">Department:</span> <span class="meta-value">{{ entry.staff.department.name }}</span></p>
+            <p><span class="meta-label">Employment Type:</span> <span class="meta-value">{{ entry.staff.get_employment_type_display }}</span></p>
+        </div>
+        <div class="meta-col right">
+            <p><span class="meta-label">Pay Period:</span> <span class="meta-value">{{ entry.period }}</span></p>
+            <p><span class="meta-label">Basic Salary:</span> <span class="meta-value">NPR {{ entry.basic_salary }}</span></p>
+            <p><span class="meta-label">Salary Type:</span> <span class="meta-value">{{ entry.staff.get_salary_type_display }}</span></p>
+            <p><span class="meta-label">Hire Date:</span> <span class="meta-value">{{ entry.staff.hire_date }}</span></p>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="section-header">Attendance Summary</div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Total Calendar Days</th>
+                <th>Working Days</th>
+                <th>Days Present</th>
+                <th>Days Absent</th>
+                <th>Days On Leave</th>
+                <th>Overtime (Hours)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ entry.working_days|add:entry.absent_days|add:entry.leave_days }}</td>
+                <td>{{ entry.working_days }}</td>
+                <td>{{ entry.present_days }}</td>
+                <td>{{ entry.absent_days }}</td>
+                <td>{{ entry.leave_days }}</td>
+                <td>{{ entry.overtime_hours }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-header">Earnings & Deductions</div>
+    <div style="width: 48%; float: left;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Description (Earnings)</th>
+                    <th class="num">Amount (NPR)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Basic Salary</td>
+                    <td class="num">{{ entry.basic_salary }}</td>
+                </tr>
+                {% if entry.overtime_amount > 0 %}
+                <tr>
+                    <td>Overtime ({{ entry.overtime_hours }} hrs @ {{ entry.overtime_rate }}/hr)</td>
+                    <td class="num">{{ entry.overtime_amount }}</td>
+                </tr>
+                {% endif %}
+                {% for allowance in entry.allowances %}
+                <tr>
+                    <td>{{ allowance.name }}</td>
+                    <td class="num">{{ allowance.amount }}</td>
+                </tr>
+                {% endfor %}
+                <tr style="font-weight: bold; background-color: #f7fafc;">
+                    <td>Total Gross Earnings</td>
+                    <td class="num">{{ entry.gross_salary }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="width: 48%; float: right;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Description (Deductions)</th>
+                    <th class="num">Amount (NPR)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>SSF Employee Contribution (11%)</td>
+                    <td class="num">{{ entry.ssf_employee }}</td>
+                </tr>
+                {% if entry.income_tax > 0 %}
+                <tr>
+                    <td>Nepal Income Tax (TDS)</td>
+                    <td class="num">{{ entry.income_tax }}</td>
+                </tr>
+                {% endif %}
+                {% for deduction in entry.deductions %}
+                <tr>
+                    <td>{{ deduction.name }}</td>
+                    <td class="num">{{ deduction.amount }}</td>
+                </tr>
+                {% endfor %}
+                <tr style="font-weight: bold; background-color: #f7fafc;">
+                    <td>Total Deductions</td>
+                    <td class="num">{{ entry.total_deductions }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clear"></div>
+
+    {% if entry.ssf_employer > 0 %}
+    <p style="font-size: 8pt; color: #718096; margin-top: -10px; margin-bottom: 20px;">
+        * Note: Employer also contributed NPR {{ entry.ssf_employer }} (20%) directly to your Social Security Fund (SSF) account.
+    </p>
+    {% endif %}
+
+    <div class="summary-container">
+        <div class="qr-container">
+            <img class="qr-image" src="{{ qr_code_url }}" alt="Verification QR Code">
+            <div class="qr-text">Scan to verify payslip validity</div>
+        </div>
+        
+        <div class="net-pay-box">
+            <div style="font-size: 9pt; color: #4a5568; font-weight: bold; text-transform: uppercase;">Net Take-Home Pay</div>
+            <div class="net-pay-amount">NPR {{ entry.net_salary }}</div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div style="margin-top: 50px; font-size: 8pt; color: #a0aec0; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+        This is a computer-generated document and does not require a physical signature.
+    </div>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Active Guest Ledger Report</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap');
+        @page {
+            size: A4 landscape;
+            margin: 1.2cm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: 'Inter', sans-serif;
+                font-size: 8pt;
+                color: #94a3b8;
+            }
+            @bottom-left {
+                content: "SIA Enterprises HMS - Active Guest Folio Accounts";
+                font-family: 'Inter', sans-serif;
+                font-size: 8pt;
+                color: #94a3b8;
+            }
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            line-height: 1.4;
+        }
+        .header {
+            margin-bottom: 1.5cm;
+            border-bottom: 1.5px solid #e2e8f0;
+            padding-bottom: 0.5cm;
+        }
+        .logo-area {
+            float: left;
+        }
+        .logo-area h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18pt;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 4px 0;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+        .logo-area p {
+            font-size: 9pt;
+            color: #64748b;
+            margin: 0;
+        }
+        .meta-info {
+            float: right;
+            text-align: right;
+        }
+        .meta-info h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13pt;
+            color: #0f172a;
+            margin: 0 0 6px 0;
+        }
+        .meta-info p {
+            font-size: 9pt;
+            color: #475569;
+            margin: 2px 0;
+        }
+        .clearfix {
+            clear: both;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+            margin-top: 0.2cm;
+        }
+        th {
+            background-color: #0f172a;
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            text-align: left;
+            padding: 8px 10px;
+            border: 1px solid #0f172a;
+        }
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .badge {
+            background-color: #fee2e2;
+            color: #ef4444;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 7.5pt;
+            font-weight: 600;
+        }
+        .badge-success {
+            background-color: #dcfce7;
+            color: #22c55e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo-area">
+        <h1>SIA Enterprises</h1>
+        <p>Advanced HMS Front Desk Operations</p>
+    </div>
+    <div class="meta-info">
+        <h2>Active In-House Guest Ledger</h2>
+        <p><strong>Status:</strong> Active Checked-In Folios</p>
+        <p><strong>Generated:</strong> {{ generated_at|date:"Y-m-d H:i" }}</p>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th class="text-center" style="width: 8%;">Room</th>
+            <th style="width: 20%;">Guest Name</th>
+            <th style="width: 15%;">Phone</th>
+            <th class="text-center" style="width: 12%;">Check In</th>
+            <th class="text-center" style="width: 12%;">Check Out</th>
+            <th class="text-right" style="width: 11%;">Total Bill (NPR)</th>
+            <th class="text-right" style="width: 11%;">Paid (NPR)</th>
+            <th class="text-right" style="width: 11%;">Balance Due (NPR)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in ledger_items %}
+        <tr>
+            <td class="text-center"><strong>{{ item.room_number }}</strong></td>
+            <td>{{ item.guest_name }}</td>
+            <td>{{ item.phone }}</td>
+            <td class="text-center">{{ item.check_in_date }}</td>
+            <td class="text-center">{{ item.check_out_date }}</td>
+            <td class="text-right">{{ item.total_amount|floatformat:2 }}</td>
+            <td class="text-right">{{ item.paid_amount|floatformat:2 }}</td>
+            <td class="text-right">
+                {% if item.balance_due > 0 %}
+                    <span class="badge">{{ item.balance_due|floatformat:2 }}</span>
+                {% else %}
+                    <span class="badge badge-success">Rs. 0.00</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" style="text-align: center; color: #64748b; padding: 20px;">No guests are currently checked in.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

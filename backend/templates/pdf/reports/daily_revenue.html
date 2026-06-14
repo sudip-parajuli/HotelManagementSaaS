@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Daily Revenue Report</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap');
+        @page {
+            size: A4 portrait;
+            margin: 1.6cm 1.2cm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: 'Inter', sans-serif;
+                font-size: 8pt;
+                color: #94a3b8;
+            }
+            @bottom-left {
+                content: "SIA Enterprises HMS - Confidential";
+                font-family: 'Inter', sans-serif;
+                font-size: 8pt;
+                color: #94a3b8;
+            }
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            line-height: 1.4;
+        }
+        .header {
+            margin-bottom: 2.5cm;
+            border-bottom: 1.5px solid #e2e8f0;
+            padding-bottom: 0.5cm;
+        }
+        .logo-area {
+            float: left;
+        }
+        .logo-area h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20pt;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 4px 0;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+        .logo-area p {
+            font-size: 9pt;
+            color: #64748b;
+            margin: 0;
+        }
+        .meta-info {
+            float: right;
+            text-align: right;
+        }
+        .meta-info h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 14pt;
+            color: #0f172a;
+            margin: 0 0 6px 0;
+        }
+        .meta-info p {
+            font-size: 9pt;
+            color: #475569;
+            margin: 2px 0;
+        }
+        .clearfix {
+            clear: both;
+        }
+        .kpis-row {
+            margin-bottom: 1.2cm;
+        }
+        .kpi-card {
+            width: 21%;
+            float: left;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-right: 3%;
+        }
+        .kpi-card:last-child {
+            margin-right: 0;
+        }
+        .kpi-title {
+            font-size: 8pt;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .kpi-value {
+            font-size: 14pt;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9.5pt;
+            margin-top: 0.5cm;
+        }
+        th {
+            background-color: #0f172a;
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 12px;
+            border: 1px solid #0f172a;
+        }
+        td {
+            padding: 9px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .total-row {
+            font-weight: 700;
+            background-color: #e2e8f0 !important;
+            border-top: 1.5px solid #0f172a;
+            border-bottom: 2px double #0f172a;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo-area">
+        <h1>SIA Enterprises</h1>
+        <p>Advanced HMS Analytics Suite</p>
+    </div>
+    <div class="meta-info">
+        <h2>Daily Revenue Summary</h2>
+        <p><strong>Range:</strong> {{ start_date }} to {{ end_date }}</p>
+        <p><strong>Generated:</strong> {{ generated_at|date:"Y-m-d H:i" }}</p>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<div class="kpis-row">
+    <div class="kpi-card">
+        <div class="kpi-title">Total Rev</div>
+        <div class="kpi-value">Rs. {{ total_revenue|floatformat:2 }}</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-title">Rooms Rev</div>
+        <div class="kpi-value">Rs. {{ room_revenue|floatformat:2 }}</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-title">POS Rev</div>
+        <div class="kpi-value">Rs. {{ restaurant_revenue|floatformat:2 }}</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-title">Other Rev</div>
+        <div class="kpi-value">Rs. {{ other_revenue|floatformat:2 }}</div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<h3>Daily Ledger Details</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th class="text-right">Room Rev (NPR)</th>
+            <th class="text-right">F&B POS Rev (NPR)</th>
+            <th class="text-right">Other Rev (NPR)</th>
+            <th class="text-right">Total Rev (NPR)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in metrics %}
+        <tr>
+            <td>{{ m.date }}</td>
+            <td class="text-right">{{ m.room_revenue|floatformat:2 }}</td>
+            <td class="text-right">{{ m.restaurant_revenue|floatformat:2 }}</td>
+            <td class="text-right">{{ m.other_revenue|floatformat:2 }}</td>
+            <td class="text-right"><strong>{{ m.total_revenue|floatformat:2 }}</strong></td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" style="text-align: center; color: #64748b;">No analytics metrics recorded in this range.</td>
+        </tr>
+        {% endfor %}
+        <tr class="total-row">
+            <td>TOTALS</td>
+            <td class="text-right">Rs. {{ room_revenue|floatformat:2 }}</td>
+            <td class="text-right">Rs. {{ restaurant_revenue|floatformat:2 }}</td>
+            <td class="text-right">Rs. {{ other_revenue|floatformat:2 }}</td>
+            <td class="text-right">Rs. {{ total_revenue|floatformat:2 }}</td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

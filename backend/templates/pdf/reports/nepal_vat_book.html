@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Nepal VAT Sales Register</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap');
+        @page {
+            size: A4 landscape;
+            margin: 1.2cm 1cm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: 'Inter', sans-serif;
+                font-size: 8pt;
+                color: #94a3b8;
+            }
+            @bottom-left {
+                content: "Sales Register Book - Approved by Inland Revenue Department (IRD)";
+                font-family: 'Inter', sans-serif;
+                font-size: 8pt;
+                color: #94a3b8;
+            }
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            line-height: 1.3;
+        }
+        .header {
+            margin-bottom: 1.2cm;
+            border-bottom: 1.5px solid #e2e8f0;
+            padding-bottom: 0.4cm;
+        }
+        .logo-area {
+            float: left;
+        }
+        .logo-area h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16pt;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 2px 0;
+            text-transform: uppercase;
+        }
+        .logo-area p {
+            font-size: 8pt;
+            color: #64748b;
+            margin: 0;
+        }
+        .meta-info {
+            float: right;
+            text-align: right;
+        }
+        .meta-info h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 12pt;
+            color: #0f172a;
+            margin: 0 0 4px 0;
+        }
+        .meta-info p {
+            font-size: 8pt;
+            color: #475569;
+            margin: 1px 0;
+        }
+        .clearfix {
+            clear: both;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8.5pt;
+            margin-top: 0.2cm;
+        }
+        th {
+            background-color: #0f172a;
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #1e293b;
+        }
+        td {
+            padding: 7px 8px;
+            border: 1px solid #cbd5e1;
+            vertical-align: middle;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .total-row {
+            font-weight: 700;
+            background-color: #e2e8f0 !important;
+            border-top: 1.5px solid #0f172a;
+            border-bottom: 2px double #0f172a;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo-area">
+        <h1>SIA Enterprises</h1>
+        <p>VAT Sales Book Register (Annex 5 - Rule 23)</p>
+    </div>
+    <div class="meta-info">
+        <h2>Nepal VAT Sales Register</h2>
+        <p><strong>Range:</strong> {{ start_date }} to {{ end_date }}</p>
+        <p><strong>Generated:</strong> {{ generated_at|date:"Y-m-d H:i" }}</p>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th class="text-center" style="width: 10%;">Date</th>
+            <th style="width: 14%;">Invoice No.</th>
+            <th style="width: 24%;">Buyer's / Guest Name</th>
+            <th style="width: 12%;">Buyer's PAN</th>
+            <th class="text-right" style="width: 10%;">Total Sales (NPR)</th>
+            <th class="text-right" style="width: 10%;">Taxable (NPR)</th>
+            <th class="text-right" style="width: 10%;">Exempt (NPR)</th>
+            <th class="text-right" style="width: 10%;">VAT 13% (NPR)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in vat_items %}
+        <tr>
+            <td class="text-center">{{ item.date }}</td>
+            <td><strong>{{ item.invoice_number }}</strong></td>
+            <td>{{ item.guest_name }}</td>
+            <td>{{ item.pan_number|default:"-" }}</td>
+            <td class="text-right">{{ item.total_amount|floatformat:2 }}</td>
+            <td class="text-right">{{ item.taxable_amount|floatformat:2 }}</td>
+            <td class="text-right">{{ item.non_taxable_amount|floatformat:2 }}</td>
+            <td class="text-right">{{ item.vat_amount|floatformat:2 }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" style="text-align: center; color: #64748b; padding: 20px;">No taxable sales invoices in this range.</td>
+        </tr>
+        {% endfor %}
+        <tr class="total-row">
+            <td colspan="4">TOTAL VALUES</td>
+            <td class="text-right">Rs. {{ total_sales|floatformat:2 }}</td>
+            <td class="text-right">Rs. {{ total_taxable|floatformat:2 }}</td>
+            <td class="text-right">Rs. {{ total_exempt|floatformat:2 }}</td>
+            <td class="text-right">Rs. {{ total_vat|floatformat:2 }}</td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
