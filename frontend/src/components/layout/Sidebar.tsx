@@ -22,30 +22,32 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/lib/store/authStore";
+import { useTranslations } from "next-intl";
 
 const navItems = [
-  { label: "Dashboard", href: "/", icon: LayoutDashboard },
-  { label: "Rooms", href: "/rooms", icon: Bed },
-  { label: "Bookings", href: "/bookings", icon: CalendarCheck },
-  { label: "Front Desk", href: "/frontdesk", icon: UserCheck },
-  { label: "Restaurant / POS", href: "/pos", icon: UtensilsCrossed },
-  { label: "Housekeeping", href: "/housekeeping", icon: Paintbrush },
-  { label: "Billing", href: "/billing", icon: FileText },
-  { label: "CRM & Loyalty", href: "/crm", icon: Award },
-  { label: "Staff & HR", href: "/staff", icon: Users },
-  { label: "Inventory", href: "/inventory", icon: Package },
-  { label: "Analytics", href: "/analytics", icon: TrendingUp },
-  { label: "Reports Console", href: "/analytics/reports", icon: FileText },
-  { label: "Super Admin", href: "/superadmin", icon: ShieldCheck, roles: ["SUPER_ADMIN"] },
+  { label: "Dashboard", href: "/", icon: LayoutDashboard, key: "dashboard" },
+  { label: "Rooms", href: "/rooms", icon: Bed, key: "rooms" },
+  { label: "Bookings", href: "/bookings", icon: CalendarCheck, key: "bookings" },
+  { label: "Front Desk", href: "/frontdesk", icon: UserCheck, key: "frontdesk" },
+  { label: "Restaurant / POS", href: "/pos", icon: UtensilsCrossed, key: "pos" },
+  { label: "Housekeeping", href: "/housekeeping", icon: Paintbrush, key: "housekeeping" },
+  { label: "Billing", href: "/billing", icon: FileText, key: "billing" },
+  { label: "CRM & Loyalty", href: "/crm", icon: Award, key: "crm" },
+  { label: "Staff & HR", href: "/staff", icon: Users, key: "staff" },
+  { label: "Inventory", href: "/inventory", icon: Package, key: "inventory" },
+  { label: "Analytics", href: "/analytics", icon: TrendingUp, key: "analytics" },
+  { label: "Reports Console", href: "/analytics/reports", icon: FileText, key: "reports" },
+  { label: "Super Admin", href: "/superadmin", icon: ShieldCheck, roles: ["SUPER_ADMIN"], key: "superadmin" },
 ];
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
+  const t = useTranslations("Sidebar");
 
   const visibleItems = navItems.filter(
-    (item) => !item.roles || (user && item.roles.includes(user.role))
+    (item) => !item.roles || (user && item.roles.includes(item.roles[0]))
   );
 
   return (
@@ -72,6 +74,7 @@ export function Sidebar() {
         {visibleItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+          const translatedLabel = t(item.key);
           return (
             <Link
               key={item.href}
@@ -82,10 +85,10 @@ export function Sidebar() {
                   ? "bg-cyan-500/10 text-cyan-400"
                   : "text-slate-400 hover:text-slate-100 hover:bg-slate-900"
               )}
-              title={collapsed ? item.label : undefined}
+              title={collapsed ? translatedLabel : undefined}
             >
               <Icon className={cn("h-4 w-4 flex-shrink-0", isActive ? "text-cyan-400" : "text-slate-500 group-hover:text-slate-300")} />
-              {!collapsed && <span className="truncate">{item.label}</span>}
+              {!collapsed && <span className="truncate">{translatedLabel}</span>}
             </Link>
           );
         })}

@@ -89,6 +89,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
         # Prepare context for the printable HTML invoice
         from django.template.loader import render_to_string
         
+        lang = request.query_params.get("lang") or (request.user.preferred_language if hasattr(request.user, "preferred_language") else "en")
         context = {
             "invoice": invoice,
             "company_name": "SIA HMS Resorts",
@@ -96,6 +97,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
             "company_address": "Lakeside, Pokhara, Nepal",
             "company_phone": "+977-61-460000",
             "fiscal_year": invoice.fiscal_year,
+            "lang": lang,
         }
         
         html_string = render_to_string("pdf/invoice.html", context)

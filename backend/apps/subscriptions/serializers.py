@@ -13,6 +13,24 @@ class SubscriptionPlanSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "created_at", "updated_at"]
 
 
+class ClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
+        fields = [
+            "id",
+            "name",
+            "schema_name",
+            "created_on",
+            "is_active",
+            "contact_email",
+            "contact_phone",
+            "subscription_plan",
+            "notes",
+            "onboarded_at",
+        ]
+        read_only_fields = ["id", "created_on", "onboarded_at"]
+
+
 class TenantSubscriptionSerializer(serializers.ModelSerializer):
     plan_details = SubscriptionPlanSerializer(source="plan", read_only=True)
     tenant_name = serializers.CharField(source="tenant.name", read_only=True)

@@ -16,6 +16,7 @@ from apps.billing.models import Invoice, InvoiceStatus, Payment, PaymentMethod
 from .models import PaymentTransaction
 from .esewa import generate_esewa_signature, verify_esewa_response, verify_esewa_signature
 from .khalti import initiate_khalti_payment, verify_khalti_payment
+from .fonepay import initiate_fonepay_qr, verify_fonepay_status
 
 
 class PaymentGatewayViewSet(viewsets.ViewSet):
@@ -112,12 +113,24 @@ class PaymentGatewayViewSet(viewsets.ViewSet):
 
         # 4. Compile Fonepay parameters (Sandbox verification helper)
         elif gateway == "fonepay":
-            # For local testing, we output a static QR code and let the checkout poll to complete
-            return Response({
-                "transaction_id": tx.id,
-                "qr_code_placeholder": "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=MOCK_FONEPAY_QR",
-                "message": "Mock Fonepay QR generated. Click 'Verify' to simulate scanning success."
-            })
+            fonepay_return = request.build_absolute_uri(f"/api/payments/verify-fonepay/?tx_id={tx.id}")
+            fonepay_res = initiate_fonepay_qr(
+                amount_npr=float(amount),
+                transaction_id=str(tx.id),
+                return_url=fonepay_return,
+            )
+            if fonepay_res and fonepay_res.get("status") == "success":
+                tx.gateway_ref = fonepay_res.get("prn", f"TX-{tx.id}")
+                tx.save()
+                return Response({
+                    "transaction_id": tx.id,
+                    "qr_code_placeholder": fonepay_res["qr_code_url"],
+                    "message": "Fonepay QR Code generated successfully."
+                })
+            else:
+                tx.status = PaymentTransaction.StatusChoices.FAILED
+                tx.save()
+                return Response({"error": fonepay_res.get("error", "Fonepay dynamic QR request failed.")}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({"error": "Invalid gateway specified."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -134,8 +147,45 @@ class PaymentGatewayViewSet(viewsets.ViewSet):
         if tx.status == PaymentTransaction.StatusChoices.SUCCESS:
             return Response({"status": "success", "invoice_id": tx.invoice.id})
 
-        # Sandbox simulation helper: auto-approve pending Fonepay/Cash transactions on verify click
-        if tx.gateway in ["fonepay", "esewa", "khalti"] and tx.status == PaymentTransaction.StatusChoices.PENDING:
+        # Process Fonepay status checks
+        if tx.gateway == "fonepay" and tx.status == PaymentTransaction.StatusChoices.PENDING:
+            check_res = verify_fonepay_status(str(tx.id), float(tx.amount))
+            if check_res.get("status") == "success":
+                with transaction.atomic():
+                    tx.status = PaymentTransaction.StatusChoices.SUCCESS
+                    tx.gateway_ref = check_res.get("transaction_code", f"FP-{tx.id}")
+                    tx.save()
+
+                    invoice = tx.invoice
+                    invoice.paid_amount += tx.amount
+                    invoice.save()
+
+                    if invoice.balance_due <= 0:
+                        invoice.status = InvoiceStatus.PAID
+                    else:
+                        invoice.status = InvoiceStatus.PARTIALLY_PAID
+                    invoice.save()
+
+                    # Record Payment logs
+                    Payment.objects.create(
+                        invoice=invoice,
+                        amount=tx.amount,
+                        payment_method=tx.gateway,
+                        reference_number=tx.gateway_ref,
+                        received_by=request.user,
+                        notes=f"Settled via Fonepay merchant QR transaction #{tx.id}",
+                    )
+
+                return Response({"status": "success", "invoice_id": invoice.id})
+            elif check_res.get("status") == "pending":
+                return Response({"status": "pending"})
+            else:
+                tx.status = PaymentTransaction.StatusChoices.FAILED
+                tx.save()
+                return Response({"status": "failed", "error": check_res.get("message")})
+
+        # Sandbox simulation helper: auto-approve pending Cash/other transactions on verify click
+        if tx.status == PaymentTransaction.StatusChoices.PENDING:
             with transaction.atomic():
                 tx.status = PaymentTransaction.StatusChoices.SUCCESS
                 tx.gateway_ref = f"REF-{timezone.now().timestamp()}"

@@ -135,12 +135,14 @@ class PayrollEntryViewSet(viewsets.ModelViewSet):
         allowance_sum = sum(float(item.get("amount", 0)) for item in entry.allowances)
         deduction_sum = sum(float(item.get("amount", 0)) for item in entry.deductions)
         
+        lang = request.query_params.get("lang") or (request.user.preferred_language if hasattr(request.user, "preferred_language") else "en")
         context = {
             "entry": entry,
             "qr_code_url": qr_code_url,
             "allowances_total": allowance_sum,
             "deductions_total": deduction_sum,
             "company_name": "SIA HMS Hotels",
+            "lang": lang,
         }
         
         html_string = render_to_string("pdf/payslip.html", context)

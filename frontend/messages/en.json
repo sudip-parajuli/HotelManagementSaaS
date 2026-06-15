@@ -1,0 +1,67 @@
+{
+  "Common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "pending": "Pending",
+    "success": "Success",
+    "failed": "Failed",
+    "loading": "Loading..."
+  },
+  "Login": {
+    "title": "SIA HMS Login",
+    "subtitle": "Access your hotel workspace console",
+    "email": "Email Address",
+    "password": "Password",
+    "submit": "Sign In",
+    "error_invalid": "Invalid email or password."
+  },
+  "Sidebar": {
+    "dashboard": "Dashboard",
+    "rooms": "Rooms",
+    "bookings": "Bookings",
+    "frontdesk": "Front Desk",
+    "pos": "Restaurant / POS",
+    "housekeeping": "Housekeeping",
+    "billing": "Billing",
+    "crm": "CRM & Loyalty",
+    "staff": "Staff & HR",
+    "inventory": "Inventory",
+    "analytics": "Analytics",
+    "reports": "Reports Console",
+    "superadmin": "Super Admin"
+  },
+  "FrontDesk": {
+    "arrivals": "Arrivals",
+    "in_house": "In-House",
+    "departures": "Departures",
+    "today_checkins": "Today's Check-ins",
+    "today_checkout": "Today's Check-out",
+    "quick_actions": "Quick Actions",
+    "check_in": "Check In",
+    "check_out": "Check Out",
+    "room_no": "Room No",
+    "guest_name": "Guest Name",
+    "status": "Status"
+  },
+  "POS": {
+    "categories": "Categories",
+    "order_panel": "Order Panel",
+    "add_to_order": "Add to Order",
+    "total": "Total",
+    "settle_payment": "Settle Payment",
+    "empty_cart": "Your cart is empty.",
+    "select_method": "Select Method"
+  },
+  "Housekeeping": {
+    "title": "Housekeeping Dashboard",
+    "task_list": "My Tasks",
+    "clean": "Clean",
+    "dirty": "Dirty",
+    "inspect": "Inspected",
+    "update_status": "Update Status",
+    "room_number": "Room Number"
+  }
+}

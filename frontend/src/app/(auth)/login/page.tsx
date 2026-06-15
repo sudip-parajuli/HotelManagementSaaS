@@ -13,6 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
+import enMessages from "../../../../messages/en.json";
+import neMessages from "../../../../messages/ne.json";
+
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
@@ -23,6 +26,9 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const { login } = useAuth();
   const [submitting, setSubmitting] = useState(false);
+  const [locale, setLocale] = useState<"en" | "ne">("en");
+
+  const t = locale === "ne" ? neMessages.Login : enMessages.Login;
 
   const {
     register,
@@ -40,11 +46,11 @@ export default function LoginPage() {
     setSubmitting(true);
     try {
       await login(data.email, data.password);
-      toast.success("Successfully logged in! Redirecting to dashboard...");
+      toast.success(locale === "ne" ? "सफलतापूर्वक लगइन भयो! ड्यासबोर्डमा रिडिरेक्ट हुँदैछ..." : "Successfully logged in! Redirecting to dashboard...");
     } catch (err: any) {
       console.error(err);
       const errorMsg =
-        err.response?.data?.error || err.response?.data?.message || "Invalid email or password.";
+        err.response?.data?.error || err.response?.data?.message || t.error_invalid;
       toast.error(errorMsg);
     } finally {
       setSubmitting(false);
@@ -61,7 +67,29 @@ export default function LoginPage() {
 
       <div className="relative w-full max-w-md z-10 animate-fade-in">
         <Card className="bg-black/40 border border-white/10 backdrop-blur-lg shadow-2xl text-white">
-          <CardHeader className="space-y-2 text-center pb-6">
+          <CardHeader className="space-y-2 text-center pb-6 relative">
+            {/* Inline Language Selector */}
+            <div className="absolute right-4 top-4 flex gap-1 bg-white/5 border border-white/10 rounded-full p-0.5">
+              <button
+                type="button"
+                onClick={() => setLocale("en")}
+                className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all ${
+                  locale === "en" ? "bg-cyan-500 text-slate-950" : "text-slate-400 hover:text-white"
+                }`}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                onClick={() => setLocale("ne")}
+                className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all ${
+                  locale === "ne" ? "bg-cyan-500 text-slate-950" : "text-slate-400 hover:text-white"
+                }`}
+              >
+                NE
+              </button>
+            </div>
+
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/20">
               <KeyRound className="h-6 w-6 text-white" />
             </div>
@@ -69,14 +97,14 @@ export default function LoginPage() {
               SIA Enterprises
             </CardTitle>
             <CardDescription className="text-slate-400 font-medium">
-              Hotel Management System Portal
+              {t.subtitle}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-slate-300 font-medium">
-                  Email Address
+                  {t.email}
                 </Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
@@ -97,7 +125,7 @@ export default function LoginPage() {
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password" className="text-slate-300 font-medium">
-                    Password
+                    {t.password}
                   </Label>
                 </div>
                 <div className="relative">
@@ -124,10 +152,10 @@ export default function LoginPage() {
                 {submitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
+                    {locale === "ne" ? "लगइन हुँदैछ..." : "Signing in..."}
                   </>
                 ) : (
-                  "Sign In"
+                  t.submit
                 )}
               </Button>
             </form>

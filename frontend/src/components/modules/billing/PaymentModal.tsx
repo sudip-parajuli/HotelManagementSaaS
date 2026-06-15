@@ -157,29 +157,39 @@ export default function PaymentModal({ isOpen, onClose, invoice, onPaymentSucces
             { id: "cash", label: "Cash / Direct", icon: DollarSign, color: "hover:border-emerald-500 hover:text-emerald-400" },
             { id: "esewa", label: "eSewa epay", icon: Wallet, color: "hover:border-green-500 hover:text-green-400" },
             { id: "khalti", label: "Khalti Wallet", icon: Wallet, color: "hover:border-purple-500 hover:text-purple-400" },
-            { id: "fonepay", label: "Fonepay QR", icon: QrCode, color: "hover:border-rose-500 hover:text-rose-400" },
+            { id: "fonepay", label: "Fonepay QR", icon: QrCode, color: "hover:border-rose-500 hover:text-rose-400", disabled: true, tag: "Coming Soon" },
             { id: "bank_transfer", label: "Bank Wire", icon: Landmark, color: "hover:border-cyan-500 hover:text-cyan-400" },
             { id: "credit", label: "On Credit", icon: Landmark, color: "hover:border-amber-500 hover:text-amber-400" }
           ].map((m) => {
             const Icon = m.icon;
             const active = method === m.id;
+            const isDisabled = "disabled" in m && m.disabled;
             return (
               <button
                 key={m.id}
                 type="button"
+                disabled={isDisabled}
                 onClick={() => {
+                  if (isDisabled) return;
                   setMethod(m.id as PaymentMethodType);
                   setFonepayQr(null);
                   setTxId(null);
                 }}
-                className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center transition-all ${
-                  active
+                className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center transition-all relative ${
+                  isDisabled
+                    ? "bg-slate-950/50 border-slate-950 text-slate-600 cursor-not-allowed opacity-50"
+                    : active
                     ? "bg-slate-900 border-cyan-500 text-cyan-400 shadow-md shadow-cyan-500/10"
                     : "bg-slate-950 border-slate-900 text-slate-400 " + m.color
                 }`}
               >
                 <Icon className="h-5 w-5 mb-1.5" />
-                <span className="text-[10px] font-medium tracking-wide">{m.label}</span>
+                <span className="text-[10px] font-medium tracking-wide">
+                  {m.label}
+                  {m.tag && (
+                    <span className="block text-[8px] text-rose-500 font-bold mt-0.5">{m.tag}</span>
+                  )}
+                </span>
               </button>
             );
           })}

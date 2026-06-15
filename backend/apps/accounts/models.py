@@ -40,6 +40,11 @@ class User(AbstractUser):
         choices=UserRole.choices,
         default=UserRole.FRONT_DESK,
     )
+    preferred_language = models.CharField(
+        max_length=5,
+        choices=[("en", "English"), ("ne", "Nepali")],
+        default="en",
+    )
     is_active = models.BooleanField(default=True)
 
     # Timestamps (AbstractUser has last_login; we add updated_at)
@@ -79,3 +84,32 @@ class User(AbstractUser):
             UserRole.PROPERTY_MANAGER,
             UserRole.FRONT_DESK,
         )
+
+
+class ImpersonationLog(models.Model):
+    """
+    Audit log for tracking superadmin impersonation sessions.
+    """
+    admin_user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="impersonations_started",
+    )
+    target_tenant = models.ForeignKey(
+        "tenants.Client",
+        on_delete=models.CASCADE,
+        related_name="impersonations",
+    )
+    started_at = models.DateTimeField(auto_now_add=True)
+    ended_at = models.DateTimeField(null=True, blank=True)
+    reason = models.TextField()
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Impersonation Log"
+        verbose_name_plural = "Impersonation Logs"
+        ordering = ["-started_at"]
+
+    def __str__(self):
+        return f"{self.admin_user.email} impersonating {self.target_tenant.name} at {self.started_at}"
+

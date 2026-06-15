@@ -59,13 +59,13 @@ export function PaymentModal({ isOpen, onClose, onConfirm, totalAmount, isSubmit
   };
 
   const paymentMethods = [
-    { id: "cash", label: "Cash", icon: Banknote, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500/50" },
-    { id: "card", label: "Card", icon: CreditCard, color: "text-blue-400 bg-blue-500/10 border-blue-500/20 hover:border-blue-500/50" },
-    { id: "room", label: "Room Charge", icon: Home, color: "text-amber-400 bg-amber-500/10 border-amber-500/20 hover:border-amber-500/50" },
-    { id: "fonepay", label: "Fonepay QR", icon: QrCode, color: "text-red-400 bg-red-500/10 border-red-500/20 hover:border-red-500/50" },
-    { id: "esewa", label: "eSewa Wallet", icon: QrCode, color: "text-green-400 bg-green-500/10 border-green-500/20 hover:border-green-500/50" },
-    { id: "khalti", label: "Khalti Wallet", icon: QrCode, color: "text-purple-400 bg-purple-500/10 border-purple-500/20 hover:border-purple-500/50" },
-  ] as const;
+    { id: "cash", label: "Cash", icon: Banknote, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500/50", disabled: false },
+    { id: "card", label: "Card", icon: CreditCard, color: "text-blue-400 bg-blue-500/10 border-blue-500/20 hover:border-blue-500/50", disabled: false },
+    { id: "room", label: "Room Charge", icon: Home, color: "text-amber-400 bg-amber-500/10 border-amber-500/20 hover:border-amber-500/50", disabled: false },
+    { id: "fonepay", label: "Fonepay QR", icon: QrCode, color: "text-red-400 bg-red-500/10 border-red-500/20 hover:border-red-500/50", disabled: true, tag: "Coming Soon" },
+    { id: "esewa", label: "eSewa Wallet", icon: QrCode, color: "text-green-400 bg-green-500/10 border-green-500/20 hover:border-green-500/50", disabled: false },
+    { id: "khalti", label: "Khalti Wallet", icon: QrCode, color: "text-purple-400 bg-purple-500/10 border-purple-500/20 hover:border-purple-500/50", disabled: false },
+  ];
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -86,18 +86,28 @@ export function PaymentModal({ isOpen, onClose, onConfirm, totalAmount, isSubmit
             {paymentMethods.map((m) => {
               const Icon = m.icon;
               const isSelected = selectedMethod === m.id;
+              const isDisabled = m.disabled;
               return (
                 <button
                   key={m.id}
-                  onClick={() => setSelectedMethod(m.id)}
-                  className={`flex flex-col items-center justify-center gap-2 p-3.5 rounded-xl border text-xs font-medium transition-all duration-200 ${m.color} ${
-                    isSelected 
+                  disabled={isDisabled}
+                  onClick={() => {
+                    if (isDisabled) return;
+                    setSelectedMethod(m.id as any);
+                  }}
+                  className={`flex flex-col items-center justify-center gap-2 p-3.5 rounded-xl border text-xs font-medium transition-all duration-200 relative ${
+                    isDisabled
+                      ? "opacity-40 cursor-not-allowed bg-slate-950 border-slate-950 text-slate-600"
+                      : isSelected 
                       ? "ring-2 ring-cyan-500/70 border-cyan-500 bg-cyan-500/5 shadow-md shadow-cyan-500/5" 
-                      : "opacity-75 hover:opacity-100"
+                      : "opacity-75 hover:opacity-100 " + m.color
                   }`}
                 >
                   <Icon className="h-5 w-5" />
                   <span>{m.label}</span>
+                  {m.tag && (
+                    <span className="text-[8px] text-red-500 font-bold block mt-0.5">{m.tag}</span>
+                  )}
                 </button>
               );
             })}

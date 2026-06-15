@@ -114,7 +114,7 @@ class TestSuperAdminSubscriptionEndpoints:
         )
         
         url = reverse("admin-tenants-impersonate", kwargs={"pk": tenant.id})
-        response = client.post(url)
+        response = client.post(url, {"reason": "Authorized support request"}, format="json")
         assert response.status_code == status.HTTP_200_OK
         assert "access" in response.data
         assert "refresh" in response.data

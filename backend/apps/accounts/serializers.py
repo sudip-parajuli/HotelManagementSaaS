@@ -51,6 +51,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "full_name",
             "phone",
             "role",
+            "preferred_language",
             "avatar",
             "avatar_url",
             "is_active",
@@ -73,7 +74,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "phone", "avatar"]
+        fields = ["first_name", "last_name", "phone", "avatar", "preferred_language"]
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -132,3 +133,28 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+
+from .models import ImpersonationLog
+
+class ImpersonationLogSerializer(serializers.ModelSerializer):
+    admin_user_email = serializers.EmailField(source="admin_user.email", read_only=True)
+    target_tenant_name = serializers.CharField(source="target_tenant.name", read_only=True)
+    target_tenant_schema = serializers.CharField(source="target_tenant.schema_name", read_only=True)
+
+    class Meta:
+        model = ImpersonationLog
+        fields = [
+            "id",
+            "admin_user",
+            "admin_user_email",
+            "target_tenant",
+            "target_tenant_name",
+            "target_tenant_schema",
+            "started_at",
+            "ended_at",
+            "reason",
+            "ip_address",
+        ]
+        read_only_fields = fields
+

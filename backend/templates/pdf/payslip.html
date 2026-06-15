@@ -2,20 +2,22 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Payslip — {{ entry.staff.user.get_full_name }}</title>
+    <title>{% if lang == 'ne' %}तलब पर्ची{% else %}Payslip{% endif %} — {{ entry.staff.user.get_full_name }}</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;700&display=swap');
+        
         @page {
             size: A4;
             margin: 20mm;
             @bottom-right {
-                content: "Page " counter(page) " of " counter(pages);
-                font-family: 'Outfit', 'Inter', sans-serif;
+                content: "{% if lang == 'ne' %}पृष्ठ {% else %}Page {% endif %}" counter(page) " {% if lang == 'ne' %}को {% else %}of {% endif %}" counter(pages);
+                font-family: 'Outfit', 'Noto Sans Devanagari', sans-serif;
                 font-size: 8pt;
                 color: #888;
             }
         }
         body {
-            font-family: 'Outfit', 'Inter', sans-serif;
+            font-family: 'Outfit', 'Noto Sans Devanagari', sans-serif;
             color: #333;
             margin: 0;
             font-size: 10pt;
@@ -137,7 +139,7 @@
 </head>
 <body>
     <div class="header">
-        <div class="payslip-title">Salary Payslip</div>
+        <div class="payslip-title">{% if lang == 'ne' %}तलब भुक्तानी पर्ची{% else %}Salary Payslip{% endif %}</div>
         <div class="company-name">{{ company_name }}</div>
         <div class="company-tag">SIA Enterprises Multi-Tenant Hospitality Operations</div>
         <div class="clear"></div>
@@ -145,30 +147,30 @@
 
     <div class="meta-container">
         <div class="meta-col">
-            <p><span class="meta-label">Employee Name:</span> <span class="meta-value">{{ entry.staff.user.get_full_name }}</span></p>
-            <p><span class="meta-label">Designation:</span> <span class="meta-value">{{ entry.staff.designation }}</span></p>
-            <p><span class="meta-label">Department:</span> <span class="meta-value">{{ entry.staff.department.name }}</span></p>
-            <p><span class="meta-label">Employment Type:</span> <span class="meta-value">{{ entry.staff.get_employment_type_display }}</span></p>
+            <p><span class="meta-label">{% if lang == 'ne' %}कर्मचारीको नाम:{% else %}Employee Name:{% endif %}</span> <span class="meta-value">{{ entry.staff.user.get_full_name }}</span></p>
+            <p><span class="meta-label">{% if lang == 'ne' %}पद:{% else %}Designation:{% endif %}</span> <span class="meta-value">{{ entry.staff.designation }}</span></p>
+            <p><span class="meta-label">{% if lang == 'ne' %}शाखा (विभाग):{% else %}Department:{% endif %}</span> <span class="meta-value">{{ entry.staff.department.name }}</span></p>
+            <p><span class="meta-label">{% if lang == 'ne' %}रोजगारीको प्रकार:{% else %}Employment Type:{% endif %}</span> <span class="meta-value">{{ entry.staff.get_employment_type_display }}</span></p>
         </div>
         <div class="meta-col right">
-            <p><span class="meta-label">Pay Period:</span> <span class="meta-value">{{ entry.period }}</span></p>
-            <p><span class="meta-label">Basic Salary:</span> <span class="meta-value">NPR {{ entry.basic_salary }}</span></p>
-            <p><span class="meta-label">Salary Type:</span> <span class="meta-value">{{ entry.staff.get_salary_type_display }}</span></p>
-            <p><span class="meta-label">Hire Date:</span> <span class="meta-value">{{ entry.staff.hire_date }}</span></p>
+            <p><span class="meta-label">{% if lang == 'ne' %}भुक्तानी अवधि:{% else %}Pay Period:{% endif %}</span> <span class="meta-value">{{ entry.period }}</span></p>
+            <p><span class="meta-label">{% if lang == 'ne' %}आधारभूत तलब:{% else %}Basic Salary:{% endif %}</span> <span class="meta-value">NPR {{ entry.basic_salary }}</span></p>
+            <p><span class="meta-label">{% if lang == 'ne' %}तलबको प्रकार:{% else %}Salary Type:{% endif %}</span> <span class="meta-value">{{ entry.staff.get_salary_type_display }}</span></p>
+            <p><span class="meta-label">{% if lang == 'ne' %}नियुक्ति मिति:{% else %}Hire Date:{% endif %}</span> <span class="meta-value">{{ entry.staff.hire_date }}</span></p>
         </div>
         <div class="clear"></div>
     </div>
 
-    <div class="section-header">Attendance Summary</div>
+    <div class="section-header">{% if lang == 'ne' %}उपस्थिति विवरण{% else %}Attendance Summary{% endif %}</div>
     <table class="table">
         <thead>
             <tr>
-                <th>Total Calendar Days</th>
-                <th>Working Days</th>
-                <th>Days Present</th>
-                <th>Days Absent</th>
-                <th>Days On Leave</th>
-                <th>Overtime (Hours)</th>
+                <th>{% if lang == 'ne' %}जम्मा दिनहरू{% else %}Total Calendar Days{% endif %}</th>
+                <th>{% if lang == 'ne' %}कार्य दिनहरू{% else %}Working Days{% endif %}</th>
+                <th>{% if lang == 'ne' %}उपस्थित दिनहरू{% else %}Days Present{% endif %}</th>
+                <th>{% if lang == 'ne' %}अनुपस्थित दिनहरू{% else %}Days Absent{% endif %}</th>
+                <th>{% if lang == 'ne' %}विदाका दिनहरू{% else %}Days On Leave{% endif %}</th>
+                <th>{% if lang == 'ne' %}अतिरिक्त समय (घण्टा){% else %}Overtime (Hours){% endif %}</th>
             </tr>
         </thead>
         <tbody>
@@ -183,23 +185,23 @@
         </tbody>
     </table>
 
-    <div class="section-header">Earnings & Deductions</div>
+    <div class="section-header">{% if lang == 'ne' %}आम्दानी र कट्टी विवरण{% else %}Earnings & Deductions{% endif %}</div>
     <div style="width: 48%; float: left;">
         <table class="table">
             <thead>
                 <tr>
-                    <th>Description (Earnings)</th>
-                    <th class="num">Amount (NPR)</th>
+                    <th>{% if lang == 'ne' %}विवरण (आम्दानी){% else %}Description (Earnings){% endif %}</th>
+                    <th class="num">{% if lang == 'ne' %}रकम (रु.){% else %}Amount (NPR){% endif %}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Basic Salary</td>
+                    <td>{% if lang == 'ne' %}आधारभूत तलब{% else %}Basic Salary{% endif %}</td>
                     <td class="num">{{ entry.basic_salary }}</td>
                 </tr>
                 {% if entry.overtime_amount > 0 %}
                 <tr>
-                    <td>Overtime ({{ entry.overtime_hours }} hrs @ {{ entry.overtime_rate }}/hr)</td>
+                    <td>{% if lang == 'ne' %}अतिरिक्त समय{% else %}Overtime{% endif %} ({{ entry.overtime_hours }} hrs @ {{ entry.overtime_rate }}/hr)</td>
                     <td class="num">{{ entry.overtime_amount }}</td>
                 </tr>
                 {% endif %}
@@ -210,7 +212,7 @@
                 </tr>
                 {% endfor %}
                 <tr style="font-weight: bold; background-color: #f7fafc;">
-                    <td>Total Gross Earnings</td>
+                    <td>{% if lang == 'ne' %}कुल आम्दानी (Gross Salary){% else %}Total Gross Earnings{% endif %}</td>
                     <td class="num">{{ entry.gross_salary }}</td>
                 </tr>
             </tbody>
@@ -221,18 +223,18 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Description (Deductions)</th>
-                    <th class="num">Amount (NPR)</th>
+                    <th>{% if lang == 'ne' %}विवरण (कट्टी){% else %}Description (Deductions){% endif %}</th>
+                    <th class="num">{% if lang == 'ne' %}रकम (रु.){% else %}Amount (NPR){% endif %}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>SSF Employee Contribution (11%)</td>
+                    <td>{% if lang == 'ne' %}सामाजिक सुरक्षा कोष कट्टी (११%){% else %}SSF Employee Contribution (11%){% endif %}</td>
                     <td class="num">{{ entry.ssf_employee }}</td>
                 </tr>
                 {% if entry.income_tax > 0 %}
                 <tr>
-                    <td>Nepal Income Tax (TDS)</td>
+                    <td>{% if lang == 'ne' %}नेपाल आयकर (TDS){% else %}Nepal Income Tax (TDS){% endif %}</td>
                     <td class="num">{{ entry.income_tax }}</td>
                 </tr>
                 {% endif %}
@@ -243,7 +245,7 @@
                 </tr>
                 {% endfor %}
                 <tr style="font-weight: bold; background-color: #f7fafc;">
-                    <td>Total Deductions</td>
+                    <td>{% if lang == 'ne' %}कुल कट्टी{% else %}Total Deductions{% endif %}</td>
                     <td class="num">{{ entry.total_deductions }}</td>
                 </tr>
             </tbody>
@@ -253,25 +255,25 @@
 
     {% if entry.ssf_employer > 0 %}
     <p style="font-size: 8pt; color: #718096; margin-top: -10px; margin-bottom: 20px;">
-        * Note: Employer also contributed NPR {{ entry.ssf_employer }} (20%) directly to your Social Security Fund (SSF) account.
+        {% if lang == 'ne' %}* नोट: रोजगारदाताले पनि तपाईंको सामाजिक सुरक्षा कोष (SSF) खातामा सिधै रु. {{ entry.ssf_employer }} (२०%) योगदान गरेको छ।{% else %}* Note: Employer also contributed NPR {{ entry.ssf_employer }} (20%) directly to your Social Security Fund (SSF) account.{% endif %}
     </p>
     {% endif %}
 
     <div class="summary-container">
         <div class="qr-container">
             <img class="qr-image" src="{{ qr_code_url }}" alt="Verification QR Code">
-            <div class="qr-text">Scan to verify payslip validity</div>
+            <div class="qr-text">{% if lang == 'ne' %}तलब पर्चीको वैधता जाँच गर्न स्क्यान गर्नुहोस्{% else %}Scan to verify payslip validity{% endif %}</div>
         </div>
         
         <div class="net-pay-box">
-            <div style="font-size: 9pt; color: #4a5568; font-weight: bold; text-transform: uppercase;">Net Take-Home Pay</div>
+            <div style="font-size: 9pt; color: #4a5568; font-weight: bold; text-transform: uppercase;">{% if lang == 'ne' %}खुद तलब (हात पर्ने रकम){% else %}Net Take-Home Pay{% endif %}</div>
             <div class="net-pay-amount">NPR {{ entry.net_salary }}</div>
         </div>
         <div class="clear"></div>
     </div>
 
     <div style="margin-top: 50px; font-size: 8pt; color: #a0aec0; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 10px;">
-        This is a computer-generated document and does not require a physical signature.
+        {% if lang == 'ne' %}यो कम्प्युटर-उत्पादित कागजात हो र यसमा भौतिक हस्ताक्षरको आवश्यकता पर्दैन।{% else %}This is a computer-generated document and does not require a physical signature.{% endif %}
     </div>
 </body>
 </html>

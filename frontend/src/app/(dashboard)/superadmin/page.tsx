@@ -229,6 +229,34 @@ export default function SuperAdminDashboard() {
               </div>
               <ArrowRight className="h-4 w-4 text-slate-500 group-hover:text-cyan-400 transform group-hover:translate-x-1 transition-all" />
             </Link>
+
+            <Link
+              href="/superadmin/audit-log"
+              className="flex items-center justify-between p-4 rounded-xl bg-slate-900/60 hover:bg-slate-800/50 border border-slate-800 hover:border-slate-700 transition-all text-sm text-slate-300 hover:text-white group"
+            >
+              <div className="flex items-center gap-3">
+                <Clock className="h-5 w-5 text-cyan-400" />
+                <div>
+                  <p className="font-semibold">Impersonation Audit Logs</p>
+                  <p className="text-slate-500 text-xs">Review admin access history & session reasons</p>
+                </div>
+              </div>
+              <ArrowRight className="h-4 w-4 text-slate-500 group-hover:text-cyan-400 transform group-hover:translate-x-1 transition-all" />
+            </Link>
+
+            <Link
+              href="/superadmin/tax-slabs"
+              className="flex items-center justify-between p-4 rounded-xl bg-slate-900/60 hover:bg-slate-800/50 border border-slate-800 hover:border-slate-700 transition-all text-sm text-slate-300 hover:text-white group"
+            >
+              <div className="flex items-center gap-3">
+                <FileText className="h-5 w-5 text-purple-400" />
+                <div>
+                  <p className="font-semibold">Nepal Tax Slabs & SSF</p>
+                  <p className="text-slate-500 text-xs">Configure FY brackets and social security rates</p>
+                </div>
+              </div>
+              <ArrowRight className="h-4 w-4 text-slate-500 group-hover:text-cyan-400 transform group-hover:translate-x-1 transition-all" />
+            </Link>
           </div>
 
           <div className="text-center text-[10px] text-slate-600 mt-6 pt-4 border-t border-slate-900">

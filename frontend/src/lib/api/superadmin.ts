@@ -40,13 +40,28 @@ export const superAdminApi = {
     return response.data;
   },
 
-  impersonateTenant: async (id: number): Promise<{ success: boolean; tenant_name: string; schema_name: string }> => {
-    const response = await authClient.post("/impersonate", { tenantId: id });
+  impersonateTenant: async (id: number, reason: string): Promise<{ success: boolean; tenant_name: string; schema_name: string }> => {
+    const response = await authClient.post("/impersonate", { tenantId: id, reason });
     return response.data;
   },
 
   stopImpersonating: async (): Promise<{ success: boolean; restored: boolean }> => {
     const response = await authClient.delete("/impersonate");
+    return response.data;
+  },
+
+  getAuditLogs: async (): Promise<{ count: number; results: any[] }> => {
+    const response = await apiClient.get<{ count: number; results: any[] }>("/admin/impersonation-logs/");
+    return response.data;
+  },
+
+  getTaxConfig: async (): Promise<{ tax_slabs: any[]; ssf_config: any[] }> => {
+    const response = await apiClient.get<{ tax_slabs: any[]; ssf_config: any[] }>("/admin/tax-config/");
+    return response.data;
+  },
+
+  updateTaxConfig: async (payload: { tax_slabs: any[]; ssf_config: any[] }): Promise<any> => {
+    const response = await apiClient.post("/admin/tax-config/", payload);
     return response.data;
   },
 

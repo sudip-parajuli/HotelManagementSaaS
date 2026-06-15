@@ -6,7 +6,7 @@ const BACKEND_URL = process.env.INTERNAL_BACKEND_URL || "http://127.0.0.1:8000";
 
 export async function POST(request: NextRequest) {
   try {
-    const { tenantId } = await request.json();
+    const { tenantId, reason } = await request.json();
     const host = request.headers.get("host");
     const cookieStore = cookies();
     const currentAccessToken = cookieStore.get("access_token")?.value;
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     // Call the Django backend impersonate endpoint
     const response = await axios.post(
       `${BACKEND_URL}/api/admin/tenants/${tenantId}/impersonate/`,
-      {},
+      { reason },
       { headers, validateStatus: () => true }
     );
 
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response.data, { status: response.status });
     }
 
-    const { access, refresh, tenant_name, schema_name } = response.data;
+    const { access, refresh, tenant_name, schema_name, impersonation_reason } = response.data;
 
     // Save the current admin tokens to temporary backup cookies
     const currentRefreshToken = cookieStore.get("refresh_token")?.value;
@@ -85,6 +85,13 @@ export async function POST(request: NextRequest) {
       maxAge: 60 * 60, // 1 hour
     });
 
+    cookieStore.set("impersonated_tenant_reason", impersonation_reason || "", {
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60, // 1 hour
+    });
+
     return NextResponse.json({ success: true, tenant_name, schema_name });
   } catch (error: any) {
     console.error("Impersonation route error:", error);
@@ -103,6 +110,7 @@ export async function DELETE() {
 
     // Clear impersonation indicator
     cookieStore.delete("impersonated_tenant_name");
+    cookieStore.delete("impersonated_tenant_reason");
 
     if (originalAccess) {
       // Restore the original superadmin tokens

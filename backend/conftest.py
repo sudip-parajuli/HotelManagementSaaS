@@ -76,6 +76,16 @@ def create_user():
             "is_active": True,
         }
         defaults.update(kwargs)
+        
+        user = User.objects.filter(email=email).first()
+        if user:
+            for key, val in defaults.items():
+                setattr(user, key, val)
+            user.role = role
+            user.set_password(password)
+            user.save()
+            return user
+
         user = User.objects.create(email=email, role=role, **defaults)
         user.set_password(password)
         user.save()
@@ -118,3 +128,43 @@ def auth_client(api_client, create_user):
     refresh = RefreshToken.for_user(user)
     api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(refresh.access_token)}")
     return api_client, user
+
+
+@pytest.fixture
+def test_tenant(db):
+    """
+    Tenant schema fixture for payroll/tenant specific tests.
+    """
+    from apps.tenants.models import Client, Domain
+    from django_tenants.utils import schema_context
+    from apps.accounts.models import User
+
+    # Clean up stale test data if any
+    try:
+        if Client.objects.filter(schema_name="test_pay_tenant").exists():
+            with schema_context("test_pay_tenant"):
+                User.objects.filter(username__in=["manager@paytest.com", "clerk@paytest.com", "support_clerk@paytest.com"]).delete()
+    except Exception:
+        pass
+    try:
+        Domain.objects.filter(domain="pay-test.localhost").delete()
+        Client.objects.filter(schema_name="test_pay_tenant").delete()
+    except Exception:
+        pass
+    try:
+        User.objects.filter(username__in=["manager@paytest.com", "clerk@paytest.com", "support_clerk@paytest.com"]).delete()
+    except Exception:
+        pass
+
+    client = Client.objects.create(
+        schema_name="test_pay_tenant",
+        name="Payroll Test Hotel",
+        contact_email="pay_test@hotel.com",
+    )
+    Domain.objects.create(
+        domain="pay-test.localhost",
+        tenant=client,
+        is_primary=True,
+    )
+    yield client
+

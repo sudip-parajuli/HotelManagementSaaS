@@ -46,8 +46,21 @@ class RefreshTokenView(TokenRefreshView):
     """
     POST /api/auth/refresh/
     Accepts refresh token, returns new access + rotated refresh token.
+    Blocks refresh for impersonated sessions containing 'tenant_schema' claim.
     """
-    pass
+    def post(self, request, *args, **kwargs):
+        refresh_token = request.data.get("refresh")
+        if refresh_token:
+            try:
+                token = RefreshToken(refresh_token)
+                if token.get("tenant_schema"):
+                    return Response(
+                        {"error": "Token refresh is disabled for impersonated sessions.", "code": "IMPERSONATION_REFRESH_BLOCKED"},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+            except TokenError:
+                pass
+        return super().post(request, *args, **kwargs)
 
 
 class LogoutView(APIView):

@@ -1,0 +1,67 @@
+{
+  "Common": {
+    "save": "बचत गर्नुहोस्",
+    "cancel": "रद्द गर्नुहोस्",
+    "confirm": "पुष्टि गर्नुहोस्",
+    "delete": "हटाउनुहोस्",
+    "edit": "सम्पादन गर्नुहोस्",
+    "pending": "पेन्डिङ",
+    "success": "सफल",
+    "failed": "असफल",
+    "loading": "लोड हुँदैछ..."
+  },
+  "Login": {
+    "title": "एस.आई.ए. एच.एम.एस. लगइन",
+    "subtitle": "तपाईंको होटल कार्यस्थान कन्सोलमा पहुँच गर्नुहोस्",
+    "email": "इमेल ठेगाना",
+    "password": "पासवर्ड",
+    "submit": "लगइन गर्नुहोस्",
+    "error_invalid": "अमान्य इमेल वा पासवर्ड।"
+  },
+  "Sidebar": {
+    "dashboard": "ड्यासबोर्ड",
+    "rooms": "कोठाहरू",
+    "bookings": "बुकिङहरू",
+    "frontdesk": "फ्रन्ट डेस्क",
+    "pos": "रेस्टुरेन्ट / POS",
+    "housekeeping": "हाउसकिपिङ",
+    "billing": "बिलिङ",
+    "crm": "CRM र लोयल्टी",
+    "staff": "कर्मचारी र HR",
+    "inventory": "इन्भेन्टरी",
+    "analytics": "एनालिटिक्स",
+    "reports": "रिपोर्ट कन्सोल",
+    "superadmin": "सुपर एडमिन"
+  },
+  "FrontDesk": {
+    "arrivals": "आगमनहरू",
+    "in_house": "होटल भित्र",
+    "departures": "प्रस्थानहरू",
+    "today_checkins": "आजको चेक-इन",
+    "today_checkout": "आजको चेक-आउट",
+    "quick_actions": "द्रुत कार्यहरू",
+    "check_in": "चेक इन",
+    "check_out": "चेक आउट",
+    "room_no": "कोठा नं",
+    "guest_name": "पाहुनाको नाम",
+    "status": "स्थिति"
+  },
+  "POS": {
+    "categories": "वर्गहरू",
+    "order_panel": "अर्डर प्यानल",
+    "add_to_order": "अर्डरमा थप्नुहोस्",
+    "total": "जम्मा",
+    "settle_payment": "भुक्तानी फर्छ्यौट",
+    "empty_cart": "तपाईंको कार्ट खाली छ।",
+    "select_method": "विधि छान्नुहोस्"
+  },
+  "Housekeeping": {
+    "title": "हाउसकिपिङ ड्यासबोर्ड",
+    "task_list": "मेरो कार्यहरू",
+    "clean": "सफा",
+    "dirty": "फोहोर",
+    "inspect": "निरीक्षण गरिएको",
+    "update_status": "स्थिति अपडेट",
+    "room_number": "कोठा नम्बर"
+  }
+}

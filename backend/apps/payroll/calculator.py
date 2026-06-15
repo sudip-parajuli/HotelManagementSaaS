@@ -11,55 +11,58 @@ from apps.staff.models import StaffMember, SalaryType, TaxFilingStatus
 from apps.hr.models import Attendance, AttendanceStatus
 
 
-def get_nepal_income_tax(annual_taxable_income: Decimal, status: str) -> Decimal:
+def get_nepal_income_tax(annual_taxable_income: Decimal, status: str, fiscal_year: str = "2081/82") -> Decimal:
     """
-    Calculates Nepal Income Tax based on progressive slabs (FY 2080/2081/2082 rules).
+    Calculates Nepal Income Tax based on progressive slabs (FY 2080/2081/2082 rules) from database.
     If registered in SSF, the 1% Social Security Tax on the first slab is waived (0%).
     """
+    from apps.payroll.models import TaxSlab
+
     tax = Decimal("0.00")
     income = annual_taxable_income
 
-    if status == TaxFilingStatus.MARRIED:
-        # Slabs for Married status:
-        # 1. First 600,000 @ 0% (SSF waiver)
-        # 2. Next 200,000 (600,000 - 800,000) @ 10%
-        # 3. Next 300,000 (800,000 - 1,100,000) @ 20%
-        # 4. Next 900,000 (1,100,000 - 2,000,000) @ 30%
-        # 5. Next 3,000,000 (2,000,000 - 5,000,000) @ 36%
-        # 6. Above 5,000,000 @ 39%
-        brackets = [
-            (Decimal("600000"), Decimal("0.00")),
-            (Decimal("200000"), Decimal("0.10")),
-            (Decimal("300000"), Decimal("0.20")),
-            (Decimal("900000"), Decimal("0.30")),
-            (Decimal("3000000"), Decimal("0.36")),
-        ]
+    # Query slabs from DB
+    db_slabs = list(TaxSlab.objects.filter(fiscal_year=fiscal_year, filing_status=status).order_by("slab_order"))
+
+    if db_slabs:
+        brackets = []
+        for slab in db_slabs:
+            limit = (slab.max_amount - slab.min_amount) if slab.max_amount else None
+            # Standard first slab has 1% tax, but since they are SSF registered, the first slab is waived (0%)
+            rate = Decimal("0.00") if slab.slab_order == 1 else (slab.rate_percent / Decimal("100.0"))
+            brackets.append((limit, rate))
     else:
-        # Slabs for Single status:
-        # 1. First 500,000 @ 0% (SSF waiver)
-        # 2. Next 200,000 (500,000 - 700,000) @ 10%
-        # 3. Next 300,000 (700,000 - 1,000,000) @ 20%
-        # 4. Next 1,000,000 (1,000,000 - 2,000,000) @ 30%
-        # 5. Next 3,000,000 (2,000,000 - 5,000,000) @ 36%
-        # 6. Above 5,000,000 @ 39%
-        brackets = [
-            (Decimal("500000"), Decimal("0.00")),
-            (Decimal("200000"), Decimal("0.10")),
-            (Decimal("300000"), Decimal("0.20")),
-            (Decimal("1000000"), Decimal("0.30")),
-            (Decimal("3000000"), Decimal("0.36")),
-        ]
+        # Fallback to hardcoded FY 2081/82 brackets
+        if status == TaxFilingStatus.MARRIED:
+            brackets = [
+                (Decimal("600000"), Decimal("0.00")),
+                (Decimal("200000"), Decimal("0.10")),
+                (Decimal("300000"), Decimal("0.20")),
+                (Decimal("900000"), Decimal("0.30")),
+                (Decimal("3000000"), Decimal("0.36")),
+                (None, Decimal("0.39"))
+            ]
+        else:
+            brackets = [
+                (Decimal("500000"), Decimal("0.00")),
+                (Decimal("200000"), Decimal("0.10")),
+                (Decimal("300000"), Decimal("0.20")),
+                (Decimal("1000000"), Decimal("0.30")),
+                (Decimal("3000000"), Decimal("0.36")),
+                (None, Decimal("0.39"))
+            ]
 
     for limit, rate in brackets:
         if income <= Decimal("0.00"):
             break
-        taxable_in_slab = min(income, limit)
-        tax += taxable_in_slab * rate
-        income -= taxable_in_slab
-
-    # Remaining amount taxed at top slab
-    if income > Decimal("0.00"):
-        tax += income * Decimal("0.39")
+        if limit is None:
+            # Top slab
+            tax += income * rate
+            income = Decimal("0.00")
+        else:
+            taxable_in_slab = min(income, limit)
+            tax += taxable_in_slab * rate
+            income -= taxable_in_slab
 
     return tax
 
@@ -144,9 +147,30 @@ def calculate_payroll_entry_data(staff: StaffMember, month: int, year: int) -> d
     allowance_amount = Decimal("0.00")
     deduction_amount = Decimal("0.00")
     
+    # Get Nepal Fiscal Year based on month and year
+    # July (7) onwards is the new fiscal year
+    bs_offset = 57
+    bs_year = year + bs_offset
+    fy_start = bs_year if month >= 7 else bs_year - 1
+    fiscal_year = f"{fy_start}/{str(fy_start + 1)[2:]}"
+
+    # Fetch SSF Config
+    from apps.payroll.models import SSFConfig
+    ssf_cfg = SSFConfig.objects.filter(fiscal_year=fiscal_year).first()
+    if not ssf_cfg:
+        # Fallback to active one, or standard 11% / 20%
+        ssf_cfg = SSFConfig.objects.filter(is_active=True).first()
+    
+    if ssf_cfg:
+        ssf_employee_rate = ssf_cfg.employee_rate_percent / Decimal("100.0")
+        ssf_employer_rate = ssf_cfg.employer_rate_percent / Decimal("100.0")
+    else:
+        ssf_employee_rate = Decimal("0.11")
+        ssf_employer_rate = Decimal("0.20")
+
     # 5. Nepal SSF Calculations
-    ssf_employee = pro_rated_basic * Decimal("0.11")
-    ssf_employer = pro_rated_basic * Decimal("0.20")
+    ssf_employee = pro_rated_basic * ssf_employee_rate
+    ssf_employer = pro_rated_basic * ssf_employer_rate
     
     # 6. Nepal progressive Income Tax (taxable basic minus SSF)
     monthly_taxable = max(
@@ -154,7 +178,7 @@ def calculate_payroll_entry_data(staff: StaffMember, month: int, year: int) -> d
         pro_rated_basic + overtime_amount + allowance_amount - ssf_employee
     )
     annual_taxable = monthly_taxable * Decimal("12.0")
-    annual_tax = get_nepal_income_tax(annual_taxable, staff.tax_filing_status)
+    annual_tax = get_nepal_income_tax(annual_taxable, staff.tax_filing_status, fiscal_year)
     monthly_tax = annual_tax / Decimal("12.0")
     
     # Rounded values

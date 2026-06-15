@@ -19,10 +19,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.accounts.permissions import IsSuperAdmin
-from apps.accounts.models import User, UserRole
+from apps.accounts.models import User, UserRole, ImpersonationLog
+from apps.accounts.serializers import ImpersonationLogSerializer
 from apps.tenants.models import Client, Domain
 from apps.subscriptions.models import SubscriptionPlan, TenantSubscription, SubscriptionStatus, SubscriptionInvoice, InvoiceStatus
-from apps.subscriptions.serializers import SubscriptionPlanSerializer
+from apps.subscriptions.serializers import SubscriptionPlanSerializer, ClientSerializer
 from apps.properties.models import Property
 
 class SuperAdminMetricsView(APIView):
@@ -96,6 +97,8 @@ class TenantManagementViewSet(viewsets.ModelViewSet):
     """
     permission_classes = [IsAuthenticated, IsSuperAdmin]
     queryset = Client.objects.exclude(schema_name='public').order_by('-created_on')
+    serializer_class = ClientSerializer
+    pagination_class = None
 
     def create(self, request, *args, **kwargs):
         name = request.data.get("name")
@@ -208,21 +211,69 @@ class TenantManagementViewSet(viewsets.ModelViewSet):
     def impersonate(self, request, pk=None):
         """
         Signs and returns a JWT token scoped to the target tenant schema.
+        Requires a reason and logs the request.
         """
         tenant = self.get_object()
+        reason = request.data.get("reason")
+        if not reason or not reason.strip():
+            return Response(
+                {"reason": ["This field is required for auditing impersonation."]},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         
+        # Get client IP
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip_address = x_forwarded_for.split(',')[0].strip()
+        else:
+            ip_address = request.META.get('REMOTE_ADDR')
+
+        # End any open impersonation sessions for this admin before starting a new one
+        ImpersonationLog.objects.filter(
+            admin_user=request.user,
+            ended_at__isnull=True
+        ).update(ended_at=timezone.now())
+
+        # Log impersonation
+        ImpersonationLog.objects.create(
+            admin_user=request.user,
+            target_tenant=tenant,
+            reason=reason,
+            ip_address=ip_address
+        )
+
         # Sign custom simplejwt token for the logged-in super admin
         refresh = RefreshToken.for_user(request.user)
         refresh["role"] = UserRole.SUPER_ADMIN
         refresh["tenant_schema"] = tenant.schema_name
         refresh["full_name"] = f"Impersonated: {tenant.name}"
+        refresh["impersonation_reason"] = reason
+
+        # Hardcode lifetimes to 10 minutes for token hardening
+        refresh.set_exp(lifetime=timedelta(minutes=10))
+        access = refresh.access_token
+        access.set_exp(lifetime=timedelta(minutes=10))
 
         return Response({
-            "access": str(refresh.access_token),
+            "access": str(access),
             "refresh": str(refresh),
             "tenant_name": tenant.name,
-            "schema_name": tenant.schema_name
+            "schema_name": tenant.schema_name,
+            "impersonation_reason": reason
         })
+
+    @action(detail=False, methods=["post"], url_path="stop-impersonation")
+    def stop_impersonation(self, request):
+        """
+        Ends any active impersonation sessions for this super admin.
+        """
+        active_logs = ImpersonationLog.objects.filter(
+            admin_user=request.user,
+            ended_at__isnull=True
+        )
+        count = active_logs.count()
+        active_logs.update(ended_at=timezone.now())
+        return Response({"message": f"Successfully ended {count} impersonation session(s)."})
 
     @action(detail=True, methods=["post"])
     def suspend(self, request, pk=None):
@@ -251,3 +302,84 @@ class TenantManagementViewSet(viewsets.ModelViewSet):
             sub.save()
 
         return Response({"message": f"Tenant '{tenant.name}' activated successfully."})
+
+
+class ImpersonationLogViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Super Admin viewset for reviewing Impersonation/Audit logs.
+    """
+    permission_classes = [IsAuthenticated, IsSuperAdmin]
+    serializer_class = ImpersonationLogSerializer
+    queryset = ImpersonationLog.objects.all().order_by("-started_at")
+
+
+from apps.payroll.models import TaxSlab, SSFConfig
+from apps.payroll.serializers import TaxSlabSerializer, SSFConfigSerializer
+
+class SuperAdminTaxConfigView(APIView):
+    """
+    Super Admin view for viewing and updating progressive tax slabs and SSF rates.
+    Syncs updates across all active tenant schemas dynamically.
+    """
+    permission_classes = [IsAuthenticated, IsSuperAdmin]
+
+    def get(self, request):
+        tenant = Client.objects.exclude(schema_name='public').first()
+        if not tenant:
+            return Response({"tax_slabs": [], "ssf_config": []})
+        
+        with tenant_context(tenant):
+            slabs = TaxSlab.objects.all().order_by("fiscal_year", "filing_status", "slab_order")
+            ssf = SSFConfig.objects.all().order_by("-fiscal_year")
+            
+            slabs_serializer = TaxSlabSerializer(slabs, many=True)
+            ssf_serializer = SSFConfigSerializer(ssf, many=True)
+            
+            return Response({
+                "tax_slabs": slabs_serializer.data,
+                "ssf_config": ssf_serializer.data
+            })
+
+    def post(self, request):
+        tax_slabs_data = request.data.get("tax_slabs", [])
+        ssf_config_data = request.data.get("ssf_config", [])
+
+        if not tax_slabs_data and not ssf_config_data:
+            return Response({"error": "No data provided to update."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Loop through all active tenants and update
+        tenants = Client.objects.exclude(schema_name='public').filter(is_active=True)
+        for tenant in tenants:
+            with tenant_context(tenant):
+                # 1. Update Tax Slabs if provided
+                if tax_slabs_data:
+                    # Clear existing and recreate
+                    TaxSlab.objects.all().delete()
+                    for item in tax_slabs_data:
+                        # Convert max_amount empty string or None safely
+                        max_amt = item.get("max_amount")
+                        if max_amt == "" or max_amt == "null" or max_amt is None:
+                            max_amt = None
+                        TaxSlab.objects.create(
+                            fiscal_year=item.get("fiscal_year"),
+                            filing_status=item.get("filing_status"),
+                            slab_order=item.get("slab_order"),
+                            min_amount=item.get("min_amount"),
+                            max_amount=max_amt,
+                            rate_percent=item.get("rate_percent")
+                        )
+
+                # 2. Update SSF Config if provided
+                if ssf_config_data:
+                    SSFConfig.objects.all().delete()
+                    for item in ssf_config_data:
+                        SSFConfig.objects.create(
+                            fiscal_year=item.get("fiscal_year"),
+                            employee_rate_percent=item.get("employee_rate_percent"),
+                            employer_rate_percent=item.get("employer_rate_percent"),
+                            is_active=item.get("is_active", True)
+                        )
+
+        return Response({"message": "Tax slabs and SSF rates successfully synchronized across all active tenants."})
+
+

@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { LanguageToggle } from "./LanguageToggle";
 
 interface NavbarProps {
   title?: string;
@@ -40,6 +41,9 @@ export function Navbar({ title }: NavbarProps) {
       </h1>
 
       <div className="flex items-center gap-3">
+        {/* Language switch toggle */}
+        <LanguageToggle />
+
         {/* Notification bell */}
         <Button
           variant="ghost"

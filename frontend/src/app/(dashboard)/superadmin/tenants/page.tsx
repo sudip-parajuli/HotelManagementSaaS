@@ -12,7 +12,9 @@ import {
   ToggleLeft, 
   ToggleRight,
   Globe,
-  Database
+  Database,
+  X,
+  AlertTriangle
 } from "lucide-react";
 import Link from "next/link";
 import { superAdminApi } from "@/lib/api/superadmin";
@@ -23,6 +25,11 @@ export default function TenantsDirectory() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [actionLoading, setActionLoading] = useState<number | null>(null);
+
+  // Impersonation modal states
+  const [impersonatingTenantId, setImpersonatingTenantId] = useState<number | null>(null);
+  const [impersonationReason, setImpersonationReason] = useState("");
+  const [showImpersonateModal, setShowImpersonateModal] = useState(false);
 
   useEffect(() => {
     loadTenants();
@@ -53,12 +60,26 @@ export default function TenantsDirectory() {
     }
   };
 
-  const handleImpersonate = async (tenantId: number) => {
+  const handleImpersonateClick = (tenantId: number) => {
+    setImpersonatingTenantId(tenantId);
+    setImpersonationReason("");
+    setShowImpersonateModal(true);
+  };
+
+  const handleConfirmImpersonate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!impersonatingTenantId) return;
+    if (!impersonationReason.trim()) {
+      alert("Impersonation reason is required.");
+      return;
+    }
+
+    const tenantId = impersonatingTenantId;
+    setShowImpersonateModal(false);
     setActionLoading(tenantId);
     try {
-      const res = await superAdminApi.impersonateTenant(tenantId);
+      const res = await superAdminApi.impersonateTenant(tenantId, impersonationReason);
       if (res.success) {
-        // Redirect to homepage of dashboard to show impersonated data
         window.location.href = "/";
       }
     } catch (err: any) {
@@ -174,7 +195,7 @@ export default function TenantsDirectory() {
                       <div className="flex justify-end gap-2">
                         {/* Impersonate button */}
                         <button
-                          onClick={() => handleImpersonate(tenant.id)}
+                          onClick={() => handleImpersonateClick(tenant.id)}
                           disabled={actionLoading !== null}
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-600 hover:bg-cyan-700 text-white transition-all shadow-md shadow-cyan-600/10"
                           title="Enter Impersonation Context"
@@ -215,6 +236,71 @@ export default function TenantsDirectory() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Impersonation Reason Custom Modal */}
+      {showImpersonateModal && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+            {/* Header */}
+            <div className="flex justify-between items-center px-6 py-4 border-b border-slate-850">
+              <h3 className="text-md font-bold text-white flex items-center gap-2">
+                <ShieldAlert className="h-4 w-4 text-amber-500" />
+                Impersonate Tenant Schema
+              </h3>
+              <button
+                onClick={() => setShowImpersonateModal(false)}
+                className="p-1 rounded-lg text-slate-500 hover:text-white hover:bg-slate-850 transition-all"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleConfirmImpersonate}>
+              <div className="p-6 space-y-4">
+                <div className="flex gap-2.5 bg-amber-950/20 border border-amber-900/30 p-3.5 rounded-xl text-xs text-amber-400">
+                  <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-semibold block mb-0.5">Audited Admin Action</span>
+                    This session will grant schema-level read/write permissions. Justification is stored in the global audit ledger.
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    Justification Reason
+                  </label>
+                  <textarea
+                    required
+                    rows={3}
+                    value={impersonationReason}
+                    onChange={(e) => setImpersonationReason(e.target.value)}
+                    placeholder="Enter reason (e.g. debugging payroll discrepancy, checking reservation ledger...)"
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/50 rounded-xl px-3 py-2 text-xs text-white outline-none placeholder-slate-600 resize-none"
+                  />
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="px-6 py-4 bg-slate-950/50 border-t border-slate-850 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowImpersonateModal(false)}
+                  className="px-4 py-2 rounded-xl text-slate-450 hover:text-white text-xs font-medium transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-medium transition-all shadow-md shadow-cyan-600/10"
+                >
+                  Confirm Impersonation
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

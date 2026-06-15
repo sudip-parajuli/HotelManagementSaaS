@@ -102,3 +102,48 @@ class PayrollEntry(models.Model):
 
     def __str__(self):
         return f"{self.staff} — {self.period}"
+
+
+class TaxSlab(models.Model):
+    """
+    Configurable tax slabs for Nepal Income Tax calculations.
+    """
+    STATUS_CHOICES = [
+        ("single", "Single"),
+        ("married", "Married"),
+    ]
+    fiscal_year = models.CharField(max_length=10, help_text="e.g., 2081/82")
+    filing_status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="single")
+    slab_order = models.IntegerField(help_text="Order of the tax slab (1, 2, 3...)")
+    min_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    max_amount = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    rate_percent = models.DecimalField(max_digits=5, decimal_places=2)
+
+    class Meta:
+        verbose_name = "Tax Slab"
+        verbose_name_plural = "Tax Slabs"
+        ordering = ["fiscal_year", "filing_status", "slab_order"]
+        unique_together = ("fiscal_year", "filing_status", "slab_order")
+
+    def __str__(self):
+        max_str = f"{self.max_amount}" if self.max_amount else "Above"
+        return f"{self.fiscal_year} — {self.filing_status} Slab {self.slab_order}: {self.min_amount} to {max_str} @ {self.rate_percent}%"
+
+
+class SSFConfig(models.Model):
+    """
+    Social Security Fund (SSF) configuration rates.
+    """
+    fiscal_year = models.CharField(max_length=10, unique=True, help_text="e.g., 2081/82")
+    employee_rate_percent = models.DecimalField(max_digits=5, decimal_places=2, default=11.00)
+    employer_rate_percent = models.DecimalField(max_digits=5, decimal_places=2, default=20.00)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "SSF Configuration"
+        verbose_name_plural = "SSF Configurations"
+        ordering = ["-fiscal_year"]
+
+    def __str__(self):
+        return f"SSF {self.fiscal_year}: Employee {self.employee_rate_percent}% / Employer {self.employer_rate_percent}%"
+

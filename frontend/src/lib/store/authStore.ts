@@ -10,6 +10,7 @@ export interface UserProfile {
   last_name: string;
   phone?: string;
   avatar?: string;
+  preferred_language?: string;
 }
 
 interface AuthState {

@@ -27,6 +27,7 @@ export interface UserProfile {
   avatar?: string;
   avatar_url?: string;
   role: UserRole;
+  preferred_language?: "en" | "ne";
   is_active: boolean;
   date_joined: string;
   last_login?: string;

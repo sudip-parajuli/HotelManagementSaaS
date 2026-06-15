@@ -21,6 +21,7 @@ class SubscriptionPlanViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsSuperAdmin]
     queryset = SubscriptionPlan.objects.all().order_by('price_monthly')
     serializer_class = SubscriptionPlanSerializer
+    pagination_class = None
 
 
 class TenantSubscriptionViewSet(viewsets.ModelViewSet):
@@ -28,6 +29,7 @@ class TenantSubscriptionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsSuperAdmin]
     queryset = TenantSubscription.objects.all().order_by('-created_at')
     serializer_class = TenantSubscriptionSerializer
+    pagination_class = None
 
     @action(detail=True, methods=["post"])
     def cancel_subscription(self, request, pk=None):
@@ -43,6 +45,7 @@ class SubscriptionInvoiceViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated, IsSuperAdmin]
     queryset = SubscriptionInvoice.objects.all().order_by('-created_at')
     serializer_class = SubscriptionInvoiceSerializer
+    pagination_class = None
 
     @action(detail=True, methods=["post"])
     def mark_paid(self, request, pk=None):

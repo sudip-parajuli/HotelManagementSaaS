@@ -2,20 +2,22 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Invoice — {{ invoice.invoice_number }}</title>
+    <title>{% if lang == 'ne' %}विजक{% else %}Invoice{% endif %} — {{ invoice.invoice_number }}</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Noto+Sans+Devanagari:wght@400;700&display=swap');
+        
         @page {
             size: A4;
             margin: 20mm;
             @bottom-right {
-                content: "Page " counter(page) " of " counter(pages);
-                font-family: 'Inter', sans-serif;
+                content: "{% if lang == 'ne' %}पृष्ठ {% else %}Page {% endif %}" counter(page) " {% if lang == 'ne' %}को {% else %}of {% endif %}" counter(pages);
+                font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
                 font-size: 8pt;
                 color: #718096;
             }
         }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
             color: #2d3748;
             margin: 0;
             font-size: 10pt;
@@ -153,36 +155,36 @@
 <body>
     <div class="header">
         <div class="invoice-title-block">
-            <div class="invoice-title">Tax Invoice</div>
-            <div><span class="pan-badge">Seller PAN: {{ company_pan }}</span></div>
+            <div class="invoice-title">{% if lang == 'ne' %}कर विजक{% else %}Tax Invoice{% endif %}</div>
+            <div><span class="pan-badge">{% if lang == 'ne' %}विक्रेता PAN{% else %}Seller PAN{% endif %}: {{ company_pan }}</span></div>
         </div>
         <div class="company-details">
             <div class="company-name">{{ company_name }}</div>
             <div class="company-meta">{{ company_address }}</div>
-            <div class="company-meta">Phone: {{ company_phone }}</div>
-            <div class="company-meta">Email: billing@siaenterprises.com.np</div>
+            <div class="company-meta">{% if lang == 'ne' %}फोन{% else %}Phone{% endif %}: {{ company_phone }}</div>
+            <div class="company-meta">{% if lang == 'ne' %}इमेल{% else %}Email{% endif %}: billing@siaenterprises.com.np</div>
         </div>
         <div class="clear"></div>
     </div>
 
     <div class="billing-container">
         <div class="billing-col">
-            <div class="section-title">Invoice Information</div>
-            <p class="bill-text"><strong>Invoice Number:</strong> {{ invoice.invoice_number }}</p>
-            <p class="bill-text"><strong>Invoice Date:</strong> {{ invoice.created_at|date:"Y-m-d" }}</p>
-            <p class="bill-text"><strong>Fiscal Year:</strong> {{ fiscal_year }}</p>
-            <p class="bill-text"><strong>Invoice Status:</strong> <span style="text-transform: uppercase; font-weight: bold; color: #2c5282;">{{ invoice.status }}</span></p>
+            <div class="section-title">{% if lang == 'ne' %}विजक विवरण{% else %}Invoice Information{% endif %}</div>
+            <p class="bill-text"><strong>{% if lang == 'ne' %}विजक नम्बर{% else %}Invoice Number{% endif %}:</strong> {{ invoice.invoice_number }}</p>
+            <p class="bill-text"><strong>{% if lang == 'ne' %}विजक मिति{% else %}Invoice Date{% endif %}:</strong> {{ invoice.created_at|date:"Y-m-d" }}</p>
+            <p class="bill-text"><strong>{% if lang == 'ne' %}आर्थिक वर्ष{% else %}Fiscal Year{% endif %}:</strong> {{ fiscal_year }}</p>
+            <p class="bill-text"><strong>{% if lang == 'ne' %}विजक स्थिति{% else %}Invoice Status{% endif %}:</strong> <span style="text-transform: uppercase; font-weight: bold; color: #2c5282;">{{ invoice.status }}</span></p>
         </div>
         <div class="billing-col right">
-            <div class="section-title">Billed To</div>
+            <div class="section-title">{% if lang == 'ne' %}प्राप्तकर्ता{% else %}Billed To{% endif %}</div>
             {% if invoice.reservation %}
-                <p class="bill-text"><strong>Name:</strong> {{ invoice.reservation.guest.full_name }}</p>
-                <p class="bill-text"><strong>Phone:</strong> {{ invoice.reservation.guest.phone }}</p>
-                <p class="bill-text"><strong>Nationality:</strong> {{ invoice.reservation.guest.nationality }}</p>
-                <p class="bill-text"><strong>Room Number:</strong> {{ invoice.reservation.room.room_number }}</p>
+                <p class="bill-text"><strong>{% if lang == 'ne' %}नाम{% else %}Name{% endif %}:</strong> {{ invoice.reservation.guest.full_name }}</p>
+                <p class="bill-text"><strong>{% if lang == 'ne' %}फोन नम्बर{% else %}Phone{% endif %}:</strong> {{ invoice.reservation.guest.phone }}</p>
+                <p class="bill-text"><strong>{% if lang == 'ne' %}राष्ट्रियता{% else %}Nationality{% endif %}:</strong> {{ invoice.reservation.guest.nationality }}</p>
+                <p class="bill-text"><strong>{% if lang == 'ne' %}कोठा नम्बर{% else %}Room Number{% endif %}:</strong> {{ invoice.reservation.room.room_number }}</p>
             {% else %}
-                <p class="bill-text"><strong>Name:</strong> {{ invoice.walk_in_guest_name|default:"Walk-in Guest" }}</p>
-                <p class="bill-text"><strong>Phone:</strong> {{ invoice.walk_in_guest_phone|default:"—" }}</p>
+                <p class="bill-text"><strong>{% if lang == 'ne' %}नाम{% else %}Name{% endif %}:</strong> {{ invoice.walk_in_guest_name|default:"Walk-in Guest" }}</p>
+                <p class="bill-text"><strong>{% if lang == 'ne' %}फोन नम्बर{% else %}Phone{% endif %}:</strong> {{ invoice.walk_in_guest_phone|default:"—" }}</p>
             {% endif %}
         </div>
         <div class="clear"></div>
@@ -191,10 +193,10 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Description</th>
-                <th class="num" style="width: 80px;">Qty</th>
-                <th class="num" style="width: 120px;">Rate (NPR)</th>
-                <th class="num" style="width: 150px;">Amount (NPR)</th>
+                <th>{% if lang == 'ne' %}विवरण{% else %}Description{% endif %}</th>
+                <th class="num" style="width: 80px;">{% if lang == 'ne' %}परिमाण{% else %}Qty{% endif %}</th>
+                <th class="num" style="width: 120px;">{% if lang == 'ne' %}दर (रु.){% else %}Rate (NPR){% endif %}</th>
+                <th class="num" style="width: 150px;">{% if lang == 'ne' %}जम्मा (रु.){% else %}Amount (NPR){% endif %}</th>
             </tr>
         </thead>
         <tbody>
@@ -207,7 +209,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="4" style="text-align: center; color: #a0aec0;">No billable items registered.</td>
+                <td colspan="4" style="text-align: center; color: #a0aec0;">{% if lang == 'ne' %}कुनै पनि विवरण दर्ता गरिएको छैन।{% else %}No billable items registered.{% endif %}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -216,37 +218,37 @@
     <div class="summary-wrapper">
         <table class="summary-table">
             <tr>
-                <td>Subtotal (Base)</td>
+                <td>{% if lang == 'ne' %}कुल (Subtotal){% else %}Subtotal (Base){% endif %}</td>
                 <td class="num">{{ invoice.subtotal }}</td>
             </tr>
             {% if invoice.discount_amount > 0 %}
             <tr>
-                <td>Discount</td>
+                <td>{% if lang == 'ne' %}छुट (Discount){% else %}Discount{% endif %}</td>
                 <td class="num">-{{ invoice.discount_amount }}</td>
             </tr>
             {% endif %}
             {% if invoice.service_charge_amount > 0 %}
             <tr>
-                <td>Service Charge ({{ invoice.service_charge_rate }}%)</td>
+                <td>{% if lang == 'ne' %}सेवा शुल्क{% else %}Service Charge{% endif %} ({{ invoice.service_charge_rate }}%)</td>
                 <td class="num">{{ invoice.service_charge_amount }}</td>
             </tr>
             {% endif %}
             {% if invoice.tax_amount > 0 %}
             <tr>
-                <td>Value Added Tax (VAT {{ invoice.tax_rate }}%)</td>
+                <td>{% if lang == 'ne' %}मूल्य अभिवृद्धि कर{% else %}Value Added Tax{% endif %} (VAT {{ invoice.tax_rate }}%)</td>
                 <td class="num">{{ invoice.tax_amount }}</td>
             </tr>
             {% endif %}
             <tr class="total">
-                <td>Grand Total</td>
+                <td>{% if lang == 'ne' %}कुल जम्मा{% else %}Grand Total{% endif %}</td>
                 <td class="num">NPR {{ invoice.total_amount }}</td>
             </tr>
             <tr>
-                <td>Paid Amount</td>
+                <td>{% if lang == 'ne' %}भुक्तानी रकम{% else %}Paid Amount{% endif %}</td>
                 <td class="num">NPR {{ invoice.paid_amount }}</td>
             </tr>
             <tr style="font-weight: bold; color: #e53e3e;">
-                <td>Balance Due</td>
+                <td>{% if lang == 'ne' %}बाँकी रकम{% else %}Balance Due{% endif %}</td>
                 <td class="num">NPR {{ invoice.balance_due }}</td>
             </tr>
         </table>
@@ -254,8 +256,8 @@
     </div>
 
     <div class="footnote">
-        <p>This is a computer-generated tax invoice approved by the Inland Revenue Department (IRD) Nepal.</p>
-        <p>Thank you for choosing {{ company_name }}. Have a pleasant journey!</p>
+        <p>{% if lang == 'ne' %}यो आन्तरिक राजस्व विभाग (IRD) नेपालद्वारा स्वीकृत कम्प्युटर-उत्पादित कर विजक हो।{% else %}This is a computer-generated tax invoice approved by the Inland Revenue Department (IRD) Nepal.{% endif %}</p>
+        <p>{% if lang == 'ne' %}{{ company_name }} छनौट गर्नुभएकोमा धन्यवाद। तपाईंको यात्रा सुखद रहोस्!{% else %}Thank you for choosing {{ company_name }}. Have a pleasant journey!{% endif %}</p>
     </div>
 </body>
 </html>

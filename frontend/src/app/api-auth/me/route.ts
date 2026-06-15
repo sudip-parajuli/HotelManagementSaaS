@@ -69,6 +69,71 @@ export async function GET(request: NextRequest) {
   }
 }
 
+export async function PUT(request: NextRequest) {
+  const cookieStore = cookies();
+  let accessToken = cookieStore.get("access_token")?.value;
+  const refreshToken = cookieStore.get("refresh_token")?.value;
+  const host = request.headers.get("host");
+
+  if (!accessToken) {
+    if (refreshToken) {
+      const refreshed = await attemptRefresh(host, refreshToken);
+      if (refreshed) {
+        accessToken = cookieStore.get("access_token")?.value;
+      }
+    }
+    
+    if (!accessToken) {
+      return NextResponse.json(
+        { error: "Unauthorized", code: "UNAUTHORIZED", detail: {} },
+        { status: 401 }
+      );
+    }
+  }
+
+  try {
+    const body = await request.json();
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    };
+    if (host) {
+      headers["Host"] = host;
+    }
+
+    let response = await axios.put(`${BACKEND_URL}/api/auth/me/`, body, {
+      headers,
+      validateStatus: () => true,
+    });
+
+    if (response.status === 401 && refreshToken) {
+      const refreshed = await attemptRefresh(host, refreshToken);
+      if (refreshed) {
+        const newAccessToken = cookieStore.get("access_token")?.value;
+        if (newAccessToken) {
+          headers["Authorization"] = `Bearer ${newAccessToken}`;
+          response = await axios.put(`${BACKEND_URL}/api/auth/me/`, body, {
+            headers,
+            validateStatus: () => true,
+          });
+        }
+      }
+    }
+
+    if (response.status !== 200) {
+      return NextResponse.json(response.data, { status: response.status });
+    }
+
+    return NextResponse.json(response.data);
+  } catch (error) {
+    console.error("Profile PUT route error:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error", code: "SERVER_ERROR", detail: {} },
+      { status: 500 }
+    );
+  }
+}
+
 async function attemptRefresh(host: string | null, refreshToken: string): Promise<boolean> {
   try {
     const headers: Record<string, string> = {

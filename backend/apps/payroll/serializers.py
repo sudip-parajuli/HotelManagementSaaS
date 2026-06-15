@@ -143,3 +143,20 @@ class PayrollEntrySerializer(serializers.ModelSerializer):
         instance.save()
         
         return instance
+
+
+from .models import TaxSlab, SSFConfig
+
+class TaxSlabSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaxSlab
+        fields = ["id", "fiscal_year", "filing_status", "slab_order", "min_amount", "max_amount", "rate_percent"]
+        read_only_fields = ["id"]
+
+
+class SSFConfigSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SSFConfig
+        fields = ["id", "fiscal_year", "employee_rate_percent", "employer_rate_percent", "is_active"]
+        read_only_fields = ["id"]
+

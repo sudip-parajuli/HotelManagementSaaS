@@ -21,38 +21,6 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def test_tenant(db):
-    # Clean up stale test data if any
-    try:
-        if Client.objects.filter(schema_name="test_pay_tenant").exists():
-            with schema_context("test_pay_tenant"):
-                User.objects.filter(username__in=["manager@paytest.com", "clerk@paytest.com"]).delete()
-    except Exception:
-        pass
-    try:
-        Domain.objects.filter(domain="pay-test.localhost").delete()
-        Client.objects.filter(schema_name="test_pay_tenant").delete()
-    except Exception:
-        pass
-    try:
-        User.objects.filter(username__in=["manager@paytest.com", "clerk@paytest.com"]).delete()
-    except Exception:
-        pass
-
-    client = Client.objects.create(
-        schema_name="test_pay_tenant",
-        name="Payroll Test Hotel",
-        contact_email="pay_test@hotel.com",
-    )
-    domain = Domain.objects.create(
-        domain="pay-test.localhost",
-        tenant=client,
-        is_primary=True,
-    )
-    yield client
-
-
-@pytest.fixture
 def tenant_manager(test_tenant):
     with schema_context(test_tenant.schema_name):
         user = User.objects.create(

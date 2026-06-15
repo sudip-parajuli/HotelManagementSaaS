@@ -137,3 +137,28 @@ class TestAuthEndpoints:
         user.refresh_from_db()
         assert user.first_name == "Updated"
         assert user.phone == "123456"
+
+    def test_preferred_language_flow(self, api_client, create_user):
+        user = create_user(email="manager@hotel.com", username="manager@hotel.com")
+        
+        login_resp = api_client.post(
+            reverse("auth-login"),
+            {"email": "manager@hotel.com", "password": "Password123!"},
+        )
+        api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {login_resp.data['access']}")
+        
+        # Verify default language is English
+        response = api_client.get(reverse("auth-me"))
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["preferred_language"] == "en"
+        
+        # Change preferred language to Nepali
+        response = api_client.put(
+            reverse("auth-me"),
+            {"preferred_language": "ne"}
+        )
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["preferred_language"] == "ne"
+        
+        user.refresh_from_db()
+        assert user.preferred_language == "ne"
