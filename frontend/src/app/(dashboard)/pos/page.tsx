@@ -28,6 +28,14 @@ function POSContent() {
   const [loading, setLoading] = useState(true);
   const [loadingOrder, setLoadingOrder] = useState(false);
 
+  const ensureArray = <T,>(data: any): T[] => {
+    if (Array.isArray(data)) return data;
+    if (data && typeof data === "object" && Array.isArray(data.results)) {
+      return data.results;
+    }
+    return [];
+  };
+
   // Load baseline tables, categories, and active orders
   const loadBaseData = async () => {
     try {
@@ -36,9 +44,9 @@ function POSContent() {
         restaurantApi.getTables(),
         posApi.getActiveOrders(),
       ]);
-      setCategories(categoriesRes.data);
-      setTables(tablesRes.data);
-      setActiveOrders(activeOrdersRes.data);
+      setCategories(ensureArray<MenuCategory>(categoriesRes.data));
+      setTables(ensureArray<DiningTable>(tablesRes.data));
+      setActiveOrders(ensureArray<Order>(activeOrdersRes.data));
     } catch (err) {
       console.error("Failed to load POS catalog", err);
     }

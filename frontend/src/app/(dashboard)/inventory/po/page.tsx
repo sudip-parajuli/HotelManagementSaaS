@@ -42,6 +42,14 @@ export default function PurchaseOrderPage() {
   // GRN Form State
   const [receiveQuantities, setReceiveQuantities] = useState<Record<number, string>>({});
 
+  const ensureArray = <T,>(data: any): T[] => {
+    if (Array.isArray(data)) return data;
+    if (data && typeof data === "object" && Array.isArray(data.results)) {
+      return data.results;
+    }
+    return [];
+  };
+
   const loadData = async () => {
     setIsLoading(true);
     try {
@@ -50,9 +58,9 @@ export default function PurchaseOrderPage() {
         inventoryApi.getSuppliers(),
         inventoryApi.getItems()
       ]);
-      setPos(posRes.data || []);
-      setSuppliers(supRes.data || []);
-      setItems(itemRes.data || []);
+      setPos(ensureArray<PurchaseOrder>(posRes.data));
+      setSuppliers(ensureArray<Supplier>(supRes.data));
+      setItems(ensureArray<InventoryItem>(itemRes.data));
     } catch (err) {
       console.error("Error loading PO workspace data", err);
     } finally {

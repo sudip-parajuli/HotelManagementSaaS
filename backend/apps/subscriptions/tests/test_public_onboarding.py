@@ -34,17 +34,28 @@ def sample_plan(db):
     except Exception:
         pass
 
-    SubscriptionPlan.objects.filter(slug="starter").delete()
-    return SubscriptionPlan.objects.create(
-        name="Starter Plan",
+    plan, created = SubscriptionPlan.objects.get_or_create(
         slug="starter",
-        price_monthly=3000.00,
-        price_yearly=32400.00,
-        max_rooms=20,
-        max_staff_users=10,
-        max_restaurants=1,
-        features=["payroll"]
+        defaults={
+            "name": "Starter Plan",
+            "price_monthly": 3000.00,
+            "price_yearly": 32400.00,
+            "max_rooms": 20,
+            "max_staff_users": 10,
+            "max_restaurants": 1,
+            "features": ["payroll"]
+        }
     )
+    if not created:
+        plan.name = "Starter Plan"
+        plan.price_monthly = 3000.00
+        plan.price_yearly = 32400.00
+        plan.max_rooms = 20
+        plan.max_staff_users = 10
+        plan.max_restaurants = 1
+        plan.features = ["payroll"]
+        plan.save()
+    return plan
 
 @pytest.mark.urls("config.urls_public")
 class TestPublicOnboardingEndpoint:

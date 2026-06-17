@@ -26,6 +26,14 @@ export default function InventoryDashboard() {
   const [movements, setMovements] = useState<StockMovement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const ensureArray = <T,>(data: any): T[] => {
+    if (Array.isArray(data)) return data;
+    if (data && typeof data === "object" && Array.isArray(data.results)) {
+      return data.results;
+    }
+    return [];
+  };
+
   useEffect(() => {
     async function fetchDashboardData() {
       try {
@@ -34,9 +42,9 @@ export default function InventoryDashboard() {
           inventoryApi.getPOs(),
           inventoryApi.getMovements(),
         ]);
-        setItems(itemsRes.data || []);
-        setPos(posRes.data || []);
-        setMovements(movementsRes.data || []);
+        setItems(ensureArray<InventoryItem>(itemsRes.data));
+        setPos(ensureArray<PurchaseOrder>(posRes.data));
+        setMovements(ensureArray<StockMovement>(movementsRes.data));
       } catch (err) {
         console.error("Error fetching inventory dashboard data", err);
       } finally {

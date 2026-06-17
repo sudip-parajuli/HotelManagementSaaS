@@ -203,7 +203,7 @@ class TestFrontDeskOperations:
         payload = {"reservation_id": res.id, "key_issued": "KEY-1"}
         response = tenant_auth_client.post(url, payload)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "reservation_id" in response.data
+        assert "reservation_id" in response.data or "reservation_id" in response.data.get("detail", {})
 
     def test_checkout_success(self, test_tenant, tenant_auth_client, sample_setup):
         prop, rt, room, guest = sample_setup

@@ -21,12 +21,14 @@ class DiningAreaViewSet(viewsets.ModelViewSet):
     queryset = DiningArea.objects.filter(is_active=True)
     serializer_class = DiningAreaSerializer
     permission_classes = [IsAuthenticated, IsRestaurantStaff | IsPropertyManager]
+    pagination_class = None
 
 
 class DiningTableViewSet(viewsets.ModelViewSet):
     queryset = DiningTable.objects.all()
     serializer_class = DiningTableSerializer
     permission_classes = [IsAuthenticated, IsRestaurantStaff | IsPropertyManager]
+    pagination_class = None
 
     @action(detail=True, methods=["put"])
     def status(self, request, pk=None):
@@ -50,6 +52,7 @@ class MenuCategoryViewSet(viewsets.ModelViewSet):
     queryset = MenuCategory.objects.filter(is_active=True)
     serializer_class = MenuCategorySerializer
     permission_classes = [IsAuthenticated, IsAnyStaff]
+    pagination_class = None
 
     def get_permissions(self):
         if self.action in ["create", "update", "partial_update", "destroy"]:
@@ -61,6 +64,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
     permission_classes = [IsAuthenticated, IsAnyStaff]
+    pagination_class = None
 
     def get_permissions(self):
         if self.action in ["create", "update", "partial_update", "destroy"]:

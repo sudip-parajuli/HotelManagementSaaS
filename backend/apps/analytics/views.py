@@ -225,6 +225,7 @@ class ReportExportViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = ReportExport.objects.all()
     serializer_class = ReportExportSerializer
+    pagination_class = None
 
     def get_queryset(self):
         return ReportExport.objects.all().order_by("-created_at")[:15]

@@ -168,3 +168,14 @@ def test_tenant(db):
     )
     yield client
 
+
+@pytest.fixture(autouse=True)
+def mock_channel_layers(settings):
+    """Overrides CHANNEL_LAYERS to use InMemoryChannelLayer for unit testing."""
+    settings.CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer",
+        }
+    }
+
+

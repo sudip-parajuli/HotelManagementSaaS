@@ -27,6 +27,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated, IsInventoryManager]
+    pagination_class = None
 
     def get_permissions(self):
         if self.action in ["list", "retrieve"]:
@@ -38,6 +39,7 @@ class InventoryItemViewSet(viewsets.ModelViewSet):
     queryset = InventoryItem.objects.all()
     serializer_class = InventoryItemSerializer
     permission_classes = [IsAuthenticated, IsInventoryManager]
+    pagination_class = None
     filterset_fields = ["category", "is_perishable", "expiry_tracking"]
     search_fields = ["name", "sku"]
 
@@ -95,6 +97,7 @@ class SupplierViewSet(viewsets.ModelViewSet):
     queryset = Supplier.objects.all()
     serializer_class = SupplierSerializer
     permission_classes = [IsAuthenticated, IsInventoryManager]
+    pagination_class = None
     search_fields = ["name", "contact_person", "email"]
 
     def get_permissions(self):
@@ -107,6 +110,7 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
     queryset = PurchaseOrder.objects.all().prefetch_related("items__item")
     serializer_class = PurchaseOrderSerializer
     permission_classes = [IsAuthenticated, IsInventoryManager]
+    pagination_class = None
     filterset_fields = ["supplier", "status"]
     ordering_fields = ["created_at", "expected_date", "total_amount"]
 
@@ -226,6 +230,7 @@ class StockMovementViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = StockMovement.objects.all().select_related("item", "created_by")
     serializer_class = StockMovementSerializer
     permission_classes = [IsAuthenticated, IsAnyStaff]
+    pagination_class = None
     filterset_class = StockMovementFilter
     ordering_fields = ["created_at", "quantity"]
 
@@ -234,6 +239,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all().select_related("menu_item", "ingredient")
     serializer_class = RecipeSerializer
     permission_classes = [IsAuthenticated, IsInventoryManager]
+    pagination_class = None
     filterset_fields = ["menu_item", "ingredient"]
 
     def get_permissions(self):

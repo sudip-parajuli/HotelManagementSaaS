@@ -57,6 +57,14 @@ export default function InventoryItemsPage() {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const ensureArray = <T,>(data: any): T[] => {
+    if (Array.isArray(data)) return data;
+    if (data && typeof data === "object" && Array.isArray(data.results)) {
+      return data.results;
+    }
+    return [];
+  };
+
   // Fetch Data
   const fetchData = async () => {
     setIsLoading(true);
@@ -65,8 +73,8 @@ export default function InventoryItemsPage() {
         inventoryApi.getItems(),
         inventoryApi.getCategories()
       ]);
-      setItems(itemsRes.data || []);
-      setCategories(catRes.data || []);
+      setItems(ensureArray<InventoryItem>(itemsRes.data));
+      setCategories(ensureArray<Category>(catRes.data));
     } catch (err) {
       console.error("Error loading inventory items data", err);
     } finally {

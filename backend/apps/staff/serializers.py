@@ -56,6 +56,11 @@ class StaffMemberSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(source="user.get_full_name", read_only=True)
     email = serializers.EmailField(source="user.email", read_only=True)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and not isinstance(self.instance, (list, tuple)) and hasattr(self.instance, "user"):
+            self.fields["user"].instance = self.instance.user
+
     class Meta:
         model = StaffMember
         fields = [

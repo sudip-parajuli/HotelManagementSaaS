@@ -29,19 +29,27 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
   const [vegOnly, setVegOnly] = useState(false);
   const [veganOnly, setVeganOnly] = useState(false);
 
+  const categoriesList = useMemo<MenuCategory[]>(() => {
+    if (Array.isArray(categories)) return categories;
+    if (categories && typeof categories === "object" && Array.isArray((categories as any).results)) {
+      return (categories as any).results;
+    }
+    return [];
+  }, [categories]);
+
   // Flatten items for global search or filter by category
   const filteredItems = useMemo(() => {
     let items: MenuItem[] = [];
 
     if (selectedCategoryId === null) {
       // Show all items from active categories
-      categories.forEach((cat) => {
+      categoriesList.forEach((cat) => {
         if (cat.items) {
           items.push(...cat.items);
         }
       });
     } else {
-      const selectedCat = categories.find((cat) => cat.id === selectedCategoryId);
+      const selectedCat = categoriesList.find((cat) => cat.id === selectedCategoryId);
       if (selectedCat && selectedCat.items) {
         items.push(...selectedCat.items);
       }
@@ -72,7 +80,7 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
       seen.add(item.id);
       return true;
     });
-  }, [categories, selectedCategoryId, searchQuery, vegOnly, veganOnly]);
+  }, [categoriesList, selectedCategoryId, searchQuery, vegOnly, veganOnly]);
 
   const renderCategoryIcon = (iconName: string) => {
     const IconComponent = iconMap[iconName.toLowerCase()] || UtensilsCrossed;
@@ -142,7 +150,7 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
           <Sparkles className="h-3.5 w-3.5 mr-1.5" />
           All Items
         </Button>
-        {categories.map((cat) => (
+        {categoriesList.map((cat) => (
           <Button
             key={cat.id}
             variant="outline"

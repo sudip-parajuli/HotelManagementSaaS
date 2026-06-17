@@ -21,6 +21,7 @@ class HousekeepingTaskViewSet(viewsets.ModelViewSet):
     queryset = HousekeepingTask.objects.all()
     serializer_class = HousekeepingTaskSerializer
     permission_classes = [IsAuthenticated, IsHousekeeping | IsPropertyManager]
+    pagination_class = None
 
     def get_permissions(self):
         if self.action in ["list", "retrieve", "board"]:
@@ -143,6 +144,7 @@ class MaintenanceRequestViewSet(viewsets.ModelViewSet):
     queryset = MaintenanceRequest.objects.all()
     serializer_class = MaintenanceRequestSerializer
     permission_classes = [IsAuthenticated, IsHousekeeping | IsPropertyManager]
+    pagination_class = None
 
     def get_permissions(self):
         if self.action in ["list", "retrieve"]:

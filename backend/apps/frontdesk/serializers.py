@@ -60,7 +60,7 @@ class CheckOutSerializer(serializers.ModelSerializer):
             "feedback_rating",
             "feedback_comment",
         ]
-        read_only_fields = ["id", "actual_checkout_time"]
+        read_only_fields = ["id", "actual_checkout_time", "final_amount"]
 
     def validate_reservation_id(self, value):
         try:

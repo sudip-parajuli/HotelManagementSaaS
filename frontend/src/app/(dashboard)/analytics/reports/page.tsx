@@ -45,10 +45,18 @@ export default function ReportsConsole() {
     }
   }, [reportType]);
 
+  const ensureArray = <T,>(data: any): T[] => {
+    if (Array.isArray(data)) return data;
+    if (data && typeof data === "object" && Array.isArray(data.results)) {
+      return data.results;
+    }
+    return [];
+  };
+
   const fetchExports = async () => {
     try {
       const res = await analyticsApi.listReports();
-      setExportsList(res.data);
+      setExportsList(ensureArray<ReportExport>(res.data));
     } catch (err) {
       console.error(err);
     } finally {

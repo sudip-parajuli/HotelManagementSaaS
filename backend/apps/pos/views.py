@@ -22,6 +22,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated, IsRestaurantStaff | IsPropertyManager]
+    pagination_class = None
 
     @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated, IsAnyStaff])
     def active(self, request):
@@ -223,6 +224,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 class KOTViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = KOTSerializer
     permission_classes = [IsAuthenticated, IsAnyStaff]
+    pagination_class = None
 
     def get_queryset(self):
         """

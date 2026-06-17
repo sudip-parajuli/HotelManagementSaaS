@@ -115,9 +115,10 @@ class FrontDeskViewSet(viewsets.ViewSet):
             total_room_charges = res.total_amount
             
             # Aggregate custom line items
-            additional_total = 0
+            from decimal import Decimal
+            additional_total = Decimal("0.00")
             for item in additional_charges:
-                additional_total += item.get("amount", 0)
+                additional_total += Decimal(str(item.get("amount", 0)))
             
             grand_total = total_room_charges + additional_total
             
@@ -156,22 +157,7 @@ class FrontDeskViewSet(viewsets.ViewSet):
                 notes=f"Post check-out cleaning for Room {room.room_number}.",
             )
             
-            # Credit Loyalty Points (1 point per Rs. 100 spent)
-            points_earned = int(grand_total // 100)
-            if points_earned > 0:
-                loyalty_acc, created = LoyaltyAccount.objects.get_or_create(
-                    guest=res.guest,
-                    defaults={"points_balance": 0},
-                )
-                loyalty_acc.points_balance += points_earned
-                loyalty_acc.save()
-                
-                LoyaltyTransaction.objects.create(
-                    account=loyalty_acc,
-                    points=points_earned,
-                    transaction_type=LoyaltyTransaction.TransactionType.EARN,
-                    description=f"Earned points from Reservation #{res.id} checkout.",
-                )
+
                 
         return Response({
             "checkout_id": checkout_record.id,
