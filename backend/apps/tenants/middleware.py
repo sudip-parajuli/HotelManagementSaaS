@@ -5,6 +5,7 @@ Allows Super Admins to dynamically route requests based on the tenant_schema cla
 
 from rest_framework_simplejwt.tokens import AccessToken
 from django.db import connection
+from django.conf import settings
 from apps.tenants.models import Client
 
 class ImpersonationMiddleware:
@@ -36,6 +37,10 @@ class ImpersonationMiddleware:
                     if tenant:
                         connection.set_tenant(tenant)
                         request.tenant = tenant
+                        # TenantMainMiddleware selected public URLs before this
+                        # signed platform-admin context was resolved. Switch
+                        # routing as well as schema, so hotel APIs are reachable.
+                        request.urlconf = settings.ROOT_URLCONF
             except Exception:
                 pass
 
