@@ -1,3 +1,4 @@
+import { backendHeaders } from "@/lib/server/backend";
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
@@ -9,7 +10,7 @@ async function fetchProfile(accessToken: string, host: string | null) {
     Authorization: `Bearer ${accessToken}`,
   };
   if (host) {
-    headers["Host"] = host;
+    Object.assign(headers, backendHeaders(host));
   }
   return axios.get(`${BACKEND_URL}/api/auth/me/`, {
     headers,
@@ -101,7 +102,7 @@ export async function PUT(request: NextRequest) {
       Authorization: `Bearer ${accessToken}`,
     };
     if (host) {
-      headers["Host"] = host;
+      Object.assign(headers, backendHeaders(host));
     }
 
     let response = await axios.put(`${BACKEND_URL}/api/auth/me/`, body, {
@@ -143,7 +144,7 @@ async function attemptRefresh(
       "Content-Type": "application/json",
     };
     if (host) {
-      headers["Host"] = host;
+      Object.assign(headers, backendHeaders(host));
     }
 
     const response = await axios.post(

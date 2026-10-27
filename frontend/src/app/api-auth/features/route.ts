@@ -1,3 +1,4 @@
+import { backendHeaders } from "@/lib/server/backend";
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     };
-    if (host) headers["Host"] = host;
+    if (host) Object.assign(headers, backendHeaders(host));
     return axios.get(`${BACKEND_URL}/api/auth/features/`, {
       headers,
       validateStatus: () => true,
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
   async function attemptRefresh(refresh: string) {
     try {
       const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (host) headers["Host"] = host;
+      if (host) Object.assign(headers, backendHeaders(host));
       const res = await axios.post(
         `${BACKEND_URL}/api/auth/refresh/`,
         { refresh },

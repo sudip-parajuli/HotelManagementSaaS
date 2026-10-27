@@ -1,3 +1,4 @@
+import { backendHeaders } from "@/lib/server/backend";
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
       "Content-Type": "application/json",
     };
     if (host) {
-      headers["Host"] = host;
+      Object.assign(headers, backendHeaders(host));
     }
 
     const response = await axios.post(

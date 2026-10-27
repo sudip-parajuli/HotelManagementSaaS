@@ -8,15 +8,15 @@ Hospitality management powered by **Techwired Solutions**.
 | --- | --- | --- |
 | Next.js frontend | Vercel, project root `frontend` | Marketing, isolated demo, authenticated application UI and auth route handlers |
 | PostgreSQL | Supabase | Existing Django schema-per-tenant database |
-| Django ASGI application | Container/VM service | REST API, tenant routing, WebSocket support |
+| Django ASGI application | Vercel project `staywired-api` or container host | REST API and tenant routing |
 | Redis + Celery worker + Celery Beat | Persistent services | Queues, scheduled tasks and channel layer |
 | Files | Existing S3-compatible storage | Property/room images, generated artifacts |
 
-Vercel plus Supabase is sufficient to serve the **public demo**. It is not a replacement for the Django service, Redis or workers used by the live product. The demo makes no API requests and stores fictional data in the visitor's browser. Existing modules remain backed by Django, not Supabase's browser API.
+The public demo remains independent of backend services. Current Vercel Django support also permits hosting the API directly; this repository now includes a separate serverless profile. The traditional Redis/worker deployment remains available for scheduled work and shared realtime broadcasts. The demo makes no API requests and stores fictional data in the visitor's browser. Existing modules remain backed by Django, not Supabase's browser API.
 
 ## 1. Vercel frontend and demo
 
-Verified public deployment: [staywired.vercel.app](https://staywired.vercel.app), demo [here](https://staywired.vercel.app/demo/). Vercel project: `staywired`, ID `prj_3RdzywmcI5FgFfv6HHB7BdoYy3gP`, team `sudip-2000s-projects`. The production deployment is ready; Supabase and the live backend remain pending account/service configuration.
+Verified public deployment: [staywired.vercel.app](https://staywired.vercel.app), demo [here](https://staywired.vercel.app/demo/). Vercel project: `staywired`, ID `prj_3RdzywmcI5FgFfv6HHB7BdoYy3gP`, team `sudip-2000s-projects`. The production deployment is ready; The Supabase project has been verified in the requested account, and a separate Vercel API project has been created. Database credentials and migrations are still pending; a live demo does not imply a ready operational database.
 
 1. Import `sudip-parajuli/HotelManagementSaaS` into the intended Vercel team.
 2. Name the project **staywired** and select root directory `frontend`.
@@ -35,7 +35,7 @@ Reference: [Vercel monorepo root directories](https://vercel.com/docs/monorepos)
 
 Use **sudipparajuli800@gmail.com**. Do not create this project under **sparajuli802@gmail.com** or modify that account's existing projects. Confirm the selected account and organization before creating a project. Use the free tier; do not enable paid upgrades.
 
-Connect Supabase through the available integration using that account. Select or create a dedicated `staywired` project after verifying the organization and available free project capacity. Database credentials belong only in the backend host's secret environment configuration. Never paste them into documentation, client code or GitHub.
+Reuse the verified existing project **Hotel Management System** (`vwrwuywyadbjugyttbgb`), organization **sudipparajuli800's Org** (`vnooitrvthyyvmzvchwi`), free tier, Tokyo (`ap-northeast-1`). Do not create a duplicate project. Database credentials belong only in the backend host's secret environment configuration. Never paste them into documentation, client code or GitHub.
 
 Use Supabase as managed PostgreSQL for the existing Django application. Do not replace Django authentication or tenant isolation with a browser-side Supabase client. Django's migrations remain the source of truth.
 
@@ -45,9 +45,9 @@ Configure backend environment variables from Supabase's **Connect** dialog:
 
 ```dotenv
 POSTGRES_DB=postgres
-POSTGRES_USER=postgres.YOUR_PROJECT_REF
+POSTGRES_USER=postgres.vwrwuywyadbjugyttbgb
 POSTGRES_PASSWORD=SET_IN_HOST_SECRET_STORE
-POSTGRES_HOST=YOUR_SESSION_POOLER_HOST
+POSTGRES_HOST=aws-0-ap-northeast-1.pooler.supabase.com
 POSTGRES_PORT=5432
 POSTGRES_SSLMODE=require
 POSTGRES_CONN_MAX_AGE=0
@@ -59,7 +59,34 @@ Keep application tenant schemas out of Supabase's exposed API schemas. The Djang
 
 Reference: [Supabase connection methods](https://supabase.com/docs/guides/database/connecting-to-postgres), [pooling and session behavior](https://supabase.com/docs/guides/database/connecting-to-postgres/pooling-and-limits).
 
-## 3. Django and background services
+## 3. Vercel API setup
+
+Vercel project **staywired-api**, ID `prj_RsnRw6iXDNANWaz6ZVoXmpiuThbH`, uses root directory `backend` and the Django framework. `backend/pyproject.toml` selects the ASGI entrypoint, `backend/vercel.json` configures its request duration, and `config.settings.vercel` provides deployment settings. [Current Vercel Django documentation](https://vercel.com/docs/frameworks/full-stack/django) supersedes the earlier assumption that a container host was mandatory.
+
+The ignored local file `backend/.env.supabase.local` holds the verified connection parameters and deployment secrets. Add the existing database password to its `POSTGRES_PASSWORD=` line. The bootstrap owner credentials also remain in this file; the owner password is not uploaded as a runtime environment variable.
+
+```powershell
+cd backend
+.\.venv\Scripts\python.exe scripts/supabase_manage.py check
+.\.venv\Scripts\python.exe scripts/supabase_manage.py migrate_schemas --shared --noinput
+.\.venv\Scripts\python.exe scripts/supabase_manage.py bootstrap_staywired
+.\.venv\Scripts\python.exe scripts/configure_vercel.py api
+.\.venv\Scripts\python.exe scripts/configure_vercel.py frontend
+```
+
+Inspect the remote database before migrating. Bootstrap creates only the public tenant, platform owner and module catalog; it preserves an existing owner's password and refuses to take domains away from another tenant. It enables RLS on Django-owned public tables without adding browser policies. It does not change Supabase's managed `auth` or `storage` schemas. Migration execution is explicit, never performed on an ordinary web request or automatically during a Vercel build.
+
+The CLI configuration helper transfers an allowlist of secrets through stdin, prints names only and targets production. Preview deployments do not inherit live database credentials. Redeploy both applications after setting environments. Verify the backend `/api/health/` for liveness, then test authenticated database endpoints; liveness alone does not verify migrations or database readiness.
+
+The Next.js server route `/api/[...path]` forwards API traffic and tenant host context using a shared server secret. It does not overwrite the platform's HTTP Host header. Django accepts only configured frontend hosts and a matching secret. Browser-supplied proxy headers are discarded, cross-origin writes are rejected and responses are not cached.
+
+### Serverless feature boundaries
+
+The serverless profile runs explicitly requested Celery work synchronously; it does not run Beat schedules. Process-local cache and Channels are not shared between instances. Durable media uploads are deliberately rejected until an object-storage backend is configured, rather than written to Vercel's temporary disk. PDF generation still requires native WeasyPrint libraries; billing's existing HTML fallback remains available. These services must be configured and verified before enabling those capabilities for real hotel operations.
+
+Do not treat an API liveness response or public demo as proof that storage, scheduled jobs or realtime coordination are production-ready.
+
+## 4. Traditional container and worker deployment
 
 Use the existing `backend/Dockerfile` or production Compose topology. Configure a unique Django secret, allowed hosts, trusted origins, PostgreSQL, Redis and file storage secrets. `config.settings.production` requires HTTPS and recognizes `X-Forwarded-Proto` from the trusted reverse proxy. The proxy must overwrite, not simply trust, client-supplied forwarded headers.
 
@@ -77,7 +104,7 @@ Bootstrap the public tenant with `python manage.py create_tenant --help` and sup
 
 Start the ASGI service and Celery worker/Beat using the existing container configuration. Ensure exactly one Beat scheduler runs. Supabase does not run these processes.
 
-## 4. Smoke checks
+## 5. Smoke checks
 
 - Anonymous `/demo/` loads without API credentials; no real guest data appears.
 - Anonymous `/bookings/` and `/admin/` redirect to sign in.
@@ -89,7 +116,7 @@ Start the ASGI service and Celery worker/Beat using the existing container confi
 - WebSockets, scheduled billing and background reports work on the service host.
 - Database backups, restore procedure and operational logs are configured.
 
-## 5. Rollback
+## 6. Rollback
 
 For frontend-only changes, promote the last verified Vercel deployment. For database migrations, take a backup first and review reversibility before applying them. This release adds connection settings and application validation, with no new booking-schema migration. Other pre-existing local changes in this repository may include migrations and must be evaluated separately before a production database upgrade.
 

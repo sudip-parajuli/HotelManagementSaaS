@@ -40,3 +40,8 @@ The public demo is isolated from live hotel data and works on Vercel without bac
 Production Django services, Redis, workers and storage must be configured separately. Supabase provisioning requires a confirmed connection to the requested account (`sudipparajuli800@gmail.com`). No project should be created under the other account. The Vercel production deployment is **READY** and verified at [staywired.vercel.app](https://staywired.vercel.app), with the [public demo](https://staywired.vercel.app/demo/). Source commit: `79c095e898b573e208d6e5aff860ce80ff5e6242`. Browser checks confirmed the homepage, demo, mobile overflow containment, and anonymous `/bookings/` redirect to `/login/`. The Supabase project and live Django service are **not yet provisioned** for this deployment.
 
 See [deployment guide](DEPLOYMENT.md) for runtime topology, connection settings, migrations, smoke checks, backups and rollback.
+
+
+## Supabase/Vercel follow-up
+
+Verified the existing free-tier Hotel Management System project in sudipparajuli800's Org. Added a dedicated Vercel Django profile and API project, secure frontend proxy, idempotent public bootstrap/RLS command, ignored local secret configuration, and secret-safe CLI deployment helpers. New checks: four frontend proxy tests and four backend runtime/security tests pass. Database password and remote migrations remain pending until the local secret configuration is completed.

@@ -17,10 +17,6 @@ class ImpersonationMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        print("MIDDLEWARE DEBUG:")
-        print("  Host:", request.get_host())
-        print("  Tenant:", getattr(request, 'tenant', None))
-        print("  URLConf:", getattr(request, 'urlconf', None))
         raw_token = None
         header = request.META.get("HTTP_AUTHORIZATION")
         if header and header.startswith("Bearer "):

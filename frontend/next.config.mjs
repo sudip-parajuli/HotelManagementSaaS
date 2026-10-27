@@ -26,15 +26,8 @@ const nextConfig = {
     ],
   },
 
-  // Rewrite /api/* to the Django backend in development
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${process.env.INTERNAL_BACKEND_URL || "http://127.0.0.1:8000"}/api/:path*/`,
-      },
-    ];
-  },
+  // /api/* is handled by the server-side proxy route, preserving tenant context
+  // without overriding Vercel's routing Host or exposing the proxy secret.
 };
 
 export default nextConfig;

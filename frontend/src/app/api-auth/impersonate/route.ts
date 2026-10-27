@@ -1,3 +1,4 @@
+import { backendHeaders } from "@/lib/server/backend";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import axios from "axios";
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
       Authorization: `Bearer ${currentAccessToken}`,
     };
     if (host) {
-      headers["Host"] = host;
+      Object.assign(headers, backendHeaders(host));
     }
 
     // Call the Django backend impersonate endpoint

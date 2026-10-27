@@ -1,0 +1,2 @@
+# Vercel discovers this dependency file from the backend project root.
+-r requirements/base.txt
