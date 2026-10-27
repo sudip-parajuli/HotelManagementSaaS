@@ -4,6 +4,14 @@
 
 Staywired connects reservations, rooms, front desk, housekeeping and guest balances in a hospitality workspace. The repository also contains the existing multi-tenant Django operational system, including restaurant POS, billing, staff, inventory, CRM and modular subscriptions.
 
+## Repository and product
+
+The product is **Staywired**; the repository retains the historical
+`HotelManagementSaaS` name. The public interactive demo and the connected Django
+operational system have different data and deployment requirements. Read the
+[demo guide](docs/DEMO.md) for sample workflows and the
+[deployment guide](docs/DEPLOYMENT.md) for the configured backend boundaries.
+
 ## Try the demo
 
 **Live:** [Staywired](https://staywired.vercel.app) · [Interactive hotel demo](https://staywired.vercel.app/demo/)
@@ -85,8 +93,6 @@ Backend tests require a reachable PostgreSQL test database with schema creation 
 - [Vercel, Supabase and backend deployment guide](docs/DEPLOYMENT.md)
 - [Release notes and verification status](docs/RELEASE.md)
 - [Existing production planning](SIA_HMS_SaaS_Production_Plan.md)
-
-Use the **sudipparajuli800@gmail.com** Supabase account for this deployment as requested. The other account's existing projects must remain untouched. See the deployment guide for connection setup, tenant isolation, smoke checks and rollback.
 
 ## Security and operational notes
 
