@@ -53,16 +53,16 @@ export interface LiveStatus {
 
 export const sessionsApi = {
   listUnitTypes: () =>
-    apiClient.get<SessionUnitType[]>("/api/sessions/unit-types/").then((r) => r.data),
+    apiClient.get<SessionUnitType[]>("/sessions/unit-types/").then((r) => r.data),
 
   listUnits: (params?: { status?: string; unit_type?: number }) =>
-    apiClient.get<SessionUnit[]>("/api/sessions/units/", { params }).then((r) => r.data),
+    apiClient.get<SessionUnit[]>("/sessions/units/", { params }).then((r) => r.data),
 
   listSessions: (params?: { status?: string; date_from?: string; date_to?: string }) =>
-    apiClient.get<TimedSession[]>("/api/sessions/", { params }).then((r) => r.data),
+    apiClient.get<TimedSession[]>("/sessions/", { params }).then((r) => r.data),
 
   getSession: (id: number) =>
-    apiClient.get<TimedSession>(`/api/sessions/${id}/`).then((r) => r.data),
+    apiClient.get<TimedSession>(`/sessions/${id}/`).then((r) => r.data),
 
   startSession: (payload: {
     unit_id: number;
@@ -70,25 +70,25 @@ export const sessionsApi = {
     guest_phone?: string;
     guest_id?: number;
     paid_minutes: number;
-  }) => apiClient.post("/api/sessions/start/", payload).then((r) => r.data),
+  }) => apiClient.post("/sessions/start/", payload).then((r) => r.data),
 
   extendSession: (id: number, additional_minutes: number, payment_method?: string) =>
     apiClient
-      .post(`/api/sessions/${id}/extend/`, { additional_minutes, payment_method })
+      .post(`/sessions/${id}/extend/`, { additional_minutes, payment_method })
       .then((r) => r.data),
 
   pauseSession: (id: number) =>
-    apiClient.post(`/api/sessions/${id}/pause/`).then((r) => r.data),
+    apiClient.post(`/sessions/${id}/pause/`).then((r) => r.data),
 
   resumeSession: (id: number) =>
-    apiClient.post(`/api/sessions/${id}/resume/`).then((r) => r.data),
+    apiClient.post(`/sessions/${id}/resume/`).then((r) => r.data),
 
   endSession: (id: number) =>
-    apiClient.post(`/api/sessions/${id}/end/`).then((r) => r.data),
+    apiClient.post(`/sessions/${id}/end/`).then((r) => r.data),
 
   liveStatus: (id: number) =>
-    apiClient.get<LiveStatus>(`/api/sessions/${id}/live/`).then((r) => r.data),
+    apiClient.get<LiveStatus>(`/sessions/${id}/live/`).then((r) => r.data),
 
   getReport: (report: "daily" | "units") =>
-    apiClient.get(`/api/sessions/reports/${report}/`).then((r) => r.data),
+    apiClient.get(`/sessions/reports/${report}/`).then((r) => r.data),
 };

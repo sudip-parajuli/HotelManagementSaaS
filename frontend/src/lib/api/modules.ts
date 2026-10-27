@@ -52,22 +52,22 @@ export interface TenantModuleSub {
 
 export const modulesApi = {
   listModules: () =>
-    apiClient.get<AddonModule[]>("/api/modules/").then((r) => r.data),
+    apiClient.get<AddonModule[]>("/modules/").then((r) => r.data),
 
   listBusinessTypes: () =>
-    apiClient.get<BusinessType[]>("/api/modules/business-types/").then((r) => r.data),
+    apiClient.get<BusinessType[]>("/modules/business-types/").then((r) => r.data),
 
   getTenantInfo: () =>
-    apiClient.get<TenantInfo>("/api/modules/tenant/").then((r) => r.data),
+    apiClient.get<TenantInfo>("/modules/tenant/").then((r) => r.data),
 
   updateTenantBusinessType: (payload: { business_type?: string; business_description?: string }) =>
-    apiClient.patch("/api/modules/tenant/", payload).then((r) => r.data),
+    apiClient.patch("/modules/tenant/", payload).then((r) => r.data),
 
   activateModules: (moduleKeys: string[], billingCycle = "monthly") =>
     apiClient
-      .post("/api/modules/activate/", { modules: moduleKeys, billing_cycle: billingCycle })
+      .post("/modules/activate/", { modules: moduleKeys, billing_cycle: billingCycle })
       .then((r) => r.data),
 
   deactivateModule: (moduleKey: string) =>
-    apiClient.post("/api/modules/deactivate/", { module_key: moduleKey }).then((r) => r.data),
+    apiClient.post("/modules/deactivate/", { module_key: moduleKey }).then((r) => r.data),
 };

@@ -53,3 +53,19 @@ test('backend unavailability becomes a usable 502 response', async () => {
   const routes = setup(async () => { throw new Error('unreachable'); });
   assert.equal((await routes.GET(request(), { params: { path: ['bookings'] } })).status, 502);
 });
+
+test('module and session clients combine correctly with the shared API base', async () => {
+  const axios = require('axios');
+  const requested = [];
+  const client = axios.create({ baseURL: '/api', adapter: async config => {
+    requested.push(client.getUri(config));
+    return { data: {}, status: 200, statusText: 'OK', headers: {}, config };
+  } });
+  const modules = load('src/lib/api/modules.ts', {}, { './client': { apiClient: client } });
+  await modules.modulesApi.getTenantInfo();
+  await modules.modulesApi.listModules();
+  const sessions = load('src/lib/api/sessions.ts', {}, { './client': { apiClient: client } });
+  const api = Object.values(sessions)[0];
+  await api.listUnits();
+  assert.deepEqual(requested, ['/api/modules/tenant/', '/api/modules/', '/api/sessions/units/']);
+});
