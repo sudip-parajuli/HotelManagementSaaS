@@ -122,5 +122,5 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("🎉 Tenant created successfully!"))
         self.stdout.write(f"   URL:      https://{full_domain}")
         self.stdout.write(f"   Login:    {options['admin_email']}")
-        self.stdout.write(f"   Password: {options['admin_password']}")
+        self.stdout.write("   Password: configured securely (not displayed)")
         self.stdout.write("=" * 50 + "\n")

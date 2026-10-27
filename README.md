@@ -16,7 +16,9 @@ npm ci
 npm run dev
 ```
 
-Marketing page: `/landing/`. Interactive demo: `/demo/`. Existing team login: `/login/`.
+Marketing page: `/landing/`. Interactive demo: `/demo/`. Live owner login: [staywired.vercel.app/login](https://staywired.vercel.app/login/).
+
+The Django API is hosted on Vercel and connected to the verified Supabase project. The owner can open **Himalayan Haven (Demo)** from the hotel directory using Impersonate. See the [verified setup and deployment boundaries](docs/DEPLOYMENT.md#verified-live-setup--27-october-2026).
 
 ## What's new
 
@@ -37,12 +39,12 @@ The demo is separate from live hotel data. The authenticated application's exist
 | Layer | Technology | Deployment |
 | --- | --- | --- |
 | Public site, demo and operational UI | Next.js 14, React 18, TypeScript | Vercel, root `frontend` |
-| API and tenant isolation | Django 5, DRF, django-tenants | Persistent ASGI/container host |
+| API and tenant isolation | Django 5, DRF, django-tenants | Vercel `staywired-api` or container host |
 | Database | PostgreSQL, schema per tenant | Supabase, direct/session-mode connection |
 | Background jobs and realtime | Celery, Redis, Channels | Persistent worker/Redis services |
 | Existing media storage | S3-compatible storage | Existing MinIO/S3 configuration |
 
-Supabase hosts PostgreSQL; it does not replace the Django application, Redis or Celery workers. Existing staff authentication uses Django JWT cookies. No Supabase service-role key is sent to the browser.
+Supabase hosts PostgreSQL; the deployed Django API runs on Vercel. Requested tasks run synchronously in its serverless profile. Scheduled jobs, shared realtime coordination and durable media require the additional services described in the deployment guide. Existing staff authentication uses Django JWT cookies. No Supabase service-role key is sent to the browser.
 
 ## Full local setup
 

@@ -10,13 +10,13 @@ Hospitality management powered by **Techwired Solutions**.
 | PostgreSQL | Supabase | Existing Django schema-per-tenant database |
 | Django ASGI application | Vercel project `staywired-api` or container host | REST API and tenant routing |
 | Redis + Celery worker + Celery Beat | Persistent services | Queues, scheduled tasks and channel layer |
-| Files | Existing S3-compatible storage | Property/room images, generated artifacts |
+| Files | Optional S3-compatible storage; not configured on the serverless profile | Private uploads and generated artifacts need durable storage |
 
 The public demo remains independent of backend services. Current Vercel Django support also permits hosting the API directly; this repository now includes a separate serverless profile. The traditional Redis/worker deployment remains available for scheduled work and shared realtime broadcasts. The demo makes no API requests and stores fictional data in the visitor's browser. Existing modules remain backed by Django, not Supabase's browser API.
 
 ## 1. Vercel frontend and demo
 
-Verified public deployment: [staywired.vercel.app](https://staywired.vercel.app), demo [here](https://staywired.vercel.app/demo/). Vercel project: `staywired`, ID `prj_3RdzywmcI5FgFfv6HHB7BdoYy3gP`, team `sudip-2000s-projects`. The production deployment is ready; The Supabase project has been verified in the requested account, and a separate Vercel API project has been created. Database credentials and migrations are still pending; a live demo does not imply a ready operational database.
+Verified public deployment: [staywired.vercel.app](https://staywired.vercel.app), demo [here](https://staywired.vercel.app/demo/). Vercel project: `staywired`, ID `prj_3RdzywmcI5FgFfv6HHB7BdoYy3gP`, team `sudip-2000s-projects`. The production deployment is ready; the Supabase project is verified in the requested account and the API is hosted at [staywired-api.vercel.app](https://staywired-api.vercel.app/api/health/). The database connection, shared migrations, owner bootstrap and isolated cloud demo are complete. The operational core is verified through the hosted frontend; remaining service boundaries are listed below.
 
 1. Import `sudip-parajuli/HotelManagementSaaS` into the intended Vercel team.
 2. Name the project **staywired** and select root directory `frontend`.
@@ -63,7 +63,7 @@ Reference: [Supabase connection methods](https://supabase.com/docs/guides/databa
 
 Vercel project **staywired-api**, ID `prj_RsnRw6iXDNANWaz6ZVoXmpiuThbH`, uses root directory `backend` and the Django framework. `backend/pyproject.toml` selects the ASGI entrypoint, `backend/vercel.json` configures its request duration, and `config.settings.vercel` provides deployment settings. [Current Vercel Django documentation](https://vercel.com/docs/frameworks/full-stack/django) supersedes the earlier assumption that a container host was mandatory.
 
-The ignored local file `backend/.env.supabase.local` holds the verified connection parameters and deployment secrets. Add the existing database password to its `POSTGRES_PASSWORD=` line. The bootstrap owner credentials also remain in this file; the owner password is not uploaded as a runtime environment variable.
+The ignored local file `backend/.env.supabase.local` holds the verified connection parameters and deployment secrets. The supplied database password is configured locally and in the production API environment. The bootstrap owner credentials also remain in this file; the owner password is not uploaded as a runtime environment variable.
 
 ```powershell
 cd backend
@@ -123,3 +123,20 @@ For frontend-only changes, promote the last verified Vercel deployment. For data
 ## Secrets already in repository history
 
 A legacy local credentials Markdown file was tracked by the original repository. It is excluded from new tracked files in this release while its local copy is preserved. Rotate any live credentials recorded there; removing a file from the latest commit does not remove earlier Git history. This guide intentionally contains no real credentials.
+
+
+## Verified live setup — 27 October 2026
+
+- Frontend: https://staywired.vercel.app
+- Owner sign-in: https://staywired.vercel.app/login/
+- API liveness: https://staywired-api.vercel.app/api/health/
+- Supabase project: https://supabase.com/dashboard/project/vwrwuywyadbjugyttbgb
+- Platform owner: `sudipparajuli800@gmail.com`. The generated app password is the `STAYWIRED_ADMIN_PASSWORD` entry in the ignored local file; it is not the Google or database password. No password is recorded in this guide.
+- Shared migrations: 81 recorded; 33 public Django tables. Verified zero public Django tables with RLS disabled and zero anonymous/public access policies.
+- Cloud sample: **Himalayan Haven (Demo)**, schema `staywired_demo`, eight rooms, zero-price sample module subscriptions with no next billing date. Its data is fictional and separate from other hotels.
+- Open the sample from **Hotels Directory → Impersonate**, entering a reason for the audit log. No custom tenant DNS is required for this owner-driven flow.
+- Live verification passed: login, profile, administration, signed tenant routing, room listing, guest/reservation creation, overlap rejection, check-in, a sample cash-settled checkout/invoice, housekeeping completion and room readiness.
+
+`python scripts/smoke_vercel.py` repeats that flow only in the explicitly labelled demo. It refuses to select a different hotel. It leaves fictional demo records and a sample invoice, never contacts a payment gateway, and never prints credentials or session tokens.
+
+Supabase Authentication's Users page is not the app's staff directory: existing Django JWT authentication and the shared `accounts_user` table remain the source of staff identity.

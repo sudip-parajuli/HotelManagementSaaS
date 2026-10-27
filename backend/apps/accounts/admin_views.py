@@ -19,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
 from decimal import Decimal
+from apps.subscriptions.revenue import monthly_recurring_total
 
 from apps.accounts.permissions import IsSuperAdmin
 from apps.accounts.models import User, UserRole, ImpersonationLog
@@ -78,13 +79,13 @@ class SuperAdminMetricsView(APIView):
         ).aggregate(total_mrr=Sum('plan__price_monthly'))
         plan_mrr = float(plan_mrr_agg['total_mrr'] or 0.0)
 
-        module_mrr_agg = TenantModuleSubscription.objects.filter(
+        module_prices = TenantModuleSubscription.objects.filter(
             status__in=[
                 TenantModuleSubscriptionStatus.ACTIVE,
                 TenantModuleSubscriptionStatus.TRIAL,
             ]
-        ).aggregate(total_mrr=Sum('price_at_activation'))
-        module_mrr = float(module_mrr_agg['total_mrr'] or 0.0)
+        ).values_list('price_at_activation', 'billing_cycle')
+        module_mrr = float(monthly_recurring_total(module_prices))
 
         mrr = plan_mrr + module_mrr
 
@@ -780,7 +781,7 @@ class ModuleRevenueAnalyticsView(APIView):
     """
     GET /api/admin/revenue/modules/
     Returns per-module revenue analytics:
-    - MRR per module (tenant_count × price)
+    - MRR per module from contracted prices, normalized for annual billing
     - Most popular modules (by tenant count)
     - Activation trends
     - Churn per module
@@ -798,14 +799,14 @@ class ModuleRevenueAnalyticsView(APIView):
         data = []
         total_mrr = 0
         for mod in all_modules:
-            active_count = TenantModuleSubscription.objects.filter(
-                module=mod, status=SubStatus.ACTIVE
-            ).count()
+            active_subs = list(TenantModuleSubscription.objects.filter(
+                module=mod, status=SubStatus.ACTIVE, tenant__is_active=True
+            ).values_list("price_at_activation", "billing_cycle"))
+            active_count = len(active_subs)
             cancelled_count = TenantModuleSubscription.objects.filter(
                 module=mod, status=SubStatus.CANCELLED
             ).count()
-            price = float(mod.price_monthly or 0)
-            mrr = active_count * price
+            mrr = float(monthly_recurring_total(active_subs))
             total_mrr += mrr
             data.append({
                 "key": mod.key,

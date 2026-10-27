@@ -39,8 +39,15 @@ class Command(BaseCommand):
             model_tables = {m._meta.db_table for m in apps.get_models(include_auto_created=True)}
             model_tables.add("django_migrations")
             with connection.cursor() as cursor:
+                # Django foreign keys are deferred. Flush their pending trigger
+                # events before ALTER TABLE, while keeping records and RLS in
+                # the same atomic commit.
+                cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
                 for table in sorted(public_tables & model_tables):
                     cursor.execute(f'ALTER TABLE public.{connection.ops.quote_name(table)} ENABLE ROW LEVEL SECURITY')
             self.stdout.write("Enabled RLS on Django-owned public tables; no anonymous policies were added.")
         call_command("seed_modules", stdout=self.stdout)
+        from apps.subscriptions.models import SubscriptionPlan
+        with schema_context("public"):
+            SubscriptionPlan.objects.get_or_create(slug="trial", defaults={"name": "Staywired Trial", "price_monthly": 0, "price_yearly": 0, "max_rooms": 50, "max_staff_users": 10, "features": []})
         self.stdout.write(self.style.SUCCESS("Staywired public tenant, owner and module catalog are ready."))

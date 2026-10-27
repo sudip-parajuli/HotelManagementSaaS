@@ -17,6 +17,8 @@ from apps.tenants.proxy import TrustedFrontendMiddleware
 from apps.tenants.storage import UnconfiguredMediaStorage
 from django.core.exceptions import ImproperlyConfigured
 from apps.tenants.middleware import ImpersonationMiddleware
+from apps.subscriptions.revenue import monthly_recurring_total
+from decimal import Decimal
 
 
 class ServerlessTests(unittest.TestCase):
@@ -60,6 +62,12 @@ class ServerlessTests(unittest.TestCase):
             ImpersonationMiddleware(lambda req: JsonResponse({"ok": True}))(request)
             db.set_tenant.assert_not_called()
             self.assertEqual(request.urlconf, "config.urls_public")
+
+    def test_zero_price_demo_access_does_not_create_revenue(self):
+        self.assertEqual(monthly_recurring_total([(0, "monthly"), (0, "yearly")]), Decimal("0.00"))
+
+    def test_recurring_revenue_normalizes_contracted_annual_prices(self):
+        self.assertEqual(monthly_recurring_total([(Decimal("500.00"), "monthly"), (Decimal("12000.00"), "yearly")]), Decimal("1500.00"))
 
 
 if __name__ == "__main__":
