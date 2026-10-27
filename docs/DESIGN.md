@@ -21,3 +21,5 @@ Keep focus outlines visible. Motion is restrained and honors prefers-reduced-mot
 ## Validation
 
 Production build, TypeScript and the existing reservation/proxy regression suite are required before publishing. Inspect light and dark login, demo overview/dialogs, platform directory and the actual property dashboard in the browser. Color tokens are shared across operational forms and dialogs; future modules must use them rather than hard-coded white text or dark surfaces.
+
+Authentication-context and data requests share one session refresh operation, including profile hydration and opening a property workspace. Concurrent expired requests do not rotate the refresh cookie multiple times. Failed refresh and invalid login paths terminate without recursion; regression tests cover all three cases.
