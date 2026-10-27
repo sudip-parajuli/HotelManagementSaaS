@@ -100,7 +100,7 @@ export default function DashboardLayout({
           {impersonatedName && (
             <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white px-6 py-2.5 flex items-center justify-between text-xs font-semibold shadow-md animate-in slide-in-from-top duration-300 relative z-10 border-b border-orange-500/20">
               <div className="flex items-center gap-2">
-                <span className="bg-white/20 px-2 py-0.5 rounded text-[9px] uppercase tracking-wider font-extrabold text-foreground">
+                <span className="bg-white/20 px-2 py-0.5 rounded text-[9px] uppercase tracking-wider font-extrabold text-white">
                   Impersonation Context Active
                 </span>
                 <span>
@@ -116,7 +116,7 @@ export default function DashboardLayout({
                 type="button"
                 onClick={handleStopImpersonating}
                 disabled={stoppingImpersonation}
-                className="flex items-center gap-1.5 bg-white hover:bg-workspace-100 text-workspace-900 font-bold px-3 py-1 rounded-lg transition-all shadow-sm disabled:opacity-50"
+                className="flex items-center gap-1.5 bg-white hover:bg-white/90 text-[#284d3b] font-bold px-3 py-1 rounded-lg transition-all shadow-sm disabled:opacity-50"
               >
                 {stoppingImpersonation ? (
                   <RefreshCw className="h-3.5 w-3.5 animate-spin" />
