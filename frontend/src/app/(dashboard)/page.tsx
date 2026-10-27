@@ -90,10 +90,11 @@ export default function DashboardPage() {
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
-      {loadError && <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm text-amber-200"><span>Some workspace data could not be loaded. Check your connection and try again.</span><button className="rounded-lg border border-amber-400/30 px-3 py-1.5 hover:bg-amber-500/10" onClick={() => window.location.reload()}>Retry</button></div>}
+      {loadError && <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm text-amber-400"><span>Some workspace data could not be loaded. Check your connection and try again.</span><button className="rounded-lg border border-amber-400/30 px-3 py-1.5 hover:bg-amber-500/10" onClick={() => window.location.reload()}>Retry</button></div>}
       {/* Header */}
-      <div className="flex flex-wrap gap-4 items-start justify-between">
-        <div className="space-y-1">
+      <div className="flex flex-wrap gap-4 items-start justify-between rounded-2xl border border-border bg-secondary/50 p-6">
+        <div className="space-y-2">
+          <p className="text-xs uppercase tracking-[.15em] text-muted-foreground">{tenantInfo?.name || "Your hospitality workspace"}</p>
           <h1 className="text-3xl font-normal font-serif text-foreground tracking-tight">
             {translateTime()},{" "}
             <span className="bg-gradient-to-r from-brand-400 to-brand-400 bg-clip-text text-transparent">
@@ -102,7 +103,7 @@ export default function DashboardPage() {
           </h1>
           <p className="text-workspace-400 text-sm">
             {bizType} &mdash; {activeModules.length} module{activeModules.length !== 1 ? "s" : ""} active
-            {tenantInfo?.monthly_total && ` &middot; NPR ${parseFloat(tenantInfo.monthly_total).toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo`}
+            {tenantInfo?.monthly_total && ` · NPR ${parseFloat(tenantInfo.monthly_total).toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo`}
           </p>
         </div>
         <div className="flex items-center gap-2 text-workspace-400 bg-workspace-900 border border-workspace-800 rounded-xl px-4 py-2.5">
@@ -143,7 +144,7 @@ export default function DashboardPage() {
 
         {hasModule("bookings") && (
           <DashboardStatCard
-            title="Recent Bookings"
+            title="Arriving today"
             icon={<CalendarCheck className="h-4 w-4" />}
             value={operations ? String(operations.arrivals.length) : "--"}
             description="Confirmed arrivals expected today"
@@ -153,7 +154,7 @@ export default function DashboardPage() {
 
         {hasModule("frontdesk") && (
           <DashboardStatCard
-            title="Front Desk"
+            title="Guests in house"
             icon={<UserCheck className="h-4 w-4" />}
             value={operations ? String(operations.in_house.length) : "--"}
             description={operations ? `${operations.departures.length} departures today · guests currently in-house shown above` : "Today's arrivals, departures, and in-house guests"}
@@ -166,7 +167,7 @@ export default function DashboardPage() {
           <DashboardStatCard
             title="Active Sessions"
             icon={<Timer className="h-4 w-4" />}
-            value="--"
+            value="Open"
             description="Monitor and manage timed sessions across units"
             href="/sessions"
           />
@@ -177,7 +178,7 @@ export default function DashboardPage() {
           <DashboardStatCard
             title="Restaurant POS"
             icon={<UtensilsCrossed className="h-4 w-4" />}
-            value="--"
+            value="Open"
             description="Active orders, table status, and daily revenue"
             href="/pos"
           />
@@ -188,7 +189,7 @@ export default function DashboardPage() {
           <DashboardStatCard
             title="Inventory Status"
             icon={<Package className="h-4 w-4" />}
-            value="--"
+            value="Open"
             description="Stock levels, reorder alerts, and purchase orders"
             href="/inventory"
           />
@@ -199,7 +200,7 @@ export default function DashboardPage() {
           <DashboardStatCard
             title="Staff Overview"
             icon={<Users className="h-4 w-4" />}
-            value="--"
+            value="Open"
             description="Attendance, shifts, and payroll-ready data"
             href="/staff"
           />
@@ -210,7 +211,7 @@ export default function DashboardPage() {
           <DashboardStatCard
             title="Billing & Invoicing"
             icon={<DollarSign className="h-4 w-4" />}
-            value="--"
+            value="Open"
             description="Recent invoices, payments, and IRD compliance"
             href="/billing"
           />

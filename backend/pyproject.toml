@@ -3,6 +3,7 @@ name = "staywired-api"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "vercel-blob==0.5.0",
     "Django==5.0.6",
     "djangorestframework==3.15.2",
     "django-cors-headers==4.3.1",
