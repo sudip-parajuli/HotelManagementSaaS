@@ -12,6 +12,8 @@ export async function POST(request: NextRequest) {
     const res = NextResponse.json({ message: "Successfully logged out (local)." });
     res.cookies.delete("access_token");
     res.cookies.delete("refresh_token");
+    for (const key of ["original_access_token", "original_refresh_token", "impersonated_tenant_name", "impersonated_tenant_reason"]) res.cookies.delete(key);
+
     return res;
   }
 
@@ -39,5 +41,6 @@ export async function POST(request: NextRequest) {
   const res = NextResponse.json({ message: "Successfully logged out." });
   res.cookies.delete("access_token");
   res.cookies.delete("refresh_token");
+    for (const key of ["original_access_token", "original_refresh_token", "impersonated_tenant_name", "impersonated_tenant_reason"]) res.cookies.delete(key);
   return res;
 }

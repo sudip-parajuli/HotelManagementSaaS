@@ -28,6 +28,8 @@ export async function POST(request: NextRequest) {
     const { access, refresh, user } = response.data;
 
     const res = NextResponse.json({ user });
+    for (const key of ["original_access_token", "original_refresh_token", "impersonated_tenant_name", "impersonated_tenant_reason"]) res.cookies.delete(key);
+
 
     res.cookies.set("access_token", access, {
       httpOnly: true,

@@ -25,3 +25,5 @@ Production build, TypeScript and the existing reservation/proxy regression suite
 Authentication-context and data requests share one session refresh operation, including profile hydration and opening a property workspace. Concurrent expired requests do not rotate the refresh cookie multiple times. Failed refresh and invalid login paths terminate without recursion; regression tests cover all three cases.
 
 The application currently uses Tailwind 3.4. Shared card spacing uses compatible utilities, and semantic colors provide RGB channels for opacity modifiers. Avoid Tailwind 4-only variable shorthand such as `px-(--spacing)` in new components.
+
+Fresh sign-in and logout remove previous impersonation indicators and backup session cookies, including local logout after expiry or a backend outage. The short demo session remains time-limited.
