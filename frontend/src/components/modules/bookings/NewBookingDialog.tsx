@@ -85,44 +85,44 @@ export const NewBookingDialog: React.FC<NewBookingDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-slate-950 border border-slate-900 text-slate-100 p-6 rounded-xl">
+      <DialogContent className="sm:max-w-md bg-workspace-950 border border-workspace-900 text-workspace-100 p-6 rounded-xl">
         <DialogHeader>
-          <DialogTitle className="text-lg font-bold text-white flex items-center gap-2">
-            <Plus className="h-5 w-5 text-cyan-400" />
+          <DialogTitle className="text-lg font-bold text-foreground flex items-center gap-2">
+            <Plus className="h-5 w-5 text-brand-400" />
             {locale === "ne" ? "द्रुत बुकिङ" : "Quick Reservation"}
           </DialogTitle>
-          <DialogDescription className="text-slate-400 text-xs">
+          <DialogDescription className="text-workspace-400 text-xs">
             {locale === "ne" ? `कोठा नं ${room.room_number} को लागि नयाँ बसाई बुकिङ सुरु गर्नुहोस्।` : `Start a new stay reservation for Room ${room.room_number}.`}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-3 text-xs">
-          <div className="grid grid-cols-2 gap-4 rounded-xl border border-slate-900 bg-slate-900/20 p-4">
+          <div className="grid grid-cols-2 gap-4 rounded-xl border border-workspace-900 bg-workspace-900/20 p-4">
             <div>
-              <span className="text-slate-500 block">{locale === "ne" ? "मिति" : "Date"}</span>
-              <span className="font-semibold text-slate-200">{checkInDate}</span>
+              <span className="text-workspace-500 block">{locale === "ne" ? "मिति" : "Date"}</span>
+              <span className="font-semibold text-workspace-200">{checkInDate}</span>
             </div>
             <div>
-              <span className="text-slate-500 block">{tFront("room_no")}</span>
-              <span className="font-semibold text-slate-200">{tFront("room")} {room.room_number}</span>
+              <span className="text-workspace-500 block">{tFront("room_no")}</span>
+              <span className="font-semibold text-workspace-200">{tFront("room")} {room.room_number}</span>
             </div>
             <div>
-              <span className="text-slate-500 block">{tRooms("floor_level")}</span>
-              <span className="font-semibold text-slate-200">{tRooms("floor_n", { n: room.floor })}</span>
+              <span className="text-workspace-500 block">{tRooms("floor_level")}</span>
+              <span className="font-semibold text-workspace-200">{tRooms("floor_n", { n: room.floor })}</span>
             </div>
             <div>
-              <span className="text-slate-500 block">{locale === "ne" ? "कोठा वर्ग" : "Room Class"}</span>
-              <span className="font-semibold text-slate-200">{tData(room.room_type?.name)}</span>
+              <span className="text-workspace-500 block">{locale === "ne" ? "कोठा वर्ग" : "Room Class"}</span>
+              <span className="font-semibold text-workspace-200">{tData(room.room_type?.name)}</span>
             </div>
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center py-4 gap-2 text-slate-500">
-              <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
+            <div className="flex items-center justify-center py-4 gap-2 text-workspace-500">
+              <Loader2 className="h-4 w-4 animate-spin text-brand-400" />
               {locale === "ne" ? "अनुमानित दर गणना गरिँदैछ..." : "Calculating rate estimate..."}
             </div>
           ) : estimate ? (
-            <div className="flex items-center justify-between p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10 text-cyan-400">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-brand-500/5 border border-brand-500/10 text-brand-400">
               <span>{locale === "ne" ? "अनुमानित दैनिक दर:" : "Estimated Daily Rate:"}</span>
               <span className="font-extrabold text-sm">
                 Rs. {Number(estimate.total_price).toLocaleString()} {locale === "ne" ? "(भ्याट सहित)" : "(incl. VAT)"}
@@ -131,10 +131,10 @@ export const NewBookingDialog: React.FC<NewBookingDialogProps> = ({
           ) : null}
         </div>
 
-        <DialogFooter className="mt-4 pt-4 border-t border-slate-900">
+        <DialogFooter className="mt-4 pt-4 border-t border-workspace-900">
           <Button
             onClick={handleStartBooking}
-            className="w-full bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold gap-2 shadow-lg shadow-cyan-500/20"
+            className="w-full bg-gradient-to-tr from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-semibold gap-2 shadow-lg shadow-brand-500/20"
           >
             {t("create_booking")}
             <ArrowRight className="h-4 w-4" />

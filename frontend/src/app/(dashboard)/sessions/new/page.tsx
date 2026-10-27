@@ -86,7 +86,7 @@ export default function NewSessionPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
+        <Loader2 className="h-6 w-6 animate-spin text-brand-400" />
       </div>
     );
   }
@@ -97,9 +97,9 @@ export default function NewSessionPage() {
 
       {/* Step 1: Select unit */}
       <section className="mb-6">
-        <Label className="text-sm text-slate-300 mb-2 block">1. Select Unit</Label>
+        <Label className="text-sm text-workspace-300 mb-2 block">1. Select Unit</Label>
         {units.length === 0 ? (
-          <Card className="bg-slate-900 border-slate-800 p-4 text-center text-slate-500 text-sm">
+          <Card className="bg-workspace-900 border-workspace-800 p-4 text-center text-workspace-500 text-sm">
             No available units
           </Card>
         ) : (
@@ -113,12 +113,12 @@ export default function NewSessionPage() {
                   className={cn(
                     "p-3 rounded-lg border text-left transition-all text-sm",
                     selectedUnit === String(u.id)
-                      ? "border-cyan-500 bg-cyan-500/10"
-                      : "border-slate-800 bg-slate-900 hover:border-slate-700"
+                      ? "border-brand-500 bg-brand-500/10"
+                      : "border-workspace-800 bg-workspace-900 hover:border-workspace-700"
                   )}
                 >
                   <div className="font-medium">{u.unit_name}</div>
-                  {ut && <div className="text-[10px] text-slate-500">{ut.type_name}</div>}
+                  {ut && <div className="text-[10px] text-workspace-500">{ut.type_name}</div>}
                 </button>
               );
             })}
@@ -130,24 +130,24 @@ export default function NewSessionPage() {
         <>
           {/* Step 2: Guest info */}
           <section className="mb-6">
-            <Label className="text-sm text-slate-300 mb-2 block">2. Guest Information</Label>
-            <Card className="bg-slate-900 border-slate-800 p-4 space-y-3">
+            <Label className="text-sm text-workspace-300 mb-2 block">2. Guest Information</Label>
+            <Card className="bg-workspace-900 border-workspace-800 p-4 space-y-3">
               <div>
-                <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><User className="h-3 w-3" /> Name</div>
+                <div className="text-xs text-workspace-500 mb-1 flex items-center gap-1"><User className="h-3 w-3" /> Name</div>
                 <Input
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   placeholder="Guest name"
-                  className="bg-slate-950 border-slate-800"
+                  className="bg-workspace-950 border-workspace-800"
                 />
               </div>
               <div>
-                <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><Phone className="h-3 w-3" /> Phone</div>
+                <div className="text-xs text-workspace-500 mb-1 flex items-center gap-1"><Phone className="h-3 w-3" /> Phone</div>
                 <Input
                   value={guestPhone}
                   onChange={(e) => setGuestPhone(e.target.value)}
                   placeholder="Phone number (optional)"
-                  className="bg-slate-950 border-slate-800"
+                  className="bg-workspace-950 border-workspace-800"
                 />
               </div>
             </Card>
@@ -155,8 +155,8 @@ export default function NewSessionPage() {
 
           {/* Step 3: Duration + price */}
           <section className="mb-6">
-            <Label className="text-sm text-slate-300 mb-2 block">3. Duration</Label>
-            <Card className="bg-slate-900 border-slate-800 p-4">
+            <Label className="text-sm text-workspace-300 mb-2 block">3. Duration</Label>
+            <Card className="bg-workspace-900 border-workspace-800 p-4">
               <div className="flex flex-wrap gap-2 mb-3">
                 {durationOptions.map((d) => (
                   <button
@@ -165,8 +165,8 @@ export default function NewSessionPage() {
                     className={cn(
                       "px-3 py-1.5 rounded-lg text-sm border transition-all",
                       !customDuration && duration === d
-                        ? "border-cyan-500 bg-cyan-500/10 text-cyan-400"
-                        : "border-slate-800 hover:border-slate-700 text-slate-400"
+                        ? "border-brand-500 bg-brand-500/10 text-brand-400"
+                        : "border-workspace-800 hover:border-workspace-700 text-workspace-400"
                     )}
                   >
                     {d >= 60 ? `${d / 60}h` : `${d}min`}
@@ -176,7 +176,7 @@ export default function NewSessionPage() {
                   onClick={() => setCustomDuration(true)}
                   className={cn(
                     "px-3 py-1.5 rounded-lg text-sm border transition-all",
-                    customDuration ? "border-cyan-500 bg-cyan-500/10 text-cyan-400" : "border-slate-800 hover:border-slate-700 text-slate-400"
+                    customDuration ? "border-brand-500 bg-brand-500/10 text-brand-400" : "border-workspace-800 hover:border-workspace-700 text-workspace-400"
                   )}
                 >
                   Custom
@@ -188,23 +188,23 @@ export default function NewSessionPage() {
                     type="number"
                     value={duration}
                     onChange={(e) => setDuration(parseInt(e.target.value) || 0)}
-                    className="bg-slate-950 border-slate-800 w-24"
+                    className="bg-workspace-950 border-workspace-800 w-24"
                     min={1}
                   />
-                  <span className="text-xs text-slate-500">minutes</span>
+                  <span className="text-xs text-workspace-500">minutes</span>
                 </div>
               )}
 
               {/* Price display */}
               {unitType && (
-                <div className="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-                  <div className="text-xs text-slate-500">
+                <div className="mt-3 pt-3 border-t border-workspace-800 flex items-center justify-between">
+                  <div className="text-xs text-workspace-500">
                     {unitType.pricing_model === "flat_rate" ? "Flat rate" :
                      unitType.pricing_model === "per_hour" ? `NPR ${parseFloat(unitType.rate).toLocaleString("en-IN")}/hr` :
                      unitType.pricing_model === "per_minute" ? `NPR ${parseFloat(unitType.rate).toLocaleString("en-IN")}/min` :
                      unitType.pricing_model === "per_day" ? `NPR ${parseFloat(unitType.rate).toLocaleString("en-IN")}/day` : ""}
                   </div>
-                  <div className="text-lg font-bold text-cyan-400">
+                  <div className="text-lg font-bold text-brand-400">
                     NPR {calculatedPrice.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
                   </div>
                 </div>

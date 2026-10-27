@@ -113,36 +113,36 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-slate-950 border-slate-900 text-slate-100 max-w-lg rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh]">
+      <DialogContent className="bg-workspace-950 border-workspace-900 text-workspace-100 max-w-lg rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh]">
         <form onSubmit={handleSubmit} className="space-y-5">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-white flex items-center gap-2">
+            <DialogTitle className="text-lg font-bold text-foreground flex items-center gap-2">
               <ShieldAlert className="h-5 w-5 text-emerald-400" />
               {t("confirm_check_out")}
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs">
+            <DialogDescription className="text-workspace-500 text-xs">
               {t("subtitle")}
             </DialogDescription>
           </DialogHeader>
 
           {/* Stay review details */}
-          <div className="rounded-xl border border-slate-900 bg-slate-900/10 p-3.5 space-y-2 text-xs">
-            <h4 className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">{t("stay_summary")}</h4>
-            <div className="grid grid-cols-2 gap-2 text-slate-300">
+          <div className="rounded-xl border border-workspace-900 bg-workspace-900/10 p-3.5 space-y-2 text-xs">
+            <h4 className="font-bold text-workspace-400 uppercase tracking-wider text-[10px]">{t("stay_summary")}</h4>
+            <div className="grid grid-cols-2 gap-2 text-workspace-300">
               <div>
-                <span className="text-slate-500 block text-[10px]">{t("guest_name")}</span>
+                <span className="text-workspace-500 block text-[10px]">{t("guest_name")}</span>
                 <span className="font-semibold">{reservation.guest.first_name} {reservation.guest.last_name}</span>
               </div>
               <div>
-                <span className="text-slate-500 block text-[10px]">{t("assigned_room")}</span>
-                <span className="font-semibold text-slate-200">{t("room")} {reservation.room.room_number}</span>
+                <span className="text-workspace-500 block text-[10px]">{t("assigned_room")}</span>
+                <span className="font-semibold text-workspace-200">{t("room")} {reservation.room.room_number}</span>
               </div>
               <div>
-                <span className="text-slate-500 block text-[10px]">{t("dates")}</span>
+                <span className="text-workspace-500 block text-[10px]">{t("dates")}</span>
                 <span className="font-semibold">{reservation.check_in_date} - {reservation.check_out_date}</span>
               </div>
               <div>
-                <span className="text-slate-500 block text-[10px]">{t("nights_count").split(" ")[0]}</span>
+                <span className="text-workspace-500 block text-[10px]">{t("nights_count").split(" ")[0]}</span>
                 <span className="font-semibold">{t("nights_count", { count: reservation.total_nights })}</span>
               </div>
             </div>
@@ -151,14 +151,14 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
           <div className="space-y-4 text-xs">
             {/* Custom additional charges builder */}
             <div className="space-y-2.5">
-              <Label className="text-slate-400 font-bold uppercase text-[10px]">{t("additional_charges")}</Label>
+              <Label className="text-workspace-400 font-bold uppercase text-[10px]">{t("additional_charges")}</Label>
               <div className="grid grid-cols-12 gap-2">
                 <div className="col-span-7">
                   <Input
                     value={desc}
                     onChange={(e) => setDesc(e.target.value)}
                     placeholder={locale === "ne" ? "विवरण (उदा. लाउन्ड्री शुल्क)" : "Description (e.g. Laundry charges)"}
-                    className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9 text-xs"
+                    className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-9 text-xs"
                   />
                 </div>
                 <div className="col-span-3">
@@ -167,25 +167,25 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder={t("amount").split(" ")[0]}
-                    className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9 text-xs"
+                    className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-9 text-xs"
                   />
                 </div>
                 <div className="col-span-2">
                   <Button
                     type="button"
                     onClick={handleAddCharge}
-                    className="w-full bg-slate-900 hover:bg-slate-800 border border-slate-800 h-9 rounded-lg px-2"
+                    className="w-full bg-workspace-900 hover:bg-workspace-800 border border-workspace-800 h-9 rounded-lg px-2"
                   >
-                    <Plus className="h-4 w-4 text-cyan-400" />
+                    <Plus className="h-4 w-4 text-brand-400" />
                   </Button>
                 </div>
               </div>
 
               {/* Added charges list */}
               {additionalCharges.length > 0 && (
-                <div className="rounded-lg border border-slate-900 bg-slate-950 p-2 space-y-1.5 max-h-[120px] overflow-y-auto">
+                <div className="rounded-lg border border-workspace-900 bg-workspace-950 p-2 space-y-1.5 max-h-[120px] overflow-y-auto">
                   {additionalCharges.map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between text-slate-300 text-xs py-1 border-b border-slate-900/60 last:border-b-0">
+                    <div key={idx} className="flex items-center justify-between text-workspace-300 text-xs py-1 border-b border-workspace-900/60 last:border-b-0">
                       <span>{item.description}</span>
                       <div className="flex items-center gap-3">
                         <span className="font-semibold">Rs. {item.amount.toLocaleString()}</span>
@@ -202,7 +202,7 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
 
             {/* Payment Method selector */}
             <div className="space-y-1.5">
-              <Label htmlFor="payment" className="text-slate-400 font-bold uppercase text-[10px] flex items-center gap-1">
+              <Label htmlFor="payment" className="text-workspace-400 font-bold uppercase text-[10px] flex items-center gap-1">
                 <DollarSign className="h-3.5 w-3.5 text-emerald-400" />
                 {t("payment_method")}
               </Label>
@@ -210,7 +210,7 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
                 id="payment"
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
-                className="w-full rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-xs p-2.5 h-10 outline-none cursor-pointer focus:border-emerald-500"
+                className="w-full rounded-lg bg-workspace-900 border border-workspace-800 text-workspace-300 text-xs p-2.5 h-10 outline-none cursor-pointer focus:border-emerald-500"
               >
                 <option value="cash">{tData("cash")} (NPR)</option>
                 <option value="card">{tData("card")}</option>
@@ -224,14 +224,14 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
             {/* Feedback Rating & Comments */}
             <div className="grid grid-cols-3 gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="rating" className="text-slate-400 font-bold uppercase text-[10px]">
+                <Label htmlFor="rating" className="text-workspace-400 font-bold uppercase text-[10px]">
                   {t("feedback_rating")}
                 </Label>
                 <select
                   id="rating"
                   value={rating}
                   onChange={(e) => setRating(Number(e.target.value))}
-                  className="w-full rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-xs p-2.5 h-10 outline-none cursor-pointer"
+                  className="w-full rounded-lg bg-workspace-900 border border-workspace-800 text-workspace-300 text-xs p-2.5 h-10 outline-none cursor-pointer"
                 >
                   <option value={5}>{locale === "ne" ? "५ ★ - उत्कृष्ट" : "5 ★ - Excellent"}</option>
                   <option value={4}>{locale === "ne" ? "४ ★ - धेरै राम्रो" : "4 ★ - Very Good"}</option>
@@ -241,7 +241,7 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
                 </select>
               </div>
               <div className="space-y-1.5 col-span-2">
-                <Label htmlFor="comment" className="text-slate-400 font-bold uppercase text-[10px]">
+                <Label htmlFor="comment" className="text-workspace-400 font-bold uppercase text-[10px]">
                   {t("feedback_comment")}
                 </Label>
                 <Input
@@ -249,24 +249,24 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   placeholder={locale === "ne" ? "उदा. पाहुनाले कोठाको दृश्य मन पराउनुभयो..." : "e.g. Guest loved the balcony view, smooth service."}
-                  className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-10"
+                  className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-10"
                 />
               </div>
             </div>
 
             {/* Billing Estimations */}
-            <div className="rounded-xl border border-slate-900 bg-slate-950 p-4 space-y-2 text-xs">
-              <h4 className="font-extrabold text-cyan-400 uppercase tracking-wider text-[10px]">{t("invoice_settlement")}</h4>
+            <div className="rounded-xl border border-workspace-900 bg-workspace-950 p-4 space-y-2 text-xs">
+              <h4 className="font-extrabold text-brand-400 uppercase tracking-wider text-[10px]">{t("invoice_settlement")}</h4>
               <div className="space-y-1.5">
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-workspace-400">
                   <span>{t("room_charges")}</span>
                   <span>Rs. {roomTotal.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-workspace-400">
                   <span>{t("additional_charges_sum")}</span>
                   <span>Rs. {additionalTotal.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between text-sm font-black text-white pt-1.5 border-t border-slate-900">
+                <div className="flex justify-between text-sm font-black text-white pt-1.5 border-t border-workspace-900">
                   <span>{t("grand_total")}</span>
                   <span className="text-emerald-400">Rs. {grandTotal.toLocaleString()}</span>
                 </div>
@@ -274,12 +274,12 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
             </div>
           </div>
 
-          <DialogFooter className="pt-2 border-t border-slate-900/60">
+          <DialogFooter className="pt-2 border-t border-workspace-900/60">
             <Button
               type="button"
               onClick={onClose}
               variant="ghost"
-              className="border border-slate-800 text-slate-400 hover:text-white rounded-lg h-10"
+              className="border border-workspace-800 text-workspace-400 hover:text-white rounded-lg h-10"
             >
               {tCommon("cancel")}
             </Button>

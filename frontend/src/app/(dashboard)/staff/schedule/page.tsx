@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  Calendar, 
-  ChevronLeft, 
-  ChevronRight, 
-  Plus, 
-  Clock, 
-  MapPin, 
-  CheckCircle2, 
+import {
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Clock,
+  MapPin,
+  CheckCircle2,
   AlertCircle,
   Trash2
 } from "lucide-react";
@@ -43,7 +43,7 @@ export default function ShiftSchedulePage() {
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(
     startOfWeek(new Date(), { weekStartsOn: 1 }) // Monday start
   );
-  
+
   const [members, setMembers] = useState<StaffMember[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [shifts, setShifts] = useState<Shift[]>([]);
@@ -183,26 +183,26 @@ export default function ShiftSchedulePage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-workspace-200 to-workspace-400 bg-clip-text text-transparent">
             {t("schedule_title")}
           </h1>
           <p className="text-muted-foreground text-sm">
             {t("schedule_subtitle")}
           </p>
         </div>
-        
+
         {/* Navigation buttons */}
         <div className="flex items-center gap-2">
-          <Button onClick={handlePrevWeek} size="icon" variant="outline" className="border-slate-800 hover:bg-slate-800 text-white">
+          <Button onClick={handlePrevWeek} size="icon" variant="outline" className="border-workspace-800 hover:bg-workspace-800 text-white">
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <Button onClick={handleTodayWeek} size="sm" variant="outline" className="border-slate-800 hover:bg-slate-800 text-white font-medium">
+          <Button onClick={handleTodayWeek} size="sm" variant="outline" className="border-workspace-800 hover:bg-workspace-800 text-white font-medium">
             {t("this_week")}
           </Button>
-          <Button onClick={handleNextWeek} size="icon" variant="outline" className="border-slate-800 hover:bg-slate-800 text-white">
+          <Button onClick={handleNextWeek} size="icon" variant="outline" className="border-workspace-800 hover:bg-workspace-800 text-white">
             <ChevronRight className="h-4 w-4" />
           </Button>
-          <span className="text-xs text-slate-400 font-bold ml-2">
+          <span className="text-xs text-workspace-400 font-bold ml-2">
             {locale === "ne" ? (
               `${MONTHS_NE[currentWeekStart.getMonth()]} ${currentWeekStart.getDate()} – ${
                 MONTHS_NE[addDays(currentWeekStart, 6).getMonth()]
@@ -215,7 +215,7 @@ export default function ShiftSchedulePage() {
       </div>
 
       {/* Grid calendar */}
-      <Card className="bg-slate-900/20 border-slate-800/60 shadow-xl overflow-hidden">
+      <Card className="bg-workspace-900/20 border-workspace-800/60 shadow-xl overflow-hidden">
         <CardContent className="p-0 overflow-x-auto">
           {isLoading ? (
             <div className="flex items-center justify-center p-12">
@@ -224,16 +224,16 @@ export default function ShiftSchedulePage() {
           ) : (
             <table className="w-full border-collapse text-left min-w-[800px]">
               <thead>
-                <tr className="border-b border-slate-800/60 bg-slate-950/20 text-slate-400 text-xs font-semibold">
-                  <th className="py-4 px-4 w-[200px] border-r border-slate-900">{t("staff_member")}</th>
+                <tr className="border-b border-workspace-800/60 bg-workspace-950/20 text-workspace-400 text-xs font-semibold">
+                  <th className="py-4 px-4 w-[200px] border-r border-workspace-900">{t("staff_member")}</th>
                   {weekDays.map((day) => {
                     const isToday = format(day, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd");
                     const dayName = format(day, "eee");
                     const displayDayName = locale === "ne" ? (dayMap[dayName] || dayName) : dayName;
                     return (
-                      <th 
-                        key={day.toISOString()} 
-                        className={`py-3 px-3 text-center border-r border-slate-900 last:border-r-0 ${
+                      <th
+                        key={day.toISOString()}
+                        className={`py-3 px-3 text-center border-r border-workspace-900 last:border-r-0 ${
                           isToday ? "bg-indigo-950/10 text-indigo-400" : ""
                         }`}
                       >
@@ -248,37 +248,37 @@ export default function ShiftSchedulePage() {
               </thead>
               <tbody>
                 {members.map((staff) => (
-                  <tr key={staff.id} className="border-b border-slate-900/60 hover:bg-slate-950/5 transition-colors text-xs">
+                  <tr key={staff.id} className="border-b border-workspace-900/60 hover:bg-workspace-950/5 transition-colors text-xs">
                     {/* Staff name */}
-                    <td className="py-3 px-4 font-semibold text-white border-r border-slate-900 bg-slate-950/5">
+                    <td className="py-3 px-4 font-semibold text-foreground border-r border-workspace-900 bg-workspace-950/5">
                       <div className="font-bold text-sm">{staff.full_name}</div>
-                      <div className="text-slate-500 text-[10px]">{tData(staff.designation)}</div>
+                      <div className="text-workspace-500 text-[10px]">{tData(staff.designation)}</div>
                     </td>
-                    
+
                     {/* Days */}
                     {weekDays.map((day) => {
                       const formattedDate = format(day, "yyyy-MM-dd");
                       const shift = shifts.find(
                         (s) => s.staff === staff.id && s.date === formattedDate
                       );
-                      
+
                       return (
-                        <td 
+                        <td
                           key={day.toISOString()}
                           onClick={() => handleCellClick(staff, day)}
-                          className="p-2 border-r border-slate-900 last:border-r-0 text-center cursor-pointer select-none vertical-middle h-[70px] min-w-[100px] hover:bg-indigo-950/5 transition-colors"
+                          className="p-2 border-r border-workspace-900 last:border-r-0 text-center cursor-pointer select-none vertical-middle h-[70px] min-w-[100px] hover:bg-indigo-950/5 transition-colors"
                         >
                           {shift ? (
                             <div className={`p-1.5 rounded-lg border text-[11px] leading-tight space-y-1 ${
-                              shift.is_confirmed 
+                              shift.is_confirmed
                                 ? "bg-indigo-950/20 border-indigo-500/20 text-indigo-300"
-                                : "bg-slate-950/50 border-slate-800 text-slate-400"
+                                : "bg-workspace-950/50 border-workspace-800 text-workspace-400"
                             }`}>
                               <div className="font-bold flex items-center justify-center gap-1">
                                 <Clock className="h-3 w-3 text-indigo-400 shrink-0" />
                                 {shift.start_time.slice(0, 5)} - {shift.end_time.slice(0, 5)}
                               </div>
-                              <div className="text-[9px] text-slate-500 font-semibold truncate flex items-center justify-center gap-0.5">
+                              <div className="text-[9px] text-workspace-500 font-semibold truncate flex items-center justify-center gap-0.5">
                                 <MapPin className="h-2.5 w-2.5 shrink-0" />
                                 {tData(shift.department_name)}
                               </div>
@@ -287,7 +287,7 @@ export default function ShiftSchedulePage() {
                               )}
                             </div>
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-slate-600 hover:text-slate-400">
+                            <div className="w-full h-full flex items-center justify-center text-workspace-600 hover:text-workspace-400">
                               <Plus className="h-4 w-4 stroke-[1.5]" />
                             </div>
                           )}
@@ -304,20 +304,20 @@ export default function ShiftSchedulePage() {
 
       {/* Dialog: Assign Shift */}
       <Dialog open={isAssignOpen} onOpenChange={() => setIsAssignOpen(false)}>
-        <DialogContent className="bg-slate-900 border-slate-800 text-white w-full sm:max-w-md">
+        <DialogContent className="bg-workspace-900 border-workspace-800 text-foreground w-full sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-white flex items-center gap-2">
+            <DialogTitle className="text-lg font-bold text-foreground flex items-center gap-2">
               <Calendar className="h-5 w-5 text-indigo-400" />
               {selectedShiftForEdit ? t("edit_shift") : t("assign_shift")}
             </DialogTitle>
           </DialogHeader>
-          
+
           {selectedCell && (
             <form onSubmit={handleShiftSubmit} className="space-y-4 pt-2">
-              <div className="bg-slate-950 p-3 rounded-lg border border-slate-850 text-xs space-y-1">
+              <div className="bg-workspace-950 p-3 rounded-lg border border-slate-850 text-xs space-y-1">
                 <div>
                   {locale === "ne" ? "कर्मचारी:" : "Staff:"}{" "}
-                  <span className="font-bold text-white">{selectedCell.staff.full_name} ({tData(selectedCell.staff.designation)})</span>
+                  <span className="font-bold text-foreground">{selectedCell.staff.full_name} ({tData(selectedCell.staff.designation)})</span>
                 </div>
                 <div>
                   {locale === "ne" ? "मिति:" : "Date:"}{" "}
@@ -344,23 +344,23 @@ export default function ShiftSchedulePage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="start">{t("start_time")}</Label>
-                  <Input 
+                  <Input
                     id="start"
                     type="time"
                     value={formData.start_time}
                     onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white font-mono" 
+                    className="bg-workspace-950 border-workspace-800 text-white font-mono"
                     required
                   />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="end">{t("end_time")}</Label>
-                  <Input 
+                  <Input
                     id="end"
                     type="time"
                     value={formData.end_time}
                     onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white font-mono" 
+                    className="bg-workspace-950 border-workspace-800 text-white font-mono"
                     required
                   />
                 </div>
@@ -368,11 +368,11 @@ export default function ShiftSchedulePage() {
 
               <div className="space-y-1">
                 <Label htmlFor="sdept">{t("roster_department")}</Label>
-                <select 
+                <select
                   id="sdept"
                   value={formData.department}
                   onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                  className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none"
+                  className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm focus:outline-none"
                   required
                 >
                   {departments.map((d) => (
@@ -383,27 +383,27 @@ export default function ShiftSchedulePage() {
 
               <div className="space-y-1">
                 <Label htmlFor="snotes">{t("shift_instructions")}</Label>
-                <Input 
+                <Input
                   id="snotes"
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   placeholder={t("shift_notes_placeholder")}
-                  className="bg-slate-950 border-slate-800 text-white text-xs" 
+                  className="bg-workspace-950 border-workspace-800 text-white text-xs"
                 />
               </div>
 
               <div className="flex items-center gap-2 pt-2">
-                <input 
+                <input
                   type="checkbox"
                   id="shift_conf"
                   checked={formData.is_confirmed}
                   onChange={(e) => setFormData({ ...formData, is_confirmed: e.target.checked })}
-                  className="w-4 h-4 accent-indigo-500 rounded border-slate-800 bg-slate-950"
+                  className="w-4 h-4 accent-indigo-500 rounded border-workspace-800 bg-workspace-950"
                 />
                 <Label htmlFor="shift_conf" className="cursor-pointer select-none">{t("publish_confirm")}</Label>
               </div>
 
-              <div className="flex justify-between gap-3 pt-4 border-t border-slate-800">
+              <div className="flex justify-between gap-3 pt-4 border-t border-workspace-800">
                 {selectedShiftForEdit ? (
                   <Button type="button" onClick={handleShiftDelete} variant="destructive" className="h-9 flex items-center gap-1.5">
                     <Trash2 className="h-4 w-4" />
@@ -412,12 +412,12 @@ export default function ShiftSchedulePage() {
                 ) : (
                   <div />
                 )}
-                
+
                 <div className="flex gap-2">
-                  <Button type="button" variant="ghost" onClick={() => setIsAssignOpen(false)} className="h-9 hover:bg-slate-800 text-slate-400">
+                  <Button type="button" variant="ghost" onClick={() => setIsAssignOpen(false)} className="h-9 hover:bg-workspace-800 text-workspace-400">
                     {tCommon("cancel")}
                   </Button>
-                  <Button type="submit" className="h-9 bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white">
+                  <Button type="submit" className="h-9 bg-gradient-to-r from-brand-600 to-indigo-500 hover:from-brand-500 hover:to-indigo-400 text-white">
                     {t("save_shift")}
                   </Button>
                 </div>

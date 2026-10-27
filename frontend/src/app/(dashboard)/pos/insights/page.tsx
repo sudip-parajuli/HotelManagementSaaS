@@ -56,16 +56,16 @@ export default function POSSalesInsightsPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-white">{t("sales_insights")}</h1>
-          <p className="text-slate-400 text-sm">
+          <h1 className="text-2xl font-bold text-foreground">{t("sales_insights")}</h1>
+          <p className="text-workspace-400 text-sm">
             {locale === "ne" ? "३० दिनको बिक्रम र गतिविधि विश्लेषण" : "Last 30-day revenue & activity analysis"}
           </p>
         </div>
         <Select value={String(days)} onValueChange={(v) => setDays(Number(v))}>
-          <SelectTrigger className="w-36 bg-slate-950 border-slate-800">
+          <SelectTrigger className="w-36 bg-workspace-950 border-workspace-800">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-slate-950 border-slate-900">
+          <SelectContent className="bg-workspace-950 border-workspace-900">
             <SelectItem value="7">7 days</SelectItem>
             <SelectItem value="30">30 days</SelectItem>
             <SelectItem value="60">60 days</SelectItem>
@@ -75,62 +75,62 @@ export default function POSSalesInsightsPage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-8 text-slate-400">Loading insights...</div>
+        <div className="text-center py-8 text-workspace-400">Loading insights...</div>
       ) : data ? (
         <>
           {/* Top Stats Row */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card className="bg-slate-900/60 border-slate-800">
+            <Card className="bg-workspace-900/60 border-workspace-800">
               <CardHeader className="pb-2">
-                <CardTitle className="text-xs text-slate-400 uppercase flex items-center gap-1.5">
+                <CardTitle className="text-xs text-workspace-400 uppercase flex items-center gap-1.5">
                   <ShoppingBag className="h-3.5 w-3.5" />
                   {locale === "ne" ? "कुल बिक्री" : "Total Sales"}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-foreground">
                   NPR {Number(data.revenue.total).toLocaleString()}
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-slate-900/60 border-slate-800">
+            <Card className="bg-workspace-900/60 border-workspace-800">
               <CardHeader className="pb-2">
-                <CardTitle className="text-xs text-slate-400 uppercase flex items-center gap-1.5">
+                <CardTitle className="text-xs text-workspace-400 uppercase flex items-center gap-1.5">
                   <Package className="h-3.5 w-3.5" />
                   {locale === "ne" ? "कुल अर्डर" : "Total Orders"}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-white">{data.revenue.orders}</div>
+                <div className="text-2xl font-bold text-foreground">{data.revenue.orders}</div>
               </CardContent>
             </Card>
 
-            <Card className="bg-slate-900/60 border-slate-800">
+            <Card className="bg-workspace-900/60 border-workspace-800">
               <CardHeader className="pb-2">
-                <CardTitle className="text-xs text-slate-400 uppercase flex items-center gap-1.5">
+                <CardTitle className="text-xs text-workspace-400 uppercase flex items-center gap-1.5">
                   <Award className="h-3.5 w-3.5" />
                   {locale === "ne" ? "औसत अर्डर" : "Avg Order"}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-foreground">
                   NPR {Number(data.revenue.avg_order_value).toLocaleString()}
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-slate-900/60 border-slate-800">
+            <Card className="bg-workspace-900/60 border-workspace-800">
               <CardHeader className="pb-2">
-                <CardTitle className="text-xs text-slate-400 uppercase">
+                <CardTitle className="text-xs text-workspace-400 uppercase">
                   {locale === "ne" ? "KDS औसत समय" : "KDS Cycle Time"}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-1">
-                <div className="text-xs text-slate-400">
+                <div className="text-xs text-workspace-400">
                   {locale === "ne" ? "स्वीकृति:" : "Accept:"} {formatTime(data.kds_performance.avg_accept_time_seconds)}
                 </div>
-                <div className="text-xs text-slate-400">
+                <div className="text-xs text-workspace-400">
                   {locale === "ne" ? "अधिकांश:" : "Cook:"} {formatTime(data.kds_performance.avg_cook_time_seconds)}
                 </div>
               </CardContent>
@@ -140,9 +140,9 @@ export default function POSSalesInsightsPage() {
           {/* Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Sales by Order Type */}
-            <Card className="bg-slate-900/60 border-slate-800">
+            <Card className="bg-workspace-900/60 border-workspace-800">
               <CardHeader>
-                <CardTitle className="text-sm text-white">
+                <CardTitle className="text-sm text-foreground">
                   {locale === "ne" ? "विक्री प्रकार अनुसार" : "Sales by Order Type"}
                 </CardTitle>
               </CardHeader>
@@ -168,9 +168,9 @@ export default function POSSalesInsightsPage() {
             </Card>
 
             {/* Top Items Pie */}
-            <Card className="bg-slate-900/60 border-slate-800">
+            <Card className="bg-workspace-900/60 border-workspace-800">
               <CardHeader>
-                <CardTitle className="text-sm text-white">
+                <CardTitle className="text-sm text-foreground">
                   {locale === "ne" ? "अग्रशील वस्तुहरू" : "Top Selling Items"}
                 </CardTitle>
               </CardHeader>
@@ -203,16 +203,16 @@ export default function POSSalesInsightsPage() {
           </div>
 
           {/* Top Items Table */}
-          <Card className="bg-slate-900/60 border-slate-800">
+          <Card className="bg-workspace-900/60 border-workspace-800">
             <CardHeader>
-              <CardTitle className="text-sm text-white">
+              <CardTitle className="text-sm text-foreground">
                 {locale === "ne" ? "शीर्ष १० विक्री वस्तुहरू" : "Top 10 Selling Items"}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <table className="w-full text-xs text-slate-300">
-                <thead className="border-b border-slate-800">
-                  <tr className="text-slate-400">
+              <table className="w-full text-xs text-workspace-300">
+                <thead className="border-b border-workspace-800">
+                  <tr className="text-workspace-400">
                     <th className="text-left pb-2">#</th>
                     <th className="text-left pb-2">{locale === "ne" ? "वस्तु" : "Item"}</th>
                     <th className="text-left pb-2">{locale === "ne" ? "श्रेणी" : "Category"}</th>
@@ -222,10 +222,10 @@ export default function POSSalesInsightsPage() {
                 </thead>
                 <tbody>
                   {data.top_items.map((item, idx) => (
-                    <tr key={item.name} className="border-b border-slate-900/50">
+                    <tr key={item.name} className="border-b border-workspace-900/50">
                       <td className="py-2">{idx + 1}</td>
-                      <td className="py-2 font-medium text-slate-200">{item.name}</td>
-                      <td className="py-2 text-slate-400">{item.category}</td>
+                      <td className="py-2 font-medium text-workspace-200">{item.name}</td>
+                      <td className="py-2 text-workspace-400">{item.category}</td>
                       <td className="py-2 text-right font-mono">{item.qty_sold}</td>
                       <td className="py-2 text-right font-mono">NPR {Number(item.revenue).toLocaleString()}</td>
                     </tr>
@@ -236,7 +236,7 @@ export default function POSSalesInsightsPage() {
           </Card>
         </>
       ) : (
-        <div className="text-center py-8 text-slate-400">No data available.</div>
+        <div className="text-center py-8 text-workspace-400">No data available.</div>
       )}
     </div>
   );

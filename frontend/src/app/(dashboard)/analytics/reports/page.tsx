@@ -98,7 +98,7 @@ export default function ReportsConsole() {
 
   useEffect(() => {
     fetchExports();
-    
+
     // Set up active poller for pending exports
     const interval = setInterval(() => {
       const hasPending = exportsList.some((e) => e.status === "pending");
@@ -135,37 +135,37 @@ export default function ReportsConsole() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-          <FileText className="h-6 w-6 text-cyan-400" />
+        <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+          <FileText className="h-6 w-6 text-brand-400" />
           {t("reports_title")}
         </h1>
-        <p className="text-slate-400 text-xs mt-0.5">
+        <p className="text-workspace-400 text-xs mt-0.5">
           {t("reports_subtitle")}
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Generator Console Form */}
-        <Card className="bg-slate-900/60 border-slate-800 lg:col-span-1 h-fit">
+        <Card className="bg-workspace-900/60 border-workspace-800 lg:col-span-1 h-fit">
           <CardHeader>
-            <CardTitle className="text-sm font-semibold text-white">{locale === "ne" ? "रिपोर्ट निर्माण कार्यक्षेत्र" : "Generate Report Workspace"}</CardTitle>
-            <CardDescription className="text-[10px] text-slate-400">
+            <CardTitle className="text-sm font-semibold text-foreground">{locale === "ne" ? "रिपोर्ट निर्माण कार्यक्षेत्र" : "Generate Report Workspace"}</CardTitle>
+            <CardDescription className="text-[10px] text-workspace-400">
               {locale === "ne" ? "प्यारामिटरहरू कन्फिगर गर्नुहोस् र सुरक्षित PDF वा स्प्रेडसिट कम्पाइलर सक्रिय गर्नुहोस्।" : "Configure parameters and trigger a secure PDF or spreadsheet compiler."}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleGenerate} className="space-y-4">
               <div className="space-y-1.5">
-                <Label className="text-xs text-slate-400">{locale === "ne" ? "रिपोर्ट प्रकार" : "Report Ledger Type"}</Label>
+                <Label className="text-xs text-workspace-400">{locale === "ne" ? "रिपोर्ट प्रकार" : "Report Ledger Type"}</Label>
                 <Select value={reportType} onValueChange={(val) => val && setReportType(val)}>
-                  <SelectTrigger className="bg-slate-950 border-slate-800 text-white rounded-lg text-xs">
+                  <SelectTrigger className="bg-workspace-950 border-workspace-800 text-foreground rounded-lg text-xs">
                     <SelectValue placeholder={locale === "ne" ? "रिपोर्ट प्रकार छनौट गर्नुहोस्" : "Select report type"}>
                       {(value) => value ? getReportName(value, locale) : (locale === "ne" ? "रिपोर्ट प्रकार छनौट गर्नुहोस्" : "Select report type")}
                     </SelectValue>
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-950 border-slate-900 text-white">
+                  <SelectContent className="bg-workspace-950 border-workspace-900 text-foreground">
                     {REPORTS_LIST.map((r) => (
-                      <SelectItem key={r.id} value={r.id} className="text-xs focus:bg-cyan-500 focus:text-slate-950">
+                      <SelectItem key={r.id} value={r.id} className="text-xs focus:bg-brand-500 focus:text-workspace-950">
                         {getReportName(r.id, locale)}
                       </SelectItem>
                     ))}
@@ -175,35 +175,35 @@ export default function ReportsConsole() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-slate-400">{locale === "ne" ? "सुरु मिति" : "Start Date"}</Label>
+                  <Label className="text-xs text-workspace-400">{locale === "ne" ? "सुरु मिति" : "Start Date"}</Label>
                   <Input
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="bg-slate-950 border-slate-800 text-white rounded-lg text-xs"
+                    className="bg-workspace-950 border-workspace-800 text-white rounded-lg text-xs"
                     required
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-slate-400">{locale === "ne" ? "अन्तिम मिति" : "End Date"}</Label>
+                  <Label className="text-xs text-workspace-400">{locale === "ne" ? "अन्तिम मिति" : "End Date"}</Label>
                   <Input
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="bg-slate-950 border-slate-800 text-white rounded-lg text-xs"
+                    className="bg-workspace-950 border-workspace-800 text-white rounded-lg text-xs"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs text-slate-400">{locale === "ne" ? "निर्यात ढाँचा" : "Export Format"}</Label>
+                <Label className="text-xs text-workspace-400">{locale === "ne" ? "निर्यात ढाँचा" : "Export Format"}</Label>
                 <Select
                   value={format}
                   onValueChange={(val) => (val === "pdf" || val === "excel") && setFormat(val)}
                   disabled={!selectedReport}
                 >
-                  <SelectTrigger className="bg-slate-950 border-slate-800 text-white rounded-lg text-xs">
+                  <SelectTrigger className="bg-workspace-950 border-workspace-800 text-foreground rounded-lg text-xs">
                     <SelectValue>
                       {(value) => {
                         if (value === "pdf") return locale === "ne" ? "PDF कागजात (.pdf)" : "PDF Document (.pdf)";
@@ -212,12 +212,12 @@ export default function ReportsConsole() {
                       }}
                     </SelectValue>
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-950 border-slate-900 text-white">
+                  <SelectContent className="bg-workspace-950 border-workspace-900 text-foreground">
                     {selectedReport?.formats.includes("pdf") && (
-                      <SelectItem value="pdf" className="text-xs focus:bg-cyan-500 focus:text-slate-950">{locale === "ne" ? "PDF कागजात (.pdf)" : "PDF Document (.pdf)"}</SelectItem>
+                      <SelectItem value="pdf" className="text-xs focus:bg-brand-500 focus:text-workspace-950">{locale === "ne" ? "PDF कागजात (.pdf)" : "PDF Document (.pdf)"}</SelectItem>
                     )}
                     {selectedReport?.formats.includes("excel") && (
-                      <SelectItem value="excel" className="text-xs focus:bg-cyan-500 focus:text-slate-950">{locale === "ne" ? "स्प्रेडसिट (.xlsx)" : "Spreadsheet (.xlsx)"}</SelectItem>
+                      <SelectItem value="excel" className="text-xs focus:bg-brand-500 focus:text-workspace-950">{locale === "ne" ? "स्प्रेडसिट (.xlsx)" : "Spreadsheet (.xlsx)"}</SelectItem>
                     )}
                   </SelectContent>
                 </Select>
@@ -226,7 +226,7 @@ export default function ReportsConsole() {
               <Button
                 type="submit"
                 disabled={generating}
-                className="w-full bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold text-xs py-2"
+                className="w-full bg-brand-500 hover:bg-brand-600 text-workspace-950 font-semibold text-xs py-2"
               >
                 {generating ? (
                   <>
@@ -242,23 +242,23 @@ export default function ReportsConsole() {
         </Card>
 
         {/* Audit / Export Logs Table */}
-        <Card className="bg-slate-900/60 border-slate-800 lg:col-span-2">
+        <Card className="bg-workspace-900/60 border-workspace-800 lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <div>
-              <CardTitle className="text-sm font-semibold text-white">{locale === "ne" ? "उत्पादित कागजात सूची" : "Generated Documents Cache"}</CardTitle>
-              <CardDescription className="text-[10px] text-slate-400">
+              <CardTitle className="text-sm font-semibold text-foreground">{locale === "ne" ? "उत्पादित कागजात सूची" : "Generated Documents Cache"}</CardTitle>
+              <CardDescription className="text-[10px] text-workspace-400">
                 {locale === "ne" ? "पृष्ठभूमिमा चलिरहेको फाइल कम्पाइलर स्थिति। फाइल लिङ्कहरू ७ दिनमा समाप्त हुनेछन्।" : "Polls background Celery files compiler status. Direct links expire in 7 days."}
               </CardDescription>
             </div>
-            <Button variant="outline" size="sm" onClick={fetchExports} className="border-slate-800 text-slate-400 hover:text-white">
+            <Button variant="outline" size="sm" onClick={fetchExports} className="border-workspace-800 text-workspace-400 hover:text-white">
               <RefreshCw className="h-3.5 w-3.5" />
             </Button>
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="py-20 flex items-center justify-center text-slate-400 text-xs">{locale === "ne" ? "रेकर्डहरू लोड हुँदैछ..." : "Loading logs..."}</div>
+              <div className="py-20 flex items-center justify-center text-workspace-400 text-xs">{locale === "ne" ? "रेकर्डहरू लोड हुँदैछ..." : "Loading logs..."}</div>
             ) : exportsList.length === 0 ? (
-              <div className="py-20 flex flex-col items-center justify-center gap-2 text-slate-500 text-xs text-center">
+              <div className="py-20 flex flex-col items-center justify-center gap-2 text-workspace-500 text-xs text-center">
                 <FileText className="h-8 w-8 opacity-20" />
                 <span>{locale === "ne" ? "यो विधाका लागि अहिलेसम्म कुनै कागजात निर्यात गरिएको छैन।" : "No exported documents registered for this schema yet."}</span>
               </div>
@@ -266,7 +266,7 @@ export default function ReportsConsole() {
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse text-left text-xs">
                   <thead>
-                    <tr className="border-b border-slate-800 text-slate-400 font-semibold">
+                    <tr className="border-b border-workspace-800 text-workspace-400 font-semibold">
                       <th className="py-3 px-2">{locale === "ne" ? "सिर्जना गरिएको" : "Created"}</th>
                       <th className="py-3 px-2">{locale === "ne" ? "रिपोर्ट विवरण" : "Report Details"}</th>
                       <th className="py-3 px-2">{locale === "ne" ? "ढाँचा" : "Format"}</th>
@@ -284,10 +284,10 @@ export default function ReportsConsole() {
                         minute: "2-digit",
                       });
                       return (
-                        <tr key={exp.id} className="border-b border-slate-900/60 hover:bg-slate-950/20">
-                          <td className="py-3 px-2 text-slate-400 font-medium">{dateStr}</td>
+                        <tr key={exp.id} className="border-b border-workspace-900/60 hover:bg-workspace-950/20">
+                          <td className="py-3 px-2 text-workspace-400 font-medium">{dateStr}</td>
                           <td className="py-3 px-2">
-                            <span className="font-semibold text-white text-[12px]">{getReportName(exp.report_type, locale)}</span>
+                            <span className="font-semibold text-foreground text-[12px]">{getReportName(exp.report_type, locale)}</span>
                           </td>
                           <td className="py-3 px-2 font-mono">
                             <span className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
@@ -296,12 +296,12 @@ export default function ReportsConsole() {
                               {exp.format}
                             </span>
                           </td>
-                          <td className="py-3 px-2 text-slate-400 font-mono text-[10.5px]">
+                          <td className="py-3 px-2 text-workspace-400 font-mono text-[10.5px]">
                             {exp.start_date} → {exp.end_date}
                           </td>
                           <td className="py-3 px-2 text-center">
                             {exp.status === "pending" ? (
-                              <span className="inline-flex items-center gap-1.5 text-cyan-400 font-semibold bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded text-[10px]">
+                              <span className="inline-flex items-center gap-1.5 text-brand-400 font-semibold bg-brand-500/10 border border-brand-500/20 px-2 py-0.5 rounded text-[10px]">
                                 <Loader2 className="h-3 w-3 animate-spin" />
                                 {locale === "ne" ? "प्रशोधन हुँदै" : "Processing"}
                               </span>
@@ -326,13 +326,13 @@ export default function ReportsConsole() {
                                 href={exp.file_path}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center h-7 px-3 rounded-md border border-slate-800 bg-transparent text-cyan-400 hover:text-cyan-300 hover:bg-slate-900 font-semibold text-[11px] transition-colors"
+                                className="inline-flex items-center justify-center h-7 px-3 rounded-md border border-workspace-800 bg-transparent text-brand-400 hover:text-brand-300 hover:bg-workspace-900 font-semibold text-[11px] transition-colors"
                               >
                                 <Download className="h-3 w-3 mr-1" />
                                 {locale === "ne" ? "फाइल डाउनलोड" : "Get File"}
                               </a>
                             ) : (
-                              <Button size="sm" variant="outline" className="h-7 border-slate-800 text-slate-600 cursor-not-allowed" disabled>
+                              <Button size="sm" variant="outline" className="h-7 border-workspace-800 text-workspace-600 cursor-not-allowed" disabled>
                                 <Download className="h-3 w-3 mr-1" />
                                 {locale === "ne" ? "अनुपलब्ध" : "Unavailable"}
                               </Button>

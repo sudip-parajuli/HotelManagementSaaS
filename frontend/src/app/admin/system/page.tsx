@@ -64,7 +64,7 @@ function ServiceCard({ name, health }: { name: string; health: ServiceHealth }) 
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <span className={iconColor}>{SERVICE_ICONS[name] ?? <Server size={20} />}</span>
-          <h3 className="font-semibold text-white capitalize">{name}</h3>
+          <h3 className="font-semibold text-foreground capitalize">{name}</h3>
         </div>
         {statusIcon}
       </div>
@@ -173,7 +173,7 @@ export default function SystemHealthPage() {
             )}
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">System Health</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">System Health</h1>
             <p className="text-zinc-500 text-sm mt-0.5">
               {health
                 ? <span className={overallOk ? "text-emerald-400" : "text-red-400"}>

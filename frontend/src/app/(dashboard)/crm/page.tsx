@@ -19,7 +19,7 @@ export default function CRMPage() {
   const [tags, setTags] = useState<GuestTag[]>([]);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [activities, setActivities] = useState<GuestActivity[]>([]);
-  
+
   const t = useTranslations("CRM");
   const tData = useTransData();
   const locale = useLocale();
@@ -174,13 +174,13 @@ export default function CRMPage() {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-white tracking-tight">{t("title")}</h1>
-          <p className="text-slate-400 text-sm">{t("subtitle")}</p>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">{t("title")}</h1>
+          <p className="text-workspace-400 text-sm">{t("subtitle")}</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-800">
+      <div className="flex border-b border-workspace-800">
         {(["guests", "tags", "campaigns"] as const).map((tab) => (
           <button
             key={tab}
@@ -190,8 +190,8 @@ export default function CRMPage() {
             }}
             className={`py-3 px-6 text-sm font-semibold border-b-2 transition-all capitalize ${
               activeTab === tab
-                ? "border-cyan-500 text-cyan-400"
-                : "border-transparent text-slate-400 hover:text-white"
+                ? "border-brand-500 text-brand-400"
+                : "border-transparent text-workspace-400 hover:text-white"
             }`}
           >
             {tab === "guests" ? t("guests") : tab === "tags" ? (locale === "ne" ? "ट्यागहरू" : "Tags") : (locale === "ne" ? "SMS अभियानहरू" : "SMS Campaigns")}
@@ -202,23 +202,23 @@ export default function CRMPage() {
       {activeTab === "guests" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Guests List */}
-          <Card className="bg-slate-900/60 border-slate-800 lg:col-span-2">
+          <Card className="bg-workspace-900/60 border-workspace-800 lg:col-span-2">
             <CardHeader className="pb-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <CardTitle className="text-sm font-semibold text-white">{t("guests")}</CardTitle>
+                <CardTitle className="text-sm font-semibold text-foreground">{t("guests")}</CardTitle>
                 <div className="flex items-center gap-2">
                   <div className="relative">
-                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-workspace-500" />
                     <Input
                       placeholder={t("search_guest")}
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
-                      className="pl-9 bg-slate-950 border-slate-800 text-white w-52 text-xs h-9 rounded-xl"
+                      className="pl-9 bg-workspace-950 border-workspace-800 text-white w-52 text-xs h-9 rounded-xl"
                     />
                   </div>
                   <Select value={tagFilter} onValueChange={(val) => setTagFilter(val || "all")}>
-                    <SelectTrigger className="bg-slate-950 border-slate-800 text-slate-300 w-36 text-xs h-9 rounded-xl">
-                      <Filter className="h-3.5 w-3.5 text-slate-500 mr-2" />
+                    <SelectTrigger className="bg-workspace-950 border-workspace-800 text-workspace-300 w-36 text-xs h-9 rounded-xl">
+                      <Filter className="h-3.5 w-3.5 text-workspace-500 mr-2" />
                       <SelectValue placeholder={locale === "ne" ? "फिल्टर ट्याग" : "Filter Tag"}>
                         {(value) => {
                           if (value === "all") return locale === "ne" ? "सबै ट्यागहरू" : "All Tags";
@@ -227,7 +227,7 @@ export default function CRMPage() {
                         }}
                       </SelectValue>
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-950 border-slate-900 text-white">
+                    <SelectContent className="bg-workspace-950 border-workspace-900 text-foreground">
                       <SelectItem value="all">{locale === "ne" ? "सबै ट्यागहरू" : "All Tags"}</SelectItem>
                       {tags.map((tg) => (
                         <SelectItem key={tg.id} value={tg.id.toString()}>
@@ -241,8 +241,8 @@ export default function CRMPage() {
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <table className="w-full text-slate-300 text-xs">
-                  <thead className="bg-slate-950/80 border-b border-slate-800 text-slate-400 text-left font-medium tracking-wider">
+                <table className="w-full text-workspace-300 text-xs">
+                  <thead className="bg-workspace-950/80 border-b border-workspace-800 text-workspace-400 text-left font-medium tracking-wider">
                     <tr>
                       <th className="p-4">{locale === "ne" ? "पाहुना प्रोफाइल" : "Guest Profile"}</th>
                       <th className="p-4 text-center">{locale === "ne" ? "बसाई" : "Stays"}</th>
@@ -252,16 +252,16 @@ export default function CRMPage() {
                       <th className="p-4">{locale === "ne" ? "ट्यागहरू" : "Tags"}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-workspace-800/60">
                     {loading ? (
                       <tr>
-                        <td colSpan={6} className="text-center p-8 text-slate-500">
+                        <td colSpan={6} className="text-center p-8 text-workspace-500">
                           {locale === "ne" ? "पाहुना विवरणहरू लोड हुँदैछ..." : "Loading guests portfolios..."}
                         </td>
                       </tr>
                     ) : guests.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="text-center p-8 text-slate-500">
+                        <td colSpan={6} className="text-center p-8 text-workspace-500">
                           {locale === "ne" ? "कुनै पाहुना फेला परेन।" : "No guest profiles matched search criteria."}
                         </td>
                       </tr>
@@ -270,26 +270,26 @@ export default function CRMPage() {
                         <tr
                           key={g.id}
                           onClick={() => loadGuestActivities(g)}
-                          className={`hover:bg-slate-900/40 transition-colors cursor-pointer ${
-                            selectedGuest?.id === g.id ? "bg-slate-900/70 border-l-2 border-cyan-500" : ""
+                          className={`hover:bg-workspace-900/40 transition-colors cursor-pointer ${
+                            selectedGuest?.id === g.id ? "bg-workspace-900/70 border-l-2 border-brand-500" : ""
                           }`}
                         >
                           <td className="p-4">
                             <div>
-                              <p className="font-semibold text-slate-200">{g.full_name}</p>
-                              <p className="text-[10px] text-slate-500">{g.phone}</p>
+                              <p className="font-semibold text-workspace-200">{g.full_name}</p>
+                              <p className="text-[10px] text-workspace-500">{g.phone}</p>
                             </div>
                           </td>
-                          <td className="p-4 text-center font-medium text-slate-200">{g.total_stays}</td>
-                          <td className="p-4 text-right font-mono font-semibold text-white">
+                          <td className="p-4 text-center font-medium text-workspace-200">{g.total_stays}</td>
+                          <td className="p-4 text-right font-mono font-semibold text-foreground">
                             {locale === "ne" ? "रु " : "Rs. "}
                             {Number(g.total_spend).toLocaleString()}
                           </td>
-                          <td className="p-4 text-right font-medium text-slate-200">
+                          <td className="p-4 text-right font-medium text-workspace-200">
                             {g.average_stay_nights} {locale === "ne" ? "रात" : "nights"}
                           </td>
                           <td className="p-4">
-                            <Badge className="bg-purple-950/40 text-purple-400 border-purple-500/20 border text-[10px] font-semibold">
+                            <Badge className="bg-brand-950/40 text-brand-400 border-brand-500/20 border text-[10px] font-semibold">
                               {tData(g.loyalty_tier)} ({g.loyalty_points} pts)
                             </Badge>
                           </td>
@@ -298,7 +298,7 @@ export default function CRMPage() {
                               {g.tags?.map((tg: any) => (
                                 <span
                                   key={tg.id}
-                                  className="px-2 py-0.5 rounded-full text-[9px] font-semibold text-slate-950"
+                                  className="px-2 py-0.5 rounded-full text-[9px] font-semibold text-workspace-950"
                                   style={{ backgroundColor: tg.color }}
                                 >
                                   {tg.name}
@@ -316,10 +316,10 @@ export default function CRMPage() {
           </Card>
 
           {/* Guest Detail Drawer */}
-          <Card className="bg-slate-900/60 border-slate-800">
+          <Card className="bg-workspace-900/60 border-workspace-800">
             <CardHeader className="border-b border-slate-850 pb-4">
-              <CardTitle className="text-sm font-semibold text-white flex items-center gap-2">
-                <User className="h-4 w-4 text-cyan-400" />
+              <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <User className="h-4 w-4 text-brand-400" />
                 {locale === "ne" ? "पाहुना पोर्टफोलियो सारांश" : "Guest Portfolio Summary"}
               </CardTitle>
             </CardHeader>
@@ -328,24 +328,24 @@ export default function CRMPage() {
                 <>
                   {/* Basic Profile */}
                   <div className="space-y-2.5 text-xs">
-                    <h3 className="font-semibold text-slate-200 text-sm">{selectedGuest.full_name}</h3>
-                    <div className="flex items-center gap-2 text-slate-400">
-                      <Phone className="h-3.5 w-3.5 text-slate-500" />
+                    <h3 className="font-semibold text-workspace-200 text-sm">{selectedGuest.full_name}</h3>
+                    <div className="flex items-center gap-2 text-workspace-400">
+                      <Phone className="h-3.5 w-3.5 text-workspace-500" />
                       <span>{selectedGuest.phone}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-slate-400">
-                      <Mail className="h-3.5 w-3.5 text-slate-500" />
+                    <div className="flex items-center gap-2 text-workspace-400">
+                      <Mail className="h-3.5 w-3.5 text-workspace-500" />
                       <span>{selectedGuest.email || (locale === "ne" ? "इमेल छैन" : "No Email")}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-slate-400">
-                      <MapPin className="h-3.5 w-3.5 text-slate-500" />
+                    <div className="flex items-center gap-2 text-workspace-400">
+                      <MapPin className="h-3.5 w-3.5 text-workspace-500" />
                       <span>{tData(selectedGuest.nationality || "Nepalese")}</span>
                     </div>
                   </div>
 
                   {/* Segment Tags */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">
+                    <label className="text-[10px] text-workspace-500 font-semibold uppercase tracking-wide">
                       {locale === "ne" ? "ग्राहक ट्यागहरू" : "Customer Tags"}
                     </label>
                     <div className="flex flex-wrap gap-1">
@@ -353,7 +353,7 @@ export default function CRMPage() {
                         <Badge
                           key={tg.id}
                           onClick={() => handleRemoveTagFromGuest(tg.id)}
-                          className="hover:bg-rose-500 hover:text-slate-950 transition-colors cursor-pointer text-[9px]"
+                          className="hover:bg-rose-500 hover:text-workspace-950 transition-colors cursor-pointer text-[9px]"
                           style={{ backgroundColor: tg.color, color: "#000" }}
                         >
                           {tg.name} x
@@ -363,7 +363,7 @@ export default function CRMPage() {
                         <button
                           key={tg.id}
                           onClick={() => handleAddTagToGuest(tg.id)}
-                          className="px-2.5 py-0.5 rounded-full border border-slate-700 hover:border-cyan-500 text-[9px] hover:text-cyan-400 text-slate-400 transition-all"
+                          className="px-2.5 py-0.5 rounded-full border border-workspace-700 hover:border-brand-500 text-[9px] hover:text-brand-400 text-workspace-400 transition-all"
                         >
                           + {tg.name}
                         </button>
@@ -373,25 +373,25 @@ export default function CRMPage() {
 
                   {/* Activity History Logs */}
                   <div className="space-y-3">
-                    <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide flex items-center gap-1">
-                      <Activity className="h-3.5 w-3.5 text-cyan-400" />
+                    <label className="text-[10px] text-workspace-500 font-semibold uppercase tracking-wide flex items-center gap-1">
+                      <Activity className="h-3.5 w-3.5 text-brand-400" />
                       {locale === "ne" ? "पाहुना गतिविधि लग" : "Guest Activity Ledger"}
                     </label>
                     <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
                       {activities.length === 0 ? (
-                        <p className="text-[10px] text-slate-500 text-center py-4">
+                        <p className="text-[10px] text-workspace-500 text-center py-4">
                           {locale === "ne" ? "गतिविधि रेकर्डहरू छैनन्।" : "No logged history for guest."}
                         </p>
                       ) : (
                         activities.map((act) => (
-                          <div key={act.id} className="bg-slate-950 p-2.5 rounded-lg border border-slate-900 space-y-1 text-[11px]">
-                            <div className="flex justify-between font-semibold text-slate-300">
-                              <span className="text-cyan-400 capitalize">{tData(act.activity_type_display)}</span>
-                              <span className="text-[9px] text-slate-600 font-mono">
+                          <div key={act.id} className="bg-workspace-950 p-2.5 rounded-lg border border-workspace-900 space-y-1 text-[11px]">
+                            <div className="flex justify-between font-semibold text-workspace-300">
+                              <span className="text-brand-400 capitalize">{tData(act.activity_type_display)}</span>
+                              <span className="text-[9px] text-workspace-600 font-mono">
                                 {new Date(act.created_at).toLocaleDateString()}
                               </span>
                             </div>
-                            <p className="text-slate-400 leading-relaxed">{act.description}</p>
+                            <p className="text-workspace-400 leading-relaxed">{act.description}</p>
                           </div>
                         ))
                       )}
@@ -399,11 +399,11 @@ export default function CRMPage() {
                   </div>
                 </>
               ) : (
-                <div className="text-center py-16 text-slate-500 flex flex-col items-center gap-2">
-                  <ClipboardList className="h-8 w-8 text-slate-600" />
+                <div className="text-center py-16 text-workspace-500 flex flex-col items-center gap-2">
+                  <ClipboardList className="h-8 w-8 text-workspace-600" />
                   <p className="text-xs">
-                    {locale === "ne" 
-                      ? "पाहुनाको ट्याग र गतिविधि लग हेर्नका लागि सूचीबाट छनौट गर्नुहोस्।" 
+                    {locale === "ne"
+                      ? "पाहुनाको ट्याग र गतिविधि लग हेर्नका लागि सूचीबाट छनौट गर्नुहोस्।"
                       : "Select a guest from the portfolio grid to view active tags and logs history."}
                   </p>
                 </div>
@@ -414,48 +414,48 @@ export default function CRMPage() {
       )}
 
       {activeTab === "tags" && (
-        <Card className="bg-slate-900/60 border-slate-800">
+        <Card className="bg-workspace-900/60 border-workspace-800">
           <CardHeader className="flex flex-row justify-between items-center pb-4 border-b border-slate-855">
             <div>
-              <CardTitle className="text-sm font-semibold text-white">{locale === "ne" ? "सेगमेन्ट ट्यागहरू" : "Segment Tags"}</CardTitle>
-              <CardDescription className="text-xs text-slate-500">
-                {locale === "ne" 
-                  ? "होटलमा पाहुनाहरूको वर्गीकरणका लागि सेगमेन्ट ट्यागहरू सिर्जना गर्नुहोस् (उदा. VIP पाहुना, कारपोरेट पाहुना)।" 
+              <CardTitle className="text-sm font-semibold text-foreground">{locale === "ne" ? "सेगमेन्ट ट्यागहरू" : "Segment Tags"}</CardTitle>
+              <CardDescription className="text-xs text-workspace-500">
+                {locale === "ne"
+                  ? "होटलमा पाहुनाहरूको वर्गीकरणका लागि सेगमेन्ट ट्यागहरू सिर्जना गर्नुहोस् (उदा. VIP पाहुना, कारपोरेट पाहुना)।"
                   : "Create classification tags to label VIPs, blacklisted profiles, and corporate guest groups."}
               </CardDescription>
             </div>
-            <Button onClick={() => setIsTagModalOpen(true)} className="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold text-xs h-8 rounded-xl">
+            <Button onClick={() => setIsTagModalOpen(true)} className="bg-brand-500 hover:bg-brand-600 text-workspace-950 font-semibold text-xs h-8 rounded-xl">
               <Plus className="h-3.5 w-3.5 mr-1" /> {locale === "ne" ? "ट्याग थप्नुहोस्" : "Create Tag"}
             </Button>
             <Dialog open={isTagModalOpen} onOpenChange={setIsTagModalOpen}>
-              <DialogContent className="bg-slate-950 border-slate-900 text-white">
+              <DialogContent className="bg-workspace-950 border-workspace-900 text-foreground">
                 <DialogHeader>
-                  <DialogTitle className="text-white flex items-center gap-1.5">
-                    <Tag className="h-5 w-5 text-cyan-400" />
+                  <DialogTitle className="text-foreground flex items-center gap-1.5">
+                    <Tag className="h-5 w-5 text-brand-400" />
                     {locale === "ne" ? "सेगमेन्ट ट्याग सिर्जना गर्नुहोस्" : "Add Segment Tag"}
                   </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleCreateTag} className="space-y-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs text-slate-400">{locale === "ne" ? "ट्याग नाम" : "Tag Name"}</label>
+                    <label className="text-xs text-workspace-400">{locale === "ne" ? "ट्याग नाम" : "Tag Name"}</label>
                     <Input
                       placeholder="e.g. VIP Member, Blacklist"
                       value={newTagName}
                       onChange={(e) => setNewTagName(e.target.value)}
-                      className="bg-slate-950 border-slate-800 text-white"
+                      className="bg-workspace-950 border-workspace-800 text-white"
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs text-slate-400">{locale === "ne" ? "रङ कोड (Hex Color)" : "Hex Color"}</label>
+                    <label className="text-xs text-workspace-400">{locale === "ne" ? "रङ कोड (Hex Color)" : "Hex Color"}</label>
                     <Input
                       type="color"
                       value={newTagColor}
                       onChange={(e) => setNewTagColor(e.target.value)}
-                      className="bg-slate-950 border-slate-800 text-white h-10 w-full"
+                      className="bg-workspace-950 border-workspace-800 text-white h-10 w-full"
                     />
                   </div>
-                  <Button type="submit" className="w-full bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold">
+                  <Button type="submit" className="w-full bg-brand-500 hover:bg-brand-600 text-workspace-950 font-semibold">
                     {locale === "ne" ? "ट्याग सुरक्षित गर्नुहोस्" : "Save Tag"}
                   </Button>
                 </form>
@@ -465,12 +465,12 @@ export default function CRMPage() {
           <CardContent className="p-6">
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
               {tags.map((tg) => (
-                <div key={tg.id} className="bg-slate-950 p-3 rounded-xl border border-slate-900 flex justify-between items-center group">
+                <div key={tg.id} className="bg-workspace-950 p-3 rounded-xl border border-workspace-900 flex justify-between items-center group">
                   <div className="flex items-center gap-2">
                     <div className="h-3 w-3 rounded-full" style={{ backgroundColor: tg.color }} />
-                    <span className="text-xs font-semibold text-slate-200">{tg.name}</span>
+                    <span className="text-xs font-semibold text-workspace-200">{tg.name}</span>
                   </div>
-                  <button onClick={() => handleDeleteTag(tg.id)} className="text-slate-600 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={() => handleDeleteTag(tg.id)} className="text-workspace-600 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
                 </div>
@@ -481,44 +481,44 @@ export default function CRMPage() {
       )}
 
       {activeTab === "campaigns" && (
-        <Card className="bg-slate-900/60 border-slate-800">
+        <Card className="bg-workspace-900/60 border-workspace-800">
           <CardHeader className="flex flex-row justify-between items-center pb-4 border-b border-slate-855">
             <div>
-              <CardTitle className="text-sm font-semibold text-white">
+              <CardTitle className="text-sm font-semibold text-foreground">
                 {locale === "ne" ? "SMS अभियानहरू (SMS Campaigns)" : "SMS Broadcast Campaigns"}
               </CardTitle>
-              <CardDescription className="text-xs text-slate-500">
-                {locale === "ne" 
-                  ? "नयाँ अफर वा अभियानहरू पाहुनाहरूका मोबाइलमा SparrowSMS मार्फत पठाउनुहोस्।" 
+              <CardDescription className="text-xs text-workspace-500">
+                {locale === "ne"
+                  ? "नयाँ अफर वा अभियानहरू पाहुनाहरूका मोबाइलमा SparrowSMS मार्फत पठाउनुहोस्।"
                   : "Dispatch targeted SMS promotions, greetings, and surveys via SparrowSMS."}
               </CardDescription>
             </div>
-            <Button onClick={() => setIsCampaignModalOpen(true)} className="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold text-xs h-8 rounded-xl">
+            <Button onClick={() => setIsCampaignModalOpen(true)} className="bg-brand-500 hover:bg-brand-600 text-workspace-950 font-semibold text-xs h-8 rounded-xl">
               <Plus className="h-3.5 w-3.5 mr-1" /> {locale === "ne" ? "अभियान सिर्जना गर्नुहोस्" : "Create Campaign"}
             </Button>
             <Dialog open={isCampaignModalOpen} onOpenChange={setIsCampaignModalOpen}>
-              <DialogContent className="bg-slate-950 border-slate-900 text-white">
+              <DialogContent className="bg-workspace-950 border-workspace-900 text-foreground">
                 <DialogHeader>
-                  <DialogTitle className="text-white flex items-center gap-1.5">
-                    <Send className="h-5 w-5 text-cyan-400" />
+                  <DialogTitle className="text-foreground flex items-center gap-1.5">
+                    <Send className="h-5 w-5 text-brand-400" />
                     {locale === "ne" ? "नयाँ SMS अभियान" : "New SMS Campaign"}
                   </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleCreateCampaign} className="space-y-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs text-slate-400">{locale === "ne" ? "अभियानको नाम" : "Campaign Name"}</label>
+                    <label className="text-xs text-workspace-400">{locale === "ne" ? "अभियानको नाम" : "Campaign Name"}</label>
                     <Input
                       placeholder="e.g. Pokhara Monsoon Festival Offer"
                       value={campName}
                       onChange={(e) => setCampName(e.target.value)}
-                      className="bg-slate-950 border-slate-800 text-white"
+                      className="bg-workspace-950 border-workspace-800 text-white"
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs text-slate-400">{locale === "ne" ? "अभियान प्रकार" : "Campaign Type"}</label>
+                    <label className="text-xs text-workspace-400">{locale === "ne" ? "अभियान प्रकार" : "Campaign Type"}</label>
                     <Select value={campType} onValueChange={(val: any) => setCampType(val)}>
-                      <SelectTrigger className="bg-slate-950 border-slate-800 text-white text-xs">
+                      <SelectTrigger className="bg-workspace-950 border-workspace-800 text-foreground text-xs">
                         <SelectValue placeholder="Select Type">
                           {(value) => {
                             if (value === "birthday") return locale === "ne" ? "जन्मदिन अभियान" : "Birthday Campaign";
@@ -529,7 +529,7 @@ export default function CRMPage() {
                           }}
                         </SelectValue>
                       </SelectTrigger>
-                      <SelectContent className="bg-slate-950 border-slate-900 text-white">
+                      <SelectContent className="bg-workspace-950 border-workspace-900 text-foreground">
                         <SelectItem value="birthday">Birthday Campaign</SelectItem>
                         <SelectItem value="anniversary">Anniversary Campaign</SelectItem>
                         <SelectItem value="winback">Winback Offer</SelectItem>
@@ -538,16 +538,16 @@ export default function CRMPage() {
                     </Select>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs text-slate-400">{locale === "ne" ? "SMS सन्देश" : "SMS message template"}</label>
+                    <label className="text-xs text-workspace-400">{locale === "ne" ? "SMS सन्देश" : "SMS message template"}</label>
                     <Input
                       placeholder="e.g. Welcome back to Pokhara! Enjoy 20% off room charges using code COZY..."
                       value={campMessage}
                       onChange={(e) => setCampMessage(e.target.value)}
-                      className="bg-slate-950 border-slate-800 text-white"
+                      className="bg-workspace-950 border-workspace-800 text-white"
                       required
                     />
                   </div>
-                  <Button type="submit" className="w-full bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold">
+                  <Button type="submit" className="w-full bg-brand-500 hover:bg-brand-600 text-workspace-950 font-semibold">
                     {locale === "ne" ? "अभियान सुरक्षित गर्नुहोस्" : "Create Campaign"}
                   </Button>
                 </form>
@@ -556,8 +556,8 @@ export default function CRMPage() {
           </CardHeader>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-slate-300 text-xs">
-                <thead className="bg-slate-950/80 border-b border-slate-800 text-slate-400 text-left font-medium tracking-wider">
+              <table className="w-full text-workspace-300 text-xs">
+                <thead className="bg-workspace-950/80 border-b border-workspace-800 text-workspace-400 text-left font-medium tracking-wider">
                   <tr>
                     <th className="p-4">{locale === "ne" ? "अभियानको नाम" : "Campaign Name"}</th>
                     <th className="p-4">{locale === "ne" ? "प्रकार" : "Type"}</th>
@@ -566,21 +566,21 @@ export default function CRMPage() {
                     <th className="p-4 text-center">{locale === "ne" ? "कार्यहरू" : "Actions"}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-workspace-800/60">
                   {campaigns.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="text-center p-8 text-slate-500">
+                      <td colSpan={5} className="text-center p-8 text-workspace-500">
                         {locale === "ne" ? "कुनै SMS अभियानहरू दर्ता छैनन्।" : "No SMS campaigns templates created."}
                       </td>
                     </tr>
                   ) : (
                     campaigns.map((c) => (
-                      <tr key={c.id} className="hover:bg-slate-900/40 transition-colors">
-                        <td className="p-4 font-semibold text-slate-200">{c.name}</td>
+                      <tr key={c.id} className="hover:bg-workspace-900/40 transition-colors">
+                        <td className="p-4 font-semibold text-workspace-200">{c.name}</td>
                         <td className="p-4 capitalize">{tData(c.campaign_type_display || c.campaign_type)}</td>
-                        <td className="p-4 max-w-sm truncate text-slate-400">{c.message_template}</td>
+                        <td className="p-4 max-w-sm truncate text-workspace-400">{c.message_template}</td>
                         <td className="p-4">
-                          <Badge className={c.status === "sent" ? "bg-emerald-500/10 text-emerald-400" : "bg-slate-500/10 text-slate-400"}>
+                          <Badge className={c.status === "sent" ? "bg-emerald-500/10 text-emerald-400" : "bg-workspace-500/10 text-workspace-400"}>
                             {tData(c.status_display || c.status)}
                           </Badge>
                         </td>
@@ -588,7 +588,7 @@ export default function CRMPage() {
                           {c.status !== "sent" && (
                             <Button
                               onClick={() => handleDispatchCampaign(c.id)}
-                              className="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold text-[10px] px-3 py-1 h-7 rounded-lg"
+                              className="bg-brand-500 hover:bg-brand-600 text-workspace-950 font-semibold text-[10px] px-3 py-1 h-7 rounded-lg"
                             >
                               <Send className="h-3 w-3 mr-1" /> {locale === "ne" ? "प्रसारण" : "Broadcast"}
                             </Button>

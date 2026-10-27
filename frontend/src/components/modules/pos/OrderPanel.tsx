@@ -184,39 +184,39 @@ export function OrderPanel({
   const total = activeOrder ? parseFloat(activeOrder.total_amount) : Math.max((subtotal + tax) - discount, 0);
 
   return (
-    <div className="flex flex-col h-full bg-slate-950/65 border-l border-slate-900 text-slate-100 flex-1 min-w-[340px] max-w-[420px] backdrop-blur-xl">
+    <div className="flex flex-col h-full bg-workspace-950/65 border-l border-workspace-900 text-workspace-100 flex-1 min-w-[340px] max-w-[420px] backdrop-blur-xl">
       {/* Header */}
-      <div className="p-4 border-b border-slate-900 flex items-center justify-between bg-slate-950">
+      <div className="p-4 border-b border-workspace-900 flex items-center justify-between bg-workspace-950">
         <div>
           {activeOrder ? (
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="font-bold text-slate-100 text-base">
+                <h2 className="font-bold text-workspace-100 text-base">
                   {locale === "ne" ? `अर्डर #${activeOrder.id}` : `Order #${activeOrder.id}`}
                 </h2>
-                <Badge className="bg-cyan-500/10 text-cyan-400 capitalize text-[10px] border-cyan-500/20">
+                <Badge className="bg-brand-500/10 text-brand-400 capitalize text-[10px] border-brand-500/20">
                   {tData(activeOrder.status)}
                 </Badge>
               </div>
-              <span className="text-xs text-slate-500 block mt-0.5">
-                {activeOrder.table_number 
-                  ? (locale === "ne" ? `डाइनिङ टेबल ${activeOrder.table_number}` : `Dining Table ${activeOrder.table_number}`) 
+              <span className="text-xs text-workspace-500 block mt-0.5">
+                {activeOrder.table_number
+                  ? (locale === "ne" ? `डाइनिङ टेबल ${activeOrder.table_number}` : `Dining Table ${activeOrder.table_number}`)
                   : (locale === "ne" ? "पैक गर्ने / कोठा सेवा" : "Takeaway / Service")}
               </span>
             </div>
           ) : (
             <div>
-              <h2 className="font-bold text-slate-100 text-base">{locale === "ne" ? "नयाँ अर्डर" : "New Order"}</h2>
-              <span className="text-xs text-slate-500 block mt-0.5">
-                {selectedTable 
-                  ? (locale === "ne" ? `डाइन-इन टेबल ${selectedTable.table_number}` : `Dine-In Table ${selectedTable.table_number}`) 
+              <h2 className="font-bold text-workspace-100 text-base">{locale === "ne" ? "नयाँ अर्डर" : "New Order"}</h2>
+              <span className="text-xs text-workspace-500 block mt-0.5">
+                {selectedTable
+                  ? (locale === "ne" ? `डाइन-इन टेबल ${selectedTable.table_number}` : `Dine-In Table ${selectedTable.table_number}`)
                   : (locale === "ne" ? "कार्ट चेकआउट" : "Cart Checkout")}
               </span>
             </div>
           )}
         </div>
         {activeOrder && (
-          <Button variant="ghost" size="sm" onClick={onCancelActiveView} className="text-slate-400 hover:text-slate-200">
+          <Button variant="ghost" size="sm" onClick={onCancelActiveView} className="text-workspace-400 hover:text-workspace-200">
             {locale === "ne" ? "निकास" : "Exit View"}
           </Button>
         )}
@@ -224,21 +224,21 @@ export function OrderPanel({
 
       {/* Inputs (Only for new orders) */}
       {!activeOrder && (
-        <div className="p-4 border-b border-slate-900 space-y-3.5 bg-slate-900/10">
+        <div className="p-4 border-b border-workspace-900 space-y-3.5 bg-workspace-900/10">
           {/* Order Type */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-slate-400 font-semibold tracking-wide">{locale === "ne" ? "अर्डर प्रकार" : "Order Type"}</Label>
+            <Label className="text-xs text-workspace-400 font-semibold tracking-wide">{locale === "ne" ? "अर्डर प्रकार" : "Order Type"}</Label>
             <Select
               value={orderType}
               onValueChange={(val) => setOrderType(val as OrderType)}
               disabled={!!selectedTable}
             >
-              <SelectTrigger className="bg-slate-900/60 border-slate-800 text-slate-200 text-sm">
+              <SelectTrigger className="bg-workspace-900/60 border-workspace-800 text-workspace-200 text-sm">
                 <SelectValue placeholder={locale === "ne" ? "अर्डर प्रकार छान्नुहोस्" : "Select order type"}>
                   {(value) => value ? tData(value) : (locale === "ne" ? "अर्डर प्रकार छान्नुहोस्" : "Select order type")}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="bg-slate-900 border-slate-800 text-slate-200">
+              <SelectContent className="bg-workspace-900 border-workspace-800 text-workspace-200">
                 <SelectItem value="dine_in">{tData("dine_in")}</SelectItem>
                 <SelectItem value="takeaway">{tData("takeaway")}</SelectItem>
                 <SelectItem value="room_service">{tData("room_service")}</SelectItem>
@@ -250,11 +250,11 @@ export function OrderPanel({
           {/* Guest Linkage (for Room Service/Bar tab) */}
           {(orderType === "room_service" || orderType === "bar") && (
             <div className="space-y-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
-              <Label className="text-xs text-slate-400 font-semibold tracking-wide flex items-center gap-1">
-                <User className="h-3 w-3 text-cyan-400" /> {locale === "ne" ? "लिङ्क गरिएको कोठा पाहुना" : "Linked Room Guest"}
+              <Label className="text-xs text-workspace-400 font-semibold tracking-wide flex items-center gap-1">
+                <User className="h-3 w-3 text-brand-400" /> {locale === "ne" ? "लिङ्क गरिएको कोठा पाहुना" : "Linked Room Guest"}
               </Label>
               <Select value={selectedResId} onValueChange={(val) => setSelectedResId(val || "none")}>
-                <SelectTrigger className="bg-slate-900/60 border-slate-800 text-slate-200 text-xs">
+                <SelectTrigger className="bg-workspace-900/60 border-workspace-800 text-workspace-200 text-xs">
                   <SelectValue placeholder={locale === "ne" ? "सक्रिय चेक-इन पाहुना छान्नुहोस्" : "Select active check-in guest"}>
                     {(value) => {
                       if (value === "none") return locale === "ne" ? "वाक-इन पाहुना (कुनै कोठा ट्याब छैन)" : "Walk-in Guest (No Room Tab)";
@@ -268,7 +268,7 @@ export function OrderPanel({
                     }}
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="bg-slate-900 border-slate-800 text-slate-200">
+                <SelectContent className="bg-workspace-900 border-workspace-800 text-workspace-200">
                   <SelectItem value="none">{locale === "ne" ? "वाक-इन पाहुना (कुनै कोठा ट्याब छैन)" : "Walk-in Guest (No Room Tab)"}</SelectItem>
                   {inHouseList.map((res) => (
                     <SelectItem key={res.id} value={res.id.toString()}>
@@ -289,19 +289,19 @@ export function OrderPanel({
         {/* Active Items */}
         {activeOrder && activeOrder.items.length > 0 && (
           <div className="space-y-2">
-            <h3 className="text-xs text-slate-500 font-semibold uppercase tracking-wider flex items-center gap-1.5 mb-2.5">
+            <h3 className="text-xs text-workspace-500 font-semibold uppercase tracking-wider flex items-center gap-1.5 mb-2.5">
               <Utensils className="h-3.5 w-3.5" /> {locale === "ne" ? "अर्डर गरिएका सामग्रीहरू" : "Placed Items"}
             </h3>
             {activeOrder.items.map((item) => (
-              <div key={item.id} className="p-2.5 rounded-lg bg-slate-900/40 border border-slate-900 flex justify-between items-center gap-3">
+              <div key={item.id} className="p-2.5 rounded-lg bg-workspace-900/40 border border-workspace-900 flex justify-between items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-xs text-slate-200 block truncate">
+                    <span className="font-semibold text-xs text-workspace-200 block truncate">
                       {tData(item.menu_item.name)}
                     </span>
-                    <span className="text-[10px] text-slate-500">x{item.quantity}</span>
+                    <span className="text-[10px] text-workspace-500">x{item.quantity}</span>
                   </div>
-                  <span className="text-[10px] text-slate-400 font-medium">
+                  <span className="text-[10px] text-workspace-400 font-medium">
                     Rs. {(parseFloat(item.unit_price) * item.quantity).toFixed(2)}
                   </span>
                 </div>
@@ -309,11 +309,11 @@ export function OrderPanel({
                 <div className="flex items-center gap-1.5 flex-shrink-0">
                   <Badge
                     className={`capitalize text-[9px] px-1.5 py-0.5 border ${
-                      item.status === "ready" 
-                        ? "bg-amber-500/10 text-amber-400 border-amber-500/20" 
+                      item.status === "ready"
+                        ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
                         : item.status === "served"
                         ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                        : "bg-slate-900 text-slate-500 border-slate-800"
+                        : "bg-workspace-900 text-workspace-500 border-workspace-800"
                     }`}
                   >
                     {tData(item.status)}
@@ -322,7 +322,7 @@ export function OrderPanel({
                     <Button
                       size="xs"
                       onClick={() => handleUpdateItemStatus(item.id, "preparing")}
-                      className="h-5 px-1.5 text-[9px] bg-slate-800 hover:bg-slate-700 text-slate-300"
+                      className="h-5 px-1.5 text-[9px] bg-workspace-800 hover:bg-workspace-700 text-workspace-300"
                     >
                       {locale === "ne" ? "तयारी" : "Prep"}
                     </Button>
@@ -360,32 +360,32 @@ export function OrderPanel({
           )}
           {cartItems.length === 0 ? (
             !activeOrder && (
-              <div className="flex flex-col items-center justify-center h-48 border border-dashed border-slate-900 rounded-xl bg-slate-950/10">
-                <Receipt className="h-9 w-9 text-slate-700 mb-2" />
-                <p className="text-xs text-slate-500 font-medium">{t("empty_cart")}</p>
-                <p className="text-[10px] text-slate-600">{locale === "ne" ? "मेनु ग्रिडबाट सामग्रीहरू छान्नुहोस्।" : "Select items from the menu grid."}</p>
+              <div className="flex flex-col items-center justify-center h-48 border border-dashed border-workspace-900 rounded-xl bg-workspace-950/10">
+                <Receipt className="h-9 w-9 text-workspace-700 mb-2" />
+                <p className="text-xs text-workspace-500 font-medium">{t("empty_cart")}</p>
+                <p className="text-[10px] text-workspace-600">{locale === "ne" ? "मेनु ग्रिडबाट सामग्रीहरू छान्नुहोस्।" : "Select items from the menu grid."}</p>
               </div>
             )
           ) : (
             cartItems.map((c) => (
-              <div key={c.id} className="p-2.5 rounded-lg bg-slate-900/70 border border-slate-800/60 flex justify-between items-center gap-3">
+              <div key={c.id} className="p-2.5 rounded-lg bg-workspace-900/70 border border-workspace-800/60 flex justify-between items-center gap-3">
                 <div className="flex-1 min-w-0">
-                  <span className="font-semibold text-xs text-slate-200 block truncate">{tData(c.name)}</span>
-                  <span className="text-[10px] text-cyan-400 font-medium">Rs. {c.price.toFixed(2)}</span>
+                  <span className="font-semibold text-xs text-workspace-200 block truncate">{tData(c.name)}</span>
+                  <span className="text-[10px] text-brand-400 font-medium">Rs. {c.price.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <div className="flex items-center border border-slate-800 rounded-md bg-slate-950">
+                  <div className="flex items-center border border-workspace-800 rounded-md bg-workspace-950">
                     <button
                       onClick={() => updateQuantity(c.id, c.quantity - 1)}
-                      className="p-1 hover:bg-slate-900 text-slate-400 hover:text-slate-200 transition-colors"
+                      className="p-1 hover:bg-workspace-900 text-workspace-400 hover:text-workspace-200 transition-colors"
                       aria-label="Decrease quantity"
                     >
                       <Minus className="h-3 w-3" />
                     </button>
-                    <span className="px-2 text-xs font-semibold text-slate-200">{c.quantity}</span>
+                    <span className="px-2 text-xs font-semibold text-workspace-200">{c.quantity}</span>
                     <button
                       onClick={() => addItem({ id: c.id, name: c.name, price: c.price })}
-                      className="p-1 hover:bg-slate-900 text-slate-400 hover:text-slate-200 transition-colors"
+                      className="p-1 hover:bg-workspace-900 text-workspace-400 hover:text-workspace-200 transition-colors"
                       aria-label="Increase quantity"
                     >
                       <Plus className="h-3 w-3" />
@@ -393,7 +393,7 @@ export function OrderPanel({
                   </div>
                   <button
                     onClick={() => removeItem(c.id)}
-                    className="p-1 text-slate-500 hover:text-red-400 transition-colors"
+                    className="p-1 text-workspace-500 hover:text-red-400 transition-colors"
                     aria-label="Remove item"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -406,17 +406,17 @@ export function OrderPanel({
       </div>
 
       {/* Bill Footer Calculations */}
-      <div className="p-4 border-t border-slate-900 bg-slate-950 space-y-3.5">
-        <div className="space-y-1.5 text-xs text-slate-400">
+      <div className="p-4 border-t border-workspace-900 bg-workspace-950 space-y-3.5">
+        <div className="space-y-1.5 text-xs text-workspace-400">
           <div className="flex justify-between">
             <span>{locale === "ne" ? "उप-योग" : "Subtotal"}</span>
-            <span className="text-slate-200 font-medium">Rs. {subtotal.toFixed(2)}</span>
+            <span className="text-workspace-200 font-medium">Rs. {subtotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>{locale === "ne" ? "भ्याट (१३%)" : "VAT (13%)"}</span>
-            <span className="text-slate-200 font-medium">Rs. {tax.toFixed(2)}</span>
+            <span className="text-workspace-200 font-medium">Rs. {tax.toFixed(2)}</span>
           </div>
-          
+
           {/* Discount input or display */}
           <div className="flex justify-between items-center">
             <span>{locale === "ne" ? "छुट (रु.)" : "Discount (Rs.)"}</span>
@@ -428,21 +428,21 @@ export function OrderPanel({
                 min="0"
                 value={discountAmount}
                 onChange={(e) => setDiscountAmount(e.target.value)}
-                className="w-20 h-6 bg-slate-900 border-slate-800 text-[11px] text-right py-0 px-1.5 text-slate-200 focus-visible:ring-cyan-500"
+                className="w-20 h-6 bg-workspace-900 border-workspace-800 text-[11px] text-right py-0 px-1.5 text-workspace-200 focus-visible:ring-brand-500"
               />
             )}
           </div>
 
-          <div className="border-t border-slate-900 pt-2 flex justify-between font-bold text-sm text-slate-100">
+          <div className="border-t border-workspace-900 pt-2 flex justify-between font-bold text-sm text-workspace-100">
             <span>{t("total")}</span>
-            <span className="text-cyan-400">Rs. {total.toFixed(2)}</span>
+            <span className="text-brand-400">Rs. {total.toFixed(2)}</span>
           </div>
         </div>
 
         {/* Order overall Notes (Only for draft) */}
         {!activeOrder && cartItems.length > 0 && (
           <div className="space-y-1.5">
-            <Label htmlFor="order-notes" className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">
+            <Label htmlFor="order-notes" className="text-[10px] text-workspace-500 font-semibold uppercase tracking-wider">
               {locale === "ne" ? "अर्डर निर्देशनहरू" : "Order Instructions"}
             </Label>
             <Textarea
@@ -450,7 +450,7 @@ export function OrderPanel({
               placeholder={locale === "ne" ? "उदा. प्याज नहाल्नुहोला, पिरो..." : "E.g. No onions, Extra spicy..."}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="min-h-[44px] bg-slate-900 border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus-visible:ring-cyan-500"
+              className="min-h-[44px] bg-workspace-900 border-workspace-800 text-xs text-workspace-200 placeholder-workspace-500 focus-visible:ring-brand-500"
             />
           </div>
         )}
@@ -462,7 +462,7 @@ export function OrderPanel({
               <Button
                 variant="outline"
                 onClick={() => setIsVoiding(true)}
-                className="flex-1 border-slate-800 text-red-400 hover:bg-red-500/10 hover:text-red-300 font-medium text-xs"
+                className="flex-1 border-workspace-800 text-red-400 hover:bg-red-500/10 hover:text-red-300 font-medium text-xs"
               >
                 {locale === "ne" ? "अर्डर खारेज" : "Void Order"}
               </Button>
@@ -478,14 +478,14 @@ export function OrderPanel({
               <Button
                 variant="outline"
                 onClick={clearCart}
-                className="border-slate-800 text-slate-400 hover:bg-slate-900 hover:text-slate-200 font-medium text-xs"
+                className="border-workspace-800 text-workspace-400 hover:bg-workspace-900 hover:text-workspace-200 font-medium text-xs"
               >
                 {locale === "ne" ? "साफ गर्नुहोस्" : "Clear"}
               </Button>
               <Button
                 onClick={handlePlaceOrder}
                 disabled={isSubmitting}
-                className="flex-1 bg-cyan-600 text-white hover:bg-cyan-500 font-semibold text-xs"
+                className="flex-1 bg-brand-600 text-white hover:bg-brand-500 font-semibold text-xs"
               >
                 {isSubmitting ? (locale === "ne" ? "राख्दै..." : "Placing...") : (locale === "ne" ? "अर्डर राख्नुहोस्" : "Place Order")}
               </Button>
@@ -518,26 +518,26 @@ export function OrderPanel({
 
       {/* Void Dialog */}
       {activeOrder && isVoiding && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 max-w-[380px] w-full space-y-4">
-            <h3 className="font-bold text-slate-100 flex items-center gap-2 text-sm">
+        <div className="fixed inset-0 bg-workspace-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-workspace-900 border border-workspace-800 rounded-xl p-5 max-w-[380px] w-full space-y-4">
+            <h3 className="font-bold text-workspace-100 flex items-center gap-2 text-sm">
               <ShieldAlert className="h-5 w-5 text-red-500" /> {locale === "ne" ? "सक्रिय अर्डर खारेज गर्नुहोस्" : "Void Active Order"}
             </h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-workspace-400 leading-relaxed">
               {locale === "ne" ? "अर्डर खारेज गर्दा यो पूर्ण रूपमा रद्द हुन्छ। अडिटिङको लागि मान्य कारण दर्ता गर्नुपर्छ।" : "Voiding an order cancels it completely. A valid reason must be logged for auditing."}
             </p>
             <div className="space-y-1.5">
-              <Label htmlFor="void-reason" className="text-xs text-slate-400">{locale === "ne" ? "खारेजीको कारण" : "Reason for Void"}</Label>
+              <Label htmlFor="void-reason" className="text-xs text-workspace-400">{locale === "ne" ? "खारेजीको कारण" : "Reason for Void"}</Label>
               <Input
                 id="void-reason"
                 placeholder={locale === "ne" ? "उदा. ग्राहकको सोच बदलियो, दोहोरो अर्डर" : "E.g. Customer changed mind, Duplicate order"}
                 value={voidReason}
                 onChange={(e) => setVoidReason(e.target.value)}
-                className="bg-slate-950 border-slate-800 text-xs"
+                className="bg-workspace-950 border-workspace-800 text-xs"
               />
             </div>
             <div className="flex justify-end gap-2 text-xs">
-              <Button size="sm" variant="outline" onClick={() => setIsVoiding(false)} className="border-slate-800">
+              <Button size="sm" variant="outline" onClick={() => setIsVoiding(false)} className="border-workspace-800">
                 {locale === "ne" ? "रद्द" : "Cancel"}
               </Button>
               <Button

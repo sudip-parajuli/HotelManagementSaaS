@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  CreditCard, 
-  Plus, 
-  Play, 
-  CheckCircle2, 
-  Printer, 
-  Settings, 
-  Coins, 
-  Trash2, 
+import {
+  CreditCard,
+  Plus,
+  Play,
+  CheckCircle2,
+  Printer,
+  Settings,
+  Coins,
+  Trash2,
   AlertTriangle,
   FolderOpen
 } from "lucide-react";
@@ -199,7 +199,7 @@ export default function PayrollWizardPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-workspace-200 to-workspace-400 bg-clip-text text-transparent">
             {locale === "ne" ? "पेरोल प्रशोधन केन्द्र" : "Payroll Processing Hub"}
           </h1>
           <p className="text-muted-foreground text-sm">
@@ -209,7 +209,7 @@ export default function PayrollWizardPage() {
           </p>
         </div>
         <div>
-          <Button onClick={() => setIsNewPeriodOpen(true)} className="bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white flex items-center gap-2 text-xs font-semibold">
+          <Button onClick={() => setIsNewPeriodOpen(true)} className="bg-gradient-to-r from-brand-600 to-indigo-500 hover:from-brand-500 hover:to-indigo-400 text-white flex items-center gap-2 text-xs font-semibold">
             <Plus className="h-4 w-4" />
             {locale === "ne" ? "तलब चक्र सुरु गर्नुहोस्" : "Initialize Pay Cycle"}
           </Button>
@@ -219,9 +219,9 @@ export default function PayrollWizardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Cycle Selector */}
         <div className="lg:col-span-3 space-y-6">
-          <Card className="bg-slate-900/30 border-slate-800/80 shadow-xl overflow-hidden">
-            <CardHeader className="p-4 border-b border-slate-900 bg-slate-950/25">
-              <CardTitle className="text-sm font-bold text-white flex items-center gap-2">
+          <Card className="bg-workspace-900/30 border-workspace-800/80 shadow-xl overflow-hidden">
+            <CardHeader className="p-4 border-b border-workspace-900 bg-workspace-950/25">
+              <CardTitle className="text-sm font-bold text-foreground flex items-center gap-2">
                 <FolderOpen className="h-4 w-4 text-indigo-400" />
                 {locale === "ne" ? "रोस्टर चक्रहरू" : "Roster Cycles"}
               </CardTitle>
@@ -234,14 +234,14 @@ export default function PayrollWizardPage() {
                     key={p.id}
                     onClick={() => setSelectedPeriod(p)}
                     className={`w-full text-left p-3 rounded-lg flex items-center justify-between gap-3 text-xs transition-all ${
-                      isActive 
+                      isActive
                         ? "bg-indigo-950/20 border border-indigo-500/20 text-white font-bold"
-                        : "text-slate-400 border border-transparent hover:bg-slate-850/40"
+                        : "text-workspace-400 border border-transparent hover:bg-slate-850/40"
                     }`}
                   >
                     <div>
                       <div>{translateMonth(p.month_display)} {p.year}</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">
+                      <div className="text-[10px] text-workspace-500 mt-0.5">
                         {locale === "ne" ? `${p.entry_count} कर्मचारीहरू गणना गरियो` : `${p.entry_count} employees computed`}
                       </div>
                     </div>
@@ -264,14 +264,14 @@ export default function PayrollWizardPage() {
         {/* Right: Calculated Ledger */}
         <div className="lg:col-span-9 space-y-6">
           {selectedPeriod ? (
-            <Card className="bg-slate-900/20 border-slate-800/60 shadow-xl overflow-hidden">
-              <CardHeader className="p-5 border-b border-slate-900/60 flex flex-row flex-wrap items-center justify-between gap-4">
+            <Card className="bg-workspace-900/20 border-workspace-800/60 shadow-xl overflow-hidden">
+              <CardHeader className="p-5 border-b border-workspace-900/60 flex flex-row flex-wrap items-center justify-between gap-4">
                 <div>
-                  <CardTitle className="text-base font-bold text-white">
+                  <CardTitle className="text-base font-bold text-foreground">
                     {locale === "ne" ? "तलब चक्र विवरण — " : "Cycle Details — "}{translateMonth(selectedPeriod.month_display)} {selectedPeriod.year}
                   </CardTitle>
-                  <CardDescription className="text-slate-400 text-xs">
-                    {locale === "ne" ? "रोस्टर बही प्रशोधन स्थिति:" : "Roster ledger processing status:"} <span className="font-bold text-white capitalize">{tData(selectedPeriod.status)}</span>
+                  <CardDescription className="text-workspace-400 text-xs">
+                    {locale === "ne" ? "रोस्टर बही प्रशोधन स्थिति:" : "Roster ledger processing status:"} <span className="font-bold text-foreground capitalize">{tData(selectedPeriod.status)}</span>
                   </CardDescription>
                 </div>
 
@@ -279,7 +279,7 @@ export default function PayrollWizardPage() {
                 <div className="flex items-center gap-2">
                   {selectedPeriod.status === "draft" && (
                     <>
-                      <Button onClick={handleRunCalculation} size="sm" variant="outline" className="border-slate-800 hover:bg-slate-800 text-white flex items-center gap-1.5 text-xs font-semibold">
+                      <Button onClick={handleRunCalculation} size="sm" variant="outline" className="border-workspace-800 hover:bg-workspace-800 text-white flex items-center gap-1.5 text-xs font-semibold">
                         <Play className="h-3.5 w-3.5 text-indigo-400" />
                         {locale === "ne" ? "गणना गर्नुहोस्" : "Calculate"}
                       </Button>
@@ -302,14 +302,14 @@ export default function PayrollWizardPage() {
                 {entries.length === 0 ? (
                   <div className="text-center py-16 space-y-3">
                     <AlertTriangle className="h-10 w-10 text-amber-500 mx-auto" />
-                    <p className="text-slate-400 text-sm">
+                    <p className="text-workspace-400 text-sm">
                       {locale === "ne" ? "कुनै पेरोल रेकर्ड गणना गरिएको छैन। रेकर्डहरू उत्पन्न गर्न 'गणना गर्नुहोस्' मा क्लिक गर्नुहोस्।" : "No payroll entries computed. Click 'Calculate' to generate entries."}
                     </p>
                   </div>
                 ) : (
                   <table className="w-full text-left text-xs border-collapse min-w-[900px]">
                     <thead>
-                      <tr className="border-b border-slate-800/60 text-slate-400 font-semibold bg-slate-950/10">
+                      <tr className="border-b border-workspace-800/60 text-workspace-400 font-semibold bg-workspace-950/10">
                         <th className="py-3 px-4">{locale === "ne" ? "कर्मचारी" : "Employee"}</th>
                         <th className="py-3 px-4 text-right">{locale === "ne" ? "आधारभूत तलब" : "Base Pay"}</th>
                         <th className="py-3 px-4 text-right">{locale === "ne" ? "ओभरटाइम" : "Overtime"}</th>
@@ -325,27 +325,27 @@ export default function PayrollWizardPage() {
                       {entries.map((entry) => {
                         const allSums = entry.allowances.reduce((s, item) => s + parseFloat(item.amount), 0);
                         return (
-                          <tr key={entry.id} className="border-b border-slate-900/50 hover:bg-slate-950/10 transition-colors">
+                          <tr key={entry.id} className="border-b border-workspace-900/50 hover:bg-workspace-950/10 transition-colors">
                             <td className="py-3 px-4">
-                              <div className="font-bold text-white text-sm">{entry.staff_name}</div>
-                              <div className="text-slate-500 text-[10px]">{tData(entry.staff_designation)}</div>
+                              <div className="font-bold text-foreground text-sm">{entry.staff_name}</div>
+                              <div className="text-workspace-500 text-[10px]">{tData(entry.staff_designation)}</div>
                             </td>
-                            <td className="py-3 px-4 text-right text-slate-300 font-medium font-mono">
+                            <td className="py-3 px-4 text-right text-workspace-300 font-medium font-mono">
                               Rs. {parseFloat(entry.basic_salary).toLocaleString()}
                             </td>
-                            <td className="py-3 px-4 text-right text-slate-400 font-mono">
+                            <td className="py-3 px-4 text-right text-workspace-400 font-mono">
                               Rs. {parseFloat(entry.overtime_amount).toLocaleString()}
                             </td>
-                            <td className="py-3 px-4 text-right text-slate-400 font-mono">
+                            <td className="py-3 px-4 text-right text-workspace-400 font-mono">
                               Rs. {allSums.toLocaleString()}
                             </td>
-                            <td className="py-3 px-4 text-right text-slate-500 font-mono">
+                            <td className="py-3 px-4 text-right text-workspace-500 font-mono">
                               Rs. {parseFloat(entry.ssf_employee).toLocaleString()}
                             </td>
                             <td className="py-3 px-4 text-right text-red-500 font-mono">
                               Rs. {parseFloat(entry.income_tax).toLocaleString()}
                             </td>
-                            <td className="py-3 px-4 text-right text-slate-300 font-mono font-semibold">
+                            <td className="py-3 px-4 text-right text-workspace-300 font-mono font-semibold">
                               Rs. {parseFloat(entry.gross_salary).toLocaleString()}
                             </td>
                             <td className="py-3 px-4 text-right text-emerald-400 font-mono font-bold text-sm">
@@ -358,11 +358,11 @@ export default function PayrollWizardPage() {
                                     {locale === "ne" ? "समायोजन" : "Adjust"}
                                   </Button>
                                 )}
-                                <a 
-                                  href={payrollApi.getPayslipUrl(entry.id)} 
-                                  target="_blank" 
+                                <a
+                                  href={payrollApi.getPayslipUrl(entry.id)}
+                                  target="_blank"
                                   rel="noreferrer"
-                                  className="h-8 px-2 inline-flex items-center gap-1 rounded text-slate-400 hover:text-white text-[11px] font-semibold hover:bg-slate-800"
+                                  className="h-8 px-2 inline-flex items-center gap-1 rounded text-workspace-400 hover:text-white text-[11px] font-semibold hover:bg-workspace-800"
                                 >
                                   <Printer className="h-3.5 w-3.5" />
                                   {locale === "ne" ? "तलब रसिद (Payslip)" : "Payslip"}
@@ -378,9 +378,9 @@ export default function PayrollWizardPage() {
               </CardContent>
             </Card>
           ) : (
-            <div className="text-center py-24 bg-slate-900/10 border border-slate-850/50 rounded-xl space-y-3">
-              <CreditCard className="h-12 w-12 text-slate-600 mx-auto" />
-              <p className="text-slate-400 font-medium">
+            <div className="text-center py-24 bg-workspace-900/10 border border-slate-850/50 rounded-xl space-y-3">
+              <CreditCard className="h-12 w-12 text-workspace-600 mx-auto" />
+              <p className="text-workspace-400 font-medium">
                 {locale === "ne"
                   ? "पेरोल प्रशोधन सुरु गर्न तलब चक्र छान्नुहोस् वा नयाँ चक्र सुरु गर्नुहोस्।"
                   : "Select or initialize a pay cycle cycle to begin processing payroll."}
@@ -392,9 +392,9 @@ export default function PayrollWizardPage() {
 
       {/* Dialog: Create Period */}
       <Dialog open={isNewPeriodOpen} onOpenChange={setIsNewPeriodOpen}>
-        <DialogContent className="bg-slate-900 border-slate-800 text-white w-full sm:max-w-sm">
+        <DialogContent className="bg-workspace-900 border-workspace-800 text-foreground w-full sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-white flex items-center gap-2">
+            <DialogTitle className="text-lg font-bold text-foreground flex items-center gap-2">
               <CreditCard className="h-5 w-5 text-indigo-450" />
               {locale === "ne" ? "तलब चक्र सुरु गर्नुहोस्" : "Initialize Pay Cycle"}
             </DialogTitle>
@@ -402,11 +402,11 @@ export default function PayrollWizardPage() {
           <form onSubmit={handleCreatePeriod} className="space-y-4 pt-2 text-xs">
             <div className="space-y-1">
               <Label htmlFor="p_month">{locale === "ne" ? "महिना" : "Month"}</Label>
-              <select 
+              <select
                 id="p_month"
                 value={newPeriodData.month}
                 onChange={(e) => setNewPeriodData({ ...newPeriodData, month: parseInt(e.target.value) })}
-                className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm"
+                className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm"
               >
                 {Array.from({ length: 12 }, (_, i) => (
                   <option key={i + 1} value={i + 1}>
@@ -417,21 +417,21 @@ export default function PayrollWizardPage() {
             </div>
             <div className="space-y-1">
               <Label htmlFor="p_year">{locale === "ne" ? "वर्ष" : "Year"}</Label>
-              <select 
+              <select
                 id="p_year"
                 value={newPeriodData.year}
                 onChange={(e) => setNewPeriodData({ ...newPeriodData, year: parseInt(e.target.value) })}
-                className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm"
+                className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm"
               >
                 <option value={2026}>2026</option>
                 <option value={2027}>2027</option>
               </select>
             </div>
-            <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
-              <Button type="button" variant="ghost" onClick={() => setIsNewPeriodOpen(false)} className="h-9 hover:bg-slate-800 text-slate-400 text-xs">
+            <div className="flex justify-end gap-3 pt-4 border-t border-workspace-800">
+              <Button type="button" variant="ghost" onClick={() => setIsNewPeriodOpen(false)} className="h-9 hover:bg-workspace-800 text-workspace-400 text-xs">
                 {locale === "ne" ? "रद्द" : "Cancel"}
               </Button>
-              <Button type="submit" className="h-9 bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white text-xs">
+              <Button type="submit" className="h-9 bg-gradient-to-r from-brand-600 to-indigo-500 hover:from-brand-500 hover:to-indigo-400 text-white text-xs">
                 {locale === "ne" ? "तलब चक्र सुरु" : "Initialize Cycle"}
               </Button>
             </div>
@@ -441,9 +441,9 @@ export default function PayrollWizardPage() {
 
       {/* Dialog: Edit adjustments */}
       <Dialog open={selectedEntryForAdjust !== null} onOpenChange={() => setSelectedEntryForAdjust(null)}>
-        <DialogContent className="bg-slate-900 border-slate-800 text-white w-full sm:max-w-lg overflow-y-auto max-h-[85vh]">
+        <DialogContent className="bg-workspace-900 border-workspace-800 text-foreground w-full sm:max-w-lg overflow-y-auto max-h-[85vh]">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-white flex items-center gap-2">
+            <DialogTitle className="text-lg font-bold text-foreground flex items-center gap-2">
               <Settings className="h-5 w-5 text-indigo-400" />
               {locale === "ne" ? "भत्ता र कटौती समायोजन" : "Adjust Allowances & Deductions"}
             </DialogTitle>
@@ -451,9 +451,9 @@ export default function PayrollWizardPage() {
 
           {selectedEntryForAdjust && (
             <form onSubmit={handleSaveAdjustments} className="space-y-4 pt-2 text-xs">
-              <div className="bg-slate-950 p-3 rounded-lg border border-slate-850 text-xs">
-                <div>{locale === "ne" ? "कर्मचारी:" : "Employee:"} <span className="font-bold text-white">{selectedEntryForAdjust.staff_name}</span></div>
-                <div>{locale === "ne" ? "पद:" : "Designation:"} <span className="text-slate-400">{tData(selectedEntryForAdjust.staff_designation)}</span></div>
+              <div className="bg-workspace-950 p-3 rounded-lg border border-slate-850 text-xs">
+                <div>{locale === "ne" ? "कर्मचारी:" : "Employee:"} <span className="font-bold text-foreground">{selectedEntryForAdjust.staff_name}</span></div>
+                <div>{locale === "ne" ? "पद:" : "Designation:"} <span className="text-workspace-400">{tData(selectedEntryForAdjust.staff_designation)}</span></div>
                 <div>{locale === "ne" ? "गणना गरिएको आधारभूत तलब:" : "Computed Base:"} <span className="font-bold text-emerald-400">Rs. {parseFloat(selectedEntryForAdjust.basic_salary).toLocaleString()}</span></div>
               </div>
 
@@ -467,22 +467,22 @@ export default function PayrollWizardPage() {
                 </div>
                 {allowanceInput.map((allow, idx) => (
                   <div key={idx} className="flex gap-3 items-center">
-                    <Input 
+                    <Input
                       value={allow.name}
                       onChange={(e) => handleAllowanceChange(idx, "name", e.target.value)}
                       placeholder={locale === "ne" ? "उदा. चाडपर्व भत्ता, इन्धन भत्ता" : "e.g. Festival Bonus, Fuel Allowance"}
-                      className="bg-slate-950 border-slate-800 text-white text-xs h-9" 
+                      className="bg-workspace-950 border-workspace-800 text-white text-xs h-9"
                       required
                     />
-                    <Input 
+                    <Input
                       type="number"
                       step="0.01"
                       value={allow.amount}
                       onChange={(e) => handleAllowanceChange(idx, "amount", e.target.value)}
-                      className="bg-slate-950 border-slate-800 text-white text-xs h-9 w-[120px]" 
+                      className="bg-workspace-950 border-workspace-800 text-white text-xs h-9 w-[120px]"
                       required
                     />
-                    <Button type="button" onClick={() => handleRemoveAllowance(idx)} size="icon" variant="ghost" className="h-8 w-8 text-red-400 hover:bg-slate-800 shrink-0">
+                    <Button type="button" onClick={() => handleRemoveAllowance(idx)} size="icon" variant="ghost" className="h-8 w-8 text-red-400 hover:bg-workspace-800 shrink-0">
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -499,22 +499,22 @@ export default function PayrollWizardPage() {
                 </div>
                 {deductionInput.map((ded, idx) => (
                   <div key={idx} className="flex gap-3 items-center">
-                    <Input 
+                    <Input
                       value={ded.name}
                       onChange={(e) => handleDeductionChange(idx, "name", e.target.value)}
                       placeholder={locale === "ne" ? "उदा. पेश्की तलब, क्षति जरिवाना" : "e.g. Advance Salary, Damage fine"}
-                      className="bg-slate-950 border-slate-800 text-white text-xs h-9" 
+                      className="bg-workspace-950 border-workspace-800 text-white text-xs h-9"
                       required
                     />
-                    <Input 
+                    <Input
                       type="number"
                       step="0.01"
                       value={ded.amount}
                       onChange={(e) => handleDeductionChange(idx, "amount", e.target.value)}
-                      className="bg-slate-950 border-slate-800 text-white text-xs h-9 w-[120px]" 
+                      className="bg-workspace-950 border-workspace-800 text-white text-xs h-9 w-[120px]"
                       required
                     />
-                    <Button type="button" onClick={() => handleRemoveDeduction(idx)} size="icon" variant="ghost" className="h-8 w-8 text-red-400 hover:bg-slate-800 shrink-0">
+                    <Button type="button" onClick={() => handleRemoveDeduction(idx)} size="icon" variant="ghost" className="h-8 w-8 text-red-400 hover:bg-workspace-800 shrink-0">
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -523,20 +523,20 @@ export default function PayrollWizardPage() {
 
               <div className="space-y-1">
                 <Label htmlFor="adj_notes">{locale === "ne" ? "अडिट टिपोटहरू" : "Audit Notes"}</Label>
-                <Input 
+                <Input
                   id="adj_notes"
                   value={adjustNotes}
                   onChange={(e) => setAdjustNotes(e.target.value)}
                   placeholder={locale === "ne" ? "म्यानुअल भत्ता वा कटौतीको कारण..." : "Reasoning for manual allowance or deduction..."}
-                  className="bg-slate-950 border-slate-800 text-white text-xs" 
+                  className="bg-workspace-950 border-workspace-800 text-white text-xs"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                <Button type="button" variant="ghost" onClick={() => setSelectedEntryForAdjust(null)} className="h-9 hover:bg-slate-800 text-slate-400 text-xs">
+              <div className="flex justify-end gap-3 pt-4 border-t border-workspace-800">
+                <Button type="button" variant="ghost" onClick={() => setSelectedEntryForAdjust(null)} className="h-9 hover:bg-workspace-800 text-workspace-400 text-xs">
                   {locale === "ne" ? "रद्द" : "Cancel"}
                 </Button>
-                <Button type="submit" className="h-9 bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white text-xs">
+                <Button type="submit" className="h-9 bg-gradient-to-r from-brand-600 to-indigo-500 hover:from-brand-500 hover:to-indigo-400 text-white text-xs">
                   {locale === "ne" ? "समायोजन बचत गर्नुहोस्" : "Save Adjustments"}
                 </Button>
               </div>

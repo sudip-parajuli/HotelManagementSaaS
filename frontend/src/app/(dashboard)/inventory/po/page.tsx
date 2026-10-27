@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  FileText, 
-  Plus, 
-  Trash2, 
-  ClipboardCheck, 
-  Check, 
+import {
+  FileText,
+  Plus,
+  Trash2,
+  ClipboardCheck,
+  Check,
   Calendar,
   AlertCircle
 } from "lucide-react";
@@ -172,7 +172,7 @@ export default function PurchaseOrderPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-workspace-200 to-workspace-400 bg-clip-text text-transparent">
             {t("po_title")}
           </h1>
           <p className="text-muted-foreground text-sm">
@@ -180,7 +180,7 @@ export default function PurchaseOrderPage() {
           </p>
         </div>
         <div>
-          <Button 
+          <Button
             onClick={() => {
               setNewPO({ supplier_id: "", expected_date: "", notes: "", items: [{ item_id: "", quantity: "", unit_price: "" }] });
               setIsCreateOpen(true);
@@ -194,7 +194,7 @@ export default function PurchaseOrderPage() {
       </div>
 
       {/* PO List */}
-      <Card className="bg-slate-900/20 border-slate-800/60 shadow-xl overflow-hidden">
+      <Card className="bg-workspace-900/20 border-workspace-800/60 shadow-xl overflow-hidden">
         <CardContent className="p-0 overflow-x-auto">
           {isLoading ? (
             <div className="flex items-center justify-center p-12">
@@ -203,13 +203,13 @@ export default function PurchaseOrderPage() {
           ) : pos.length === 0 ? (
             <div className="text-center py-16 space-y-3">
               <FileText className="h-12 w-12 text-slate-650 mx-auto" />
-              <p className="text-slate-400 font-medium">{t("no_pos_found")}</p>
-              <p className="text-xs text-slate-500">{t("create_po_desc")}</p>
+              <p className="text-workspace-400 font-medium">{t("no_pos_found")}</p>
+              <p className="text-xs text-workspace-500">{t("create_po_desc")}</p>
             </div>
           ) : (
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-slate-800 text-slate-400 font-semibold bg-slate-950/20">
+                <tr className="border-b border-workspace-800 text-workspace-400 font-semibold bg-workspace-950/20">
                   <th className="py-3 px-4">{t("po_code")}</th>
                   <th className="py-3 px-4">{t("supplier")}</th>
                   <th className="py-3 px-4">{t("order_date")}</th>
@@ -221,36 +221,36 @@ export default function PurchaseOrderPage() {
               </thead>
               <tbody>
                 {pos.map((po) => (
-                  <tr key={po.id} className="border-b border-slate-900/50 hover:bg-slate-950/10 transition-colors">
-                    <td className="py-3 px-4 font-mono font-bold text-white">#PO-{po.id}</td>
-                    <td className="py-3 px-4 text-slate-300 font-medium">{po.supplier_name}</td>
-                    <td className="py-3 px-4 text-slate-400">
+                  <tr key={po.id} className="border-b border-workspace-900/50 hover:bg-workspace-950/10 transition-colors">
+                    <td className="py-3 px-4 font-mono font-bold text-foreground">#PO-{po.id}</td>
+                    <td className="py-3 px-4 text-workspace-300 font-medium">{po.supplier_name}</td>
+                    <td className="py-3 px-4 text-workspace-400">
                       {new Date(po.created_at).toLocaleDateString()}
                     </td>
-                    <td className="py-3 px-4 text-slate-400">
+                    <td className="py-3 px-4 text-workspace-400">
                       {po.expected_date ? new Date(po.expected_date).toLocaleDateString() : "-"}
                     </td>
-                    <td className="py-3 px-4 text-slate-300 font-bold">
+                    <td className="py-3 px-4 text-workspace-300 font-bold">
                       {locale === "ne" ? `रु. ${parseFloat(po.total_amount).toLocaleString()}` : `Rs. ${parseFloat(po.total_amount).toLocaleString()}`}
                     </td>
                     <td className="py-3 px-4">
                       <Badge className={
-                        po.status === "sent" ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" :
+                        po.status === "sent" ? "bg-brand-500/20 text-brand-400 border border-brand-500/30" :
                         po.status === "partial" ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" :
                         po.status === "fulfilled" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" :
                         po.status === "cancelled" ? "bg-rose-500/20 text-rose-400 border border-rose-500/30" :
-                        "bg-slate-500/20 text-slate-400 border border-slate-500/30"
+                        "bg-workspace-500/20 text-workspace-400 border border-workspace-500/30"
                       }>
                         {tData(po.status).toUpperCase()}
                       </Badge>
                     </td>
                     <td className="py-3 px-4 text-right">
                       {["sent", "partial", "draft"].includes(po.status) && (
-                        <Button 
+                        <Button
                           onClick={() => openReceiveDialog(po)}
-                          size="sm" 
-                          variant="ghost" 
-                          className="h-8 text-emerald-500 hover:bg-slate-800/80 hover:text-white"
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 text-emerald-500 hover:bg-workspace-800/80 hover:text-white"
                         >
                           {t("receive_goods")}
                         </Button>
@@ -266,9 +266,9 @@ export default function PurchaseOrderPage() {
 
       {/* Dialog: Create Purchase Order */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="bg-slate-900 border-slate-800 text-white w-full sm:max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="bg-workspace-900 border-workspace-800 text-foreground w-full sm:max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-white flex items-center gap-2">
+            <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
               <FileText className="h-5 w-5 text-indigo-500" />
               {t("build_po")}
             </DialogTitle>
@@ -277,11 +277,11 @@ export default function PurchaseOrderPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <Label htmlFor="supplier">{t("supplier")} *</Label>
-                <select 
+                <select
                   id="supplier"
                   value={newPO.supplier_id}
                   onChange={(e) => setNewPO({ ...newPO, supplier_id: e.target.value })}
-                  className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
                   required
                 >
                   <option value="">{t("select_supplier")}</option>
@@ -292,43 +292,43 @@ export default function PurchaseOrderPage() {
               </div>
               <div className="space-y-1">
                 <Label htmlFor="exp_date">{t("expected_date")}</Label>
-                <Input 
+                <Input
                   id="exp_date"
                   type="date"
                   value={newPO.expected_date}
                   onChange={(e) => setNewPO({ ...newPO, expected_date: e.target.value })}
-                  className="bg-slate-950 border-slate-800 text-white"
+                  className="bg-workspace-950 border-workspace-800 text-white"
                 />
               </div>
             </div>
 
             <div className="space-y-1">
               <Label htmlFor="notes">{t("order_notes")}</Label>
-              <Textarea 
+              <Textarea
                 id="notes"
                 value={newPO.notes}
                 onChange={(e) => setNewPO({ ...newPO, notes: e.target.value })}
                 placeholder={t("order_notes_placeholder")}
-                className="bg-slate-950 border-slate-800 text-white text-xs h-16"
+                className="bg-workspace-950 border-workspace-800 text-white text-xs h-16"
               />
             </div>
 
             {/* Items rows */}
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <Label className="text-slate-300 font-bold">{t("line_items_checklist")}</Label>
-                <Button type="button" size="sm" onClick={addPOItemRow} className="bg-slate-800 hover:bg-slate-700 h-7 text-xs">
+                <Label className="text-workspace-300 font-bold">{t("line_items_checklist")}</Label>
+                <Button type="button" size="sm" onClick={addPOItemRow} className="bg-workspace-800 hover:bg-workspace-700 h-7 text-xs">
                   {t("add_line")}
                 </Button>
               </div>
               <div className="space-y-2">
                 {newPO.items.map((poRow, index) => (
-                  <div key={index} className="grid grid-cols-12 gap-3 items-center bg-slate-950/40 p-2.5 rounded-lg border border-slate-800/80">
+                  <div key={index} className="grid grid-cols-12 gap-3 items-center bg-workspace-950/40 p-2.5 rounded-lg border border-workspace-800/80">
                     <div className="col-span-6">
-                      <select 
+                      <select
                         value={poRow.item_id}
                         onChange={(e) => updatePOItemRow(index, "item_id", e.target.value)}
-                        className="w-full h-9 px-2 rounded-md bg-slate-950 border border-slate-800 text-white text-xs"
+                        className="w-full h-9 px-2 rounded-md bg-workspace-950 border border-workspace-800 text-white text-xs"
                         required
                       >
                         <option value="">{t("select_stock_item")}</option>
@@ -338,30 +338,30 @@ export default function PurchaseOrderPage() {
                       </select>
                     </div>
                     <div className="col-span-3">
-                      <Input 
+                      <Input
                         type="number"
                         step="any"
                         placeholder={locale === "ne" ? "मात्रा" : "Qty"}
                         value={poRow.quantity}
                         onChange={(e) => updatePOItemRow(index, "quantity", e.target.value)}
-                        className="h-9 bg-slate-950 border-slate-800 text-white text-xs"
+                        className="h-9 bg-workspace-950 border-workspace-800 text-white text-xs"
                         required
                       />
                     </div>
                     <div className="col-span-2">
-                      <Input 
+                      <Input
                         type="number"
                         step="any"
                         placeholder={locale === "ne" ? "दर" : "Rate"}
                         value={poRow.unit_price}
                         onChange={(e) => updatePOItemRow(index, "unit_price", e.target.value)}
-                        className="h-9 bg-slate-950 border-slate-800 text-white text-xs"
+                        className="h-9 bg-workspace-950 border-workspace-800 text-white text-xs"
                         required
                       />
                     </div>
                     <div className="col-span-1 text-center">
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => removePOItemRow(index)}
                         className="text-rose-500 hover:text-rose-400 p-1.5 rounded bg-rose-500/5"
                       >
@@ -373,8 +373,8 @@ export default function PurchaseOrderPage() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t border-slate-800 mt-6">
-              <Button type="button" variant="ghost" onClick={() => setIsCreateOpen(false)} className="h-9 hover:bg-slate-800 text-slate-400">
+            <div className="flex justify-end gap-3 pt-4 border-t border-workspace-800 mt-6">
+              <Button type="button" variant="ghost" onClick={() => setIsCreateOpen(false)} className="h-9 hover:bg-workspace-800 text-workspace-400">
                 {tCommon("cancel")}
               </Button>
               <Button type="submit" className="h-9 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white">
@@ -387,38 +387,38 @@ export default function PurchaseOrderPage() {
 
       {/* Dialog: Settle GRN Delivery */}
       <Dialog open={isReceiveOpen} onOpenChange={() => setIsReceiveOpen(false)}>
-        <DialogContent className="bg-slate-900 border-slate-800 text-white w-full sm:max-w-xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="bg-workspace-900 border-workspace-800 text-foreground w-full sm:max-w-xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-white flex items-center gap-2">
+            <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
               <ClipboardCheck className="h-5 w-5 text-emerald-500" />
               {t("grn_registry")}
             </DialogTitle>
           </DialogHeader>
           {selectedPO && (
             <form onSubmit={handleReceiveSubmit} className="space-y-4 pt-2">
-              <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs grid grid-cols-2 gap-2">
-                <div>{t("po_reference")} <span className="font-mono font-bold text-white">#PO-{selectedPO.id}</span></div>
-                <div>{t("supplier")}: <span className="font-bold text-white">{selectedPO.supplier_name}</span></div>
-                <div className="col-span-2 text-slate-400 mt-1">
+              <div className="bg-workspace-950 p-3 rounded-lg border border-workspace-800 text-xs grid grid-cols-2 gap-2">
+                <div>{t("po_reference")} <span className="font-mono font-bold text-foreground">#PO-{selectedPO.id}</span></div>
+                <div>{t("supplier")}: <span className="font-bold text-foreground">{selectedPO.supplier_name}</span></div>
+                <div className="col-span-2 text-workspace-400 mt-1">
                   {t("grn_instructions")}
                 </div>
               </div>
 
               <div className="space-y-3">
-                <Label className="text-slate-300 font-bold">{t("line_items_received_check")}</Label>
+                <Label className="text-workspace-300 font-bold">{t("line_items_received_check")}</Label>
                 <div className="space-y-2">
                   {selectedPO.items.map((poItem) => {
                     const balance = parseFloat(poItem.quantity) - parseFloat(poItem.received_qty);
                     return (
-                      <div key={poItem.id} className="grid grid-cols-12 gap-3 items-center bg-slate-950/40 p-3 rounded-lg border border-slate-800/80">
+                      <div key={poItem.id} className="grid grid-cols-12 gap-3 items-center bg-workspace-950/40 p-3 rounded-lg border border-workspace-800/80">
                         <div className="col-span-6 text-xs">
-                          <div className="font-bold text-white">{poItem.item_name}</div>
-                          <div className="text-slate-500 mt-0.5">
+                          <div className="font-bold text-foreground">{poItem.item_name}</div>
+                          <div className="text-workspace-500 mt-0.5">
                             {locale === "ne" ? "अर्डर गरिएको:" : "Ordered:"} {parseFloat(poItem.quantity).toFixed(1)} | {locale === "ne" ? "प्राप्त:" : "Recvd:"} {parseFloat(poItem.received_qty).toFixed(1)}
                           </div>
                         </div>
                         <div className="col-span-6 flex items-center gap-2">
-                          <Input 
+                          <Input
                             type="number"
                             step="any"
                             max={balance.toString()}
@@ -428,9 +428,9 @@ export default function PurchaseOrderPage() {
                               ...receiveQuantities,
                               [poItem.id]: e.target.value
                             })}
-                            className="h-9 bg-slate-950 border-slate-800 text-white text-xs text-right"
+                            className="h-9 bg-workspace-950 border-workspace-800 text-white text-xs text-right"
                           />
-                          <span className="text-[10px] text-slate-500 w-8">{tData(poItem.item_unit)}</span>
+                          <span className="text-[10px] text-workspace-500 w-8">{tData(poItem.item_unit)}</span>
                         </div>
                       </div>
                     );
@@ -438,8 +438,8 @@ export default function PurchaseOrderPage() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-800 mt-6">
-                <Button type="button" variant="ghost" onClick={() => setIsReceiveOpen(false)} className="h-9 hover:bg-slate-800 text-slate-400">
+              <div className="flex justify-end gap-3 pt-4 border-t border-workspace-800 mt-6">
+                <Button type="button" variant="ghost" onClick={() => setIsReceiveOpen(false)} className="h-9 hover:bg-workspace-800 text-workspace-400">
                   {tCommon("cancel")}
                 </Button>
                 <Button type="submit" className="h-9 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white">

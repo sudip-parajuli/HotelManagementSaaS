@@ -40,11 +40,11 @@ const statusConfigs = {
   },
   maintenance: {
     label: "Maintenance",
-    badgeClass: "bg-slate-500/15 text-slate-400 border-slate-500/20 hover:bg-slate-500/20",
+    badgeClass: "bg-workspace-500/15 text-workspace-400 border-workspace-500/20 hover:bg-workspace-500/20",
     icon: Hammer,
-    color: "text-slate-400",
-    cardBorder: "hover:border-slate-500/40",
-    bgGlow: "from-slate-500/5 to-transparent",
+    color: "text-workspace-400",
+    cardBorder: "hover:border-workspace-500/40",
+    bgGlow: "from-workspace-500/5 to-transparent",
   },
   out_of_order: {
     label: "Out of Order",
@@ -65,19 +65,19 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, onClick }) => {
   return (
     <Card
       onClick={onClick}
-      className={`relative overflow-hidden bg-slate-900/40 border-slate-800/80 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-950/40 ${config.cardBorder} group`}
+      className={`relative overflow-hidden bg-workspace-900/40 border-workspace-800/80 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-workspace-950/40 ${config.cardBorder} group`}
     >
       {/* Dynamic background glow based on room status */}
       <div className={`absolute inset-0 bg-gradient-to-br ${config.bgGlow} opacity-30 group-hover:opacity-50 transition-opacity`} />
-      
+
       <CardContent className="relative p-5 space-y-4">
         {/* Room Header */}
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-semibold uppercase tracking-wider text-workspace-500">
               {locale === "ne" ? `तल्ला ${room.floor}` : `Floor ${room.floor}`}
             </span>
-            <h3 className="text-2xl font-extrabold tracking-tight text-white group-hover:text-cyan-400 transition-colors">
+            <h3 className="text-2xl font-extrabold tracking-tight text-foreground group-hover:text-brand-400 transition-colors">
               {locale === "ne" ? `कोठा ${room.room_number}` : `Room ${room.room_number}`}
             </h3>
           </div>
@@ -88,14 +88,14 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, onClick }) => {
         </div>
 
         {/* Room Details */}
-        <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between text-xs">
-          <span className="text-slate-400 font-medium truncate max-w-[150px]">
+        <div className="pt-2 border-t border-workspace-800/60 flex items-center justify-between text-xs">
+          <span className="text-workspace-400 font-medium truncate max-w-[150px]">
             {tData(room.room_type?.name || "Standard Room")}
           </span>
-          <span className="text-slate-500">
-            {room.room_type?.max_occupancy 
-              ? (locale === "ne" 
-                ? `अधिकतम: ${room.room_type.max_occupancy} पाहुना` 
+          <span className="text-workspace-500">
+            {room.room_type?.max_occupancy
+              ? (locale === "ne"
+                ? `अधिकतम: ${room.room_type.max_occupancy} पाहुना`
                 : `Max: ${room.room_type.max_occupancy} guests`)
               : ""}
           </span>
@@ -103,7 +103,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, onClick }) => {
 
         {/* Notes Preview if available */}
         {room.notes && (
-          <p className="text-[11px] text-slate-500 line-clamp-1 italic">
+          <p className="text-[11px] text-workspace-500 line-clamp-1 italic">
             "{room.notes}"
           </p>
         )}

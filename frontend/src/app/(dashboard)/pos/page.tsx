@@ -28,7 +28,7 @@ function POSContent() {
   const [categories, setCategories] = useState<MenuCategory[]>([]);
   const [activeOrders, setActiveOrders] = useState<Order[]>([]);
   const [tables, setTables] = useState<DiningTable[]>([]);
-  
+
   const [selectedTable, setSelectedTable] = useState<DiningTable | null>(null);
   const [activeOrder, setActiveOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -133,21 +133,21 @@ function POSContent() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
-      <div className="px-6 py-3 border-b border-slate-900 bg-slate-950 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+      <div className="px-6 py-3 border-b border-workspace-900 bg-workspace-950 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 bg-cyan-500/10 rounded-lg flex items-center justify-center border border-cyan-500/20">
-              <ShoppingCart className="h-4.5 w-4.5 text-cyan-400" />
+            <div className="h-9 w-9 bg-brand-500/10 rounded-lg flex items-center justify-center border border-brand-500/20">
+              <ShoppingCart className="h-4.5 w-4.5 text-brand-400" />
             </div>
             <div>
-              <h1 className="text-base font-bold text-slate-100">{t("title")}</h1>
-              <p className="text-[10px] text-slate-500">{t("subtitle")}</p>
+              <h1 className="text-base font-bold text-workspace-100">{t("title")}</h1>
+              <p className="text-[10px] text-workspace-500">{t("subtitle")}</p>
             </div>
           </div>
 
           {activeOrders.length > 0 && (
             <div className="flex items-center gap-1.5 ml-4">
-              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">
+              <span className="text-[10px] text-workspace-500 font-semibold uppercase tracking-wider">
                 {locale === "ne" ? "सक्रिय:" : "Active:"}
               </span>
               <div className="flex gap-1 overflow-x-auto max-w-[240px] scrollbar-none py-0.5">
@@ -157,10 +157,10 @@ function POSContent() {
                     variant="outline"
                     size="xs"
                     onClick={() => handleSelectActiveOrder(o)}
-                    className={`text-[9px] h-6 px-2 border-slate-800 ${
+                    className={`text-[9px] h-6 px-2 border-workspace-800 ${
                       activeOrder?.id === o.id
-                        ? "bg-cyan-500/10 border-cyan-500 text-cyan-400"
-                        : "bg-slate-900/60 text-slate-400 hover:text-slate-200"
+                        ? "bg-brand-500/10 border-brand-500 text-brand-400"
+                        : "bg-workspace-900/60 text-workspace-400 hover:text-workspace-200"
                     }`}
                   >
                     #{o.id} {o.table_number ? `T-${o.table_number}` : tData("takeaway")}
@@ -173,17 +173,17 @@ function POSContent() {
 
         <div className="flex items-center gap-2">
           <Link href="/pos/tables">
-            <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-900 text-xs">
+            <Button variant="outline" size="sm" className="border-workspace-800 text-workspace-300 hover:bg-workspace-900 text-xs">
               <LayoutGrid className="h-4 w-4 mr-1.5" /> {t("tables_view")}
             </Button>
           </Link>
           <Link href="/pos/kds">
-            <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-900 text-xs">
+            <Button variant="outline" size="sm" className="border-workspace-800 text-workspace-300 hover:bg-workspace-900 text-xs">
               <ChefHat className="h-4 w-4 mr-1.5" /> {t("kds_view")}
             </Button>
           </Link>
           <Link href="/pos/insights">
-            <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-900 text-xs">
+            <Button variant="outline" size="sm" className="border-workspace-800 text-workspace-300 hover:bg-workspace-900 text-xs">
               <BarChart className="h-4 w-4 mr-1.5" /> {t("insights_view")}
             </Button>
           </Link>
@@ -191,7 +191,7 @@ function POSContent() {
             variant="ghost"
             size="icon"
             onClick={loadBaseData}
-            className="text-slate-400 hover:text-slate-100 hover:bg-slate-900 h-8 w-8"
+            className="text-workspace-400 hover:text-workspace-100 hover:bg-workspace-900 h-8 w-8"
           >
             <RefreshCw className="h-4 w-4" />
           </Button>
@@ -200,8 +200,8 @@ function POSContent() {
 
       {loading ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-3">
-          <Loader2 className="h-8 w-8 text-cyan-500 animate-spin" />
-          <span className="text-sm text-slate-400 font-medium">
+          <Loader2 className="h-8 w-8 text-brand-500 animate-spin" />
+          <span className="text-sm text-workspace-400 font-medium">
             {locale === "ne" ? "मेनु क्याटलग लोड हुँदैछ..." : "Loading menu catalog..."}
           </span>
         </div>
@@ -212,9 +212,9 @@ function POSContent() {
           </div>
 
           {loadingOrder ? (
-            <div className="w-[380px] border-l border-slate-900 bg-slate-950 flex flex-col items-center justify-center gap-2">
-              <Loader2 className="h-6 w-6 text-cyan-500 animate-spin" />
-              <span className="text-xs text-slate-400">
+            <div className="w-[380px] border-l border-workspace-900 bg-workspace-950 flex flex-col items-center justify-center gap-2">
+              <Loader2 className="h-6 w-6 text-brand-500 animate-spin" />
+              <span className="text-xs text-workspace-400">
                 {locale === "ne" ? "अर्डर टिकट लोड हुँदैछ..." : "Loading order ticket..."}
               </span>
             </div>
@@ -243,10 +243,10 @@ export default function POSPage() {
 
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+      <div className="min-h-screen flex items-center justify-center bg-workspace-950 text-foreground">
         <div className="flex flex-col items-center gap-2">
-          <Loader2 className="h-8 w-8 text-cyan-500 animate-spin" />
-          <span className="text-sm text-slate-400">
+          <Loader2 className="h-8 w-8 text-brand-500 animate-spin" />
+          <span className="text-sm text-workspace-400">
             {locale === "ne" ? "अर्डर स्क्रिन लोड हुँदैछ..." : "Loading ordering screen..."}
           </span>
         </div>

@@ -49,26 +49,26 @@ export function KDSOrderCard({ kot, onComplete, onItemStatusChange }: KDSOrderCa
 
   const getOrderTypeBadgeColor = () => {
     const type = kot.order_type.toLowerCase();
-    if (type.includes("room")) return "bg-purple-500/15 text-purple-400 border-purple-500/25";
-    if (type.includes("takeaway")) return "bg-blue-500/15 text-blue-400 border-blue-500/25";
+    if (type.includes("room")) return "bg-brand-500/15 text-brand-400 border-brand-500/25";
+    if (type.includes("takeaway")) return "bg-brand-500/15 text-brand-400 border-brand-500/25";
     if (type.includes("bar")) return "bg-amber-500/15 text-amber-400 border-amber-500/25";
-    return "bg-cyan-500/15 text-cyan-400 border-cyan-500/25";
+    return "bg-brand-500/15 text-brand-400 border-brand-500/25";
   };
 
   return (
-    <Card className="bg-slate-900/60 border-slate-800 backdrop-blur-md flex flex-col h-[380px] hover:border-slate-700 hover:shadow-lg transition-all duration-200 overflow-hidden">
+    <Card className="bg-workspace-900/60 border-workspace-800 backdrop-blur-md flex flex-col h-[380px] hover:border-workspace-700 hover:shadow-lg transition-all duration-200 overflow-hidden">
       {/* Header */}
-      <CardHeader className="p-3.5 border-b border-slate-900 bg-slate-950/40 flex flex-row items-center justify-between gap-3">
+      <CardHeader className="p-3.5 border-b border-workspace-900 bg-workspace-950/40 flex flex-row items-center justify-between gap-3">
         <div className="space-y-1">
           <div className="flex items-center gap-1.5">
-            <span className="font-bold text-slate-100 text-sm">
+            <span className="font-bold text-workspace-100 text-sm">
               {locale === "ne" ? `टेबल ${kot.table_number || "N/A"}` : `Table ${kot.table_number || "N/A"}`}
             </span>
             <Badge className={`text-[9px] px-1.5 py-0 capitalize ${getOrderTypeBadgeColor()}`} variant="outline">
               {tData(kot.order_type)}
             </Badge>
           </div>
-          <span className="text-[10px] text-slate-500 block">
+          <span className="text-[10px] text-workspace-500 block">
             {locale === "ne"
               ? `KOT #${kot.id} / अर्डर #${kot.order_id}`
               : `KOT #${kot.id} / Order #${kot.order_id}`}
@@ -89,15 +89,15 @@ export function KDSOrderCard({ kot, onComplete, onItemStatusChange }: KDSOrderCa
         {kot.items.map((item) => (
           <div
             key={item.item_id}
-            className="flex flex-col gap-1 p-2 rounded-lg bg-slate-950/30 border border-slate-900"
+            className="flex flex-col gap-1 p-2 rounded-lg bg-workspace-950/30 border border-workspace-900"
           >
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-start gap-2">
-                <span className="font-bold text-sm text-cyan-400 mt-0.5">
+                <span className="font-bold text-sm text-brand-400 mt-0.5">
                   {item.quantity}x
                 </span>
                 <div>
-                  <span className={`text-xs font-semibold text-slate-200 ${item.status === "ready" || item.status === "served" ? "line-through text-slate-500" : ""}`}>
+                  <span className={`text-xs font-semibold text-workspace-200 ${item.status === "ready" || item.status === "served" ? "line-through text-workspace-500" : ""}`}>
                     {tData(item.name)}
                   </span>
                   {item.notes && (
@@ -115,7 +115,7 @@ export function KDSOrderCard({ kot, onComplete, onItemStatusChange }: KDSOrderCa
                     <Button
                       size="xs"
                       onClick={() => onItemStatusChange(kot.id, item.item_id, "preparing")}
-                      className="h-5 px-1.5 text-[9px] bg-slate-800 hover:bg-slate-700 text-slate-300"
+                      className="h-5 px-1.5 text-[9px] bg-workspace-800 hover:bg-workspace-700 text-workspace-300"
                     >
                       {locale === "ne" ? "तयारी" : "Prep"}
                     </Button>
@@ -142,10 +142,10 @@ export function KDSOrderCard({ kot, onComplete, onItemStatusChange }: KDSOrderCa
       </CardContent>
 
       {/* Done Button */}
-      <CardFooter className="p-3 border-t border-slate-900 bg-slate-950/30">
+      <CardFooter className="p-3 border-t border-workspace-900 bg-workspace-950/30">
         <Button
           onClick={() => onComplete(kot.id)}
-          className="w-full bg-cyan-600 text-white hover:bg-cyan-500 font-semibold text-xs py-2 shadow-md shadow-cyan-600/20 flex items-center justify-center gap-1.5"
+          className="w-full bg-brand-600 text-white hover:bg-brand-500 font-semibold text-xs py-2 shadow-md shadow-brand-600/20 flex items-center justify-center gap-1.5"
         >
           <ChefHat className="h-4 w-4" />
           {locale === "ne" ? "टिकट सम्पन्न भयो" : "Mark Ticket Done"}

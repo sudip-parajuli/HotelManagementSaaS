@@ -50,7 +50,7 @@ import {
 
 const STATUS_BADGE: Record<string, string> = {
   active:    "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
-  trial:     "bg-blue-500/15 text-blue-400 border border-blue-500/30",
+  trial:     "bg-brand-500/15 text-brand-400 border border-brand-500/30",
   past_due:  "bg-amber-500/15 text-amber-400 border border-amber-500/30",
   cancelled: "bg-zinc-500/15 text-zinc-400 border border-zinc-500/30",
   suspended: "bg-red-500/15 text-red-400 border border-red-500/30",
@@ -284,7 +284,7 @@ export default function TenantDetailPage() {
                 <Building2 className="text-indigo-400" size={22} />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">{tenant.name}</h1>
+                <h1 className="text-xl font-bold text-foreground">{tenant.name}</h1>
                 <p className="text-sm text-zinc-500 font-mono">{tenant.schema_name}</p>
               </div>
               <span className={`ml-2 px-2.5 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE[subStatus] ?? "bg-zinc-700 text-zinc-400"}`}>
@@ -389,7 +389,7 @@ export default function TenantDetailPage() {
                   <div className="space-y-3">
                     <div>
                       <p className="text-xs text-zinc-500">Plan</p>
-                      <p className="text-lg font-bold text-white mt-0.5">{subscription.plan_details.name}</p>
+                      <p className="text-lg font-bold text-foreground mt-0.5">{subscription.plan_details.name}</p>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div className="rounded-lg bg-zinc-800/60 p-3">
@@ -490,7 +490,7 @@ export default function TenantDetailPage() {
             {/* Module Marketplace */}
             {addonCatalog.length > 0 && (
               <div>
-                <h2 className="font-semibold text-white mb-3 flex items-center gap-2">
+                <h2 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <Puzzle size={16} className="text-indigo-400" />
                   Module Marketplace
                   <span className="text-xs font-normal text-zinc-500">— Toggle modules on/off for this tenant</span>
@@ -623,7 +623,7 @@ export default function TenantDetailPage() {
             {showGrantModal && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
                 <div className="w-full max-w-md bg-zinc-900 border border-zinc-700 rounded-2xl p-6 shadow-2xl">
-                  <h3 className="text-lg font-bold text-white mb-4">Grant Feature Access</h3>
+                  <h3 className="text-lg font-bold text-foreground mb-4">Grant Feature Access</h3>
                   <div className="space-y-4">
                     <div>
                       <label className="text-xs text-zinc-400 block mb-1">Feature Key *</label>
@@ -680,7 +680,7 @@ export default function TenantDetailPage() {
         {activeTab === "billing" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="font-semibold text-white">Invoice History</h2>
+              <h2 className="font-semibold text-foreground">Invoice History</h2>
               <span className="text-sm text-zinc-500">{invoices.length} invoice{invoices.length !== 1 ? "s" : ""}</span>
             </div>
 
@@ -703,7 +703,7 @@ export default function TenantDetailPage() {
                         <td className="px-4 py-3 text-zinc-400 font-mono text-xs">#{inv.id.toString().padStart(5, "0")}</td>
                         <td className="px-4 py-3 text-zinc-300">{inv.plan_name}</td>
                         <td className="px-4 py-3 text-zinc-400 text-xs">{fmt(inv.period_start)} – {fmt(inv.period_end)}</td>
-                        <td className="px-4 py-3 text-right font-semibold text-white">Rs. {Number(inv.amount).toLocaleString()}</td>
+                        <td className="px-4 py-3 text-right font-semibold text-foreground">Rs. {Number(inv.amount).toLocaleString()}</td>
                         <td className="px-4 py-3 text-center">
                           <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${INVOICE_BADGE[inv.status] ?? "bg-zinc-700"}`}>
                             {inv.status}
@@ -738,7 +738,7 @@ export default function TenantDetailPage() {
         {activeTab === "modules" && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-white flex items-center gap-2">
+              <h2 className="font-semibold text-foreground flex items-center gap-2">
                 <Layers size={16} className="text-indigo-400" />
                 Module Subscriptions
               </h2>
@@ -764,7 +764,7 @@ export default function TenantDetailPage() {
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div>
-                          <p className="font-semibold text-white">{addon?.name || sub.module_name}</p>
+                          <p className="font-semibold text-foreground">{addon?.name || sub.module_name}</p>
                           <p className="text-[10px] font-mono text-zinc-500 mt-0.5">{sub.module_key}</p>
                         </div>
                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${

@@ -17,16 +17,16 @@ import { toast } from "sonner";
 const UNIT_COLORS: Record<string, string> = {
   available: "border-emerald-500/40 bg-emerald-500/5",
   occupied: "border-red-500/40 bg-red-500/5",
-  reserved: "border-blue-500/40 bg-blue-500/5",
-  maintenance: "border-slate-600/40 bg-slate-800",
-  cleaning: "border-slate-600/40 bg-slate-800",
+  reserved: "border-brand-500/40 bg-brand-500/5",
+  maintenance: "border-workspace-600/40 bg-workspace-800",
+  cleaning: "border-workspace-600/40 bg-workspace-800",
 };
 
 const STATUS_BADGE: Record<string, string> = {
   available: "bg-emerald-500/20 text-emerald-400",
   occupied: "bg-red-500/20 text-red-400",
-  reserved: "bg-blue-500/20 text-blue-400",
-  maintenance: "bg-slate-500/20 text-slate-400",
+  reserved: "bg-brand-500/20 text-brand-400",
+  maintenance: "bg-workspace-500/20 text-workspace-400",
   cleaning: "bg-amber-500/20 text-amber-400",
 };
 
@@ -42,7 +42,7 @@ function LiveTimer({ start, paidMinutes, pausedMinutes }: { start: string; paidM
   const remainingStr = `${String(Math.floor(remaining / 3600)).padStart(2, "0")}:${String(Math.floor((remaining % 3600) / 60)).padStart(2, "0")}:${String(remaining % 60).padStart(2, "0")}`;
   return (
     <div className="flex gap-3 text-xs font-mono">
-      <span className="text-slate-500">{elapsedStr}</span>
+      <span className="text-workspace-500">{elapsedStr}</span>
       <span className={remaining < 600 ? "text-red-400 animate-pulse" : "text-emerald-400"}>{remainingStr}</span>
     </div>
   );
@@ -111,7 +111,7 @@ export default function SessionsDashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
+        <Loader2 className="h-6 w-6 animate-spin text-brand-400" />
       </div>
     );
   }
@@ -122,17 +122,17 @@ export default function SessionsDashboardPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2">
-            <Gamepad2 className="h-5 w-5 text-cyan-400" />
+            <Gamepad2 className="h-5 w-5 text-brand-400" />
             Sessions
           </h1>
-          <p className="text-sm text-slate-400">Live session floor plan</p>
+          <p className="text-sm text-workspace-400">Live session floor plan</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 text-xs text-slate-500">
+          <div className="flex items-center gap-1 text-xs text-workspace-500">
             {connected ? (
               <><Wifi className="h-3 w-3 text-emerald-400" /> Live</>
             ) : (
-              <><WifiOff className="h-3 w-3 text-slate-600" /></>
+              <><WifiOff className="h-3 w-3 text-workspace-600" /></>
             )}
           </div>
           <Button onClick={() => router.push("/sessions/new")}>
@@ -142,19 +142,19 @@ export default function SessionsDashboardPage() {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-4 mb-4 text-xs text-slate-500">
+      <div className="flex items-center gap-4 mb-4 text-xs text-workspace-500">
         <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-emerald-400" /> Available</span>
         <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-red-400" /> Occupied</span>
-        <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-blue-400" /> Reserved</span>
-        <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-slate-500" /> Maintenance</span>
+        <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-brand-400" /> Reserved</span>
+        <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-workspace-500" /> Maintenance</span>
       </div>
 
       {/* Floor plan grid */}
       {units.length === 0 ? (
-        <Card className="bg-slate-900 border-slate-800 p-12 text-center">
-          <Gamepad2 className="h-12 w-12 mx-auto text-slate-700 mb-3" />
-          <p className="text-slate-400 font-medium">No session units configured</p>
-          <p className="text-slate-500 text-sm mt-1">Add units in unit management to get started.</p>
+        <Card className="bg-workspace-900 border-workspace-800 p-12 text-center">
+          <Gamepad2 className="h-12 w-12 mx-auto text-workspace-700 mb-3" />
+          <p className="text-workspace-400 font-medium">No session units configured</p>
+          <p className="text-workspace-500 text-sm mt-1">Add units in unit management to get started.</p>
           <Button variant="outline" className="mt-4" onClick={() => router.push("/sessions/units")}>
             Manage Units
           </Button>
@@ -171,7 +171,7 @@ export default function SessionsDashboardPage() {
                 key={unit.id}
                 className={cn(
                   "p-3 border transition-all cursor-pointer hover:scale-[1.02] group",
-                  UNIT_COLORS[unit.status] || "border-slate-800 bg-slate-900",
+                  UNIT_COLORS[unit.status] || "border-workspace-800 bg-workspace-900",
                   isExpiring && "animate-pulse border-amber-400"
                 )}
                 onClick={() => session && router.push(`/sessions/${session.id}`)}
@@ -181,7 +181,7 @@ export default function SessionsDashboardPage() {
                   <span className="text-xs font-medium truncate flex-1">{unit.unit_name}</span>
                   <Badge variant="outline" className={cn(
                     "text-[9px] px-1.5 py-0 capitalize",
-                    STATUS_BADGE[unit.status] || "text-slate-500"
+                    STATUS_BADGE[unit.status] || "text-workspace-500"
                   )}>
                     {unit.status}
                   </Badge>
@@ -190,8 +190,8 @@ export default function SessionsDashboardPage() {
                 {/* Active session info */}
                 {session && (
                   <div className="space-y-1.5">
-                    <div className="flex items-center gap-1 text-xs text-slate-300">
-                      <User className="h-3 w-3 text-cyan-400" />
+                    <div className="flex items-center gap-1 text-xs text-workspace-300">
+                      <User className="h-3 w-3 text-brand-400" />
                       <span className="truncate">{session.guest_name}</span>
                     </div>
                     <LiveTimer

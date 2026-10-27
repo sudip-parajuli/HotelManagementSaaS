@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { 
-  FileText, 
-  Loader2, 
-  Save, 
+import {
+  FileText,
+  Loader2,
+  Save,
   AlertTriangle,
-  Plus, 
-  Trash2, 
+  Plus,
+  Trash2,
   Info,
   DollarSign,
   TrendingUp,
@@ -127,7 +127,7 @@ export default function TaxSlabsPage() {
   const removeSlab = (indexToRemove: number) => {
     const slabToRemove = taxSlabs[indexToRemove];
     const updated = taxSlabs.filter((_, idx) => idx !== indexToRemove);
-    
+
     // Recalculate slab orders for the same filing status
     let orderCounter = 1;
     const reordered = updated.map(slab => {
@@ -147,33 +147,33 @@ export default function TaxSlabsPage() {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="bg-workspace-900/40 backdrop-blur-md border border-workspace-800/60 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <FileText className="h-6 w-6 text-purple-400" />
+          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+            <FileText className="h-6 w-6 text-brand-400" />
             Nepal Tax Slabs & SSF Rates
           </h1>
-          <p className="text-slate-400 text-sm">
+          <p className="text-workspace-400 text-sm">
             Manage progressive income tax slabs and Social Security Fund (SSF) contribution rules.
           </p>
         </div>
-        
+
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="flex items-center bg-slate-900 border border-slate-850 px-3 py-1.5 rounded-xl text-sm gap-2">
-            <span className="text-slate-500 font-medium">Fiscal Year:</span>
-            <input 
-              type="text" 
-              value={fiscalYear} 
+          <div className="flex items-center bg-workspace-900 border border-slate-850 px-3 py-1.5 rounded-xl text-sm gap-2">
+            <span className="text-workspace-500 font-medium">Fiscal Year:</span>
+            <input
+              type="text"
+              value={fiscalYear}
               onChange={(e) => setFiscalYear(e.target.value)}
               className="bg-transparent border-none text-white outline-none w-20 text-center font-bold"
               placeholder="e.g. 2081/82"
             />
           </div>
-          
+
           <button
             onClick={handleSave}
             disabled={saving || loading}
-            className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-medium text-sm px-4 py-2.5 rounded-xl shadow-lg shadow-purple-500/10 transition-all disabled:opacity-50 w-full sm:w-auto"
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-600 hover:to-indigo-700 text-white font-medium text-sm px-4 py-2.5 rounded-xl shadow-lg shadow-brand-500/10 transition-all disabled:opacity-50 w-full sm:w-auto"
           >
             {saving ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -195,38 +195,38 @@ export default function TaxSlabsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-800 gap-6">
+      <div className="flex border-b border-workspace-800 gap-6">
         <button
           onClick={() => setActiveTab("single")}
           className={`pb-3 text-sm font-semibold transition-all relative ${
-            activeTab === "single" ? "text-purple-400" : "text-slate-400 hover:text-slate-200"
+            activeTab === "single" ? "text-brand-400" : "text-workspace-400 hover:text-workspace-200"
           }`}
         >
           Single Filing Status Slabs
           {activeTab === "single" && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-500" />
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-500" />
           )}
         </button>
         <button
           onClick={() => setActiveTab("married")}
           className={`pb-3 text-sm font-semibold transition-all relative ${
-            activeTab === "married" ? "text-purple-400" : "text-slate-400 hover:text-slate-200"
+            activeTab === "married" ? "text-brand-400" : "text-workspace-400 hover:text-workspace-200"
           }`}
         >
           Married Filing Status Slabs
           {activeTab === "married" && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-500" />
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-500" />
           )}
         </button>
         <button
           onClick={() => setActiveTab("ssf")}
           className={`pb-3 text-sm font-semibold transition-all relative ${
-            activeTab === "ssf" ? "text-purple-400" : "text-slate-400 hover:text-slate-200"
+            activeTab === "ssf" ? "text-brand-400" : "text-workspace-400 hover:text-workspace-200"
           }`}
         >
           Social Security Fund (SSF) Rates
           {activeTab === "ssf" && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-500" />
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-500" />
           )}
         </button>
       </div>
@@ -235,29 +235,29 @@ export default function TaxSlabsPage() {
       {loading ? (
         <div className="flex items-center justify-center min-h-[30vh]">
           <div className="flex flex-col items-center gap-2">
-            <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
-            <p className="text-slate-500 text-sm">Loading tax configuration...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-brand-500" />
+            <p className="text-workspace-500 text-sm">Loading tax configuration...</p>
           </div>
         </div>
       ) : activeTab === "ssf" ? (
         // SSF Configurations Edit Card
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
           {ssfConfigs.map((cfg, idx) => (
-            <div key={idx} className="bg-slate-900/30 backdrop-blur-md border border-slate-800/50 p-6 rounded-2xl space-y-4 shadow-xl">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 className="text-md font-semibold text-white flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-purple-400" />
+            <div key={idx} className="bg-workspace-900/30 backdrop-blur-md border border-workspace-800/50 p-6 rounded-2xl space-y-4 shadow-xl">
+              <div className="flex items-center justify-between border-b border-workspace-800 pb-3">
+                <h3 className="text-md font-semibold text-foreground flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-brand-400" />
                   SSF Contribution Rates
                 </h3>
-                <span className="text-xs font-mono bg-purple-950 text-purple-400 px-2 py-0.5 rounded border border-purple-800/30">
+                <span className="text-xs font-mono bg-brand-950 text-brand-400 px-2 py-0.5 rounded border border-brand-800/30">
                   {cfg.fiscal_year}
                 </span>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs text-slate-400">Employee Contribution (%)</label>
-                  <div className="flex items-center bg-slate-950/80 border border-slate-850 rounded-xl px-3 py-2">
+                  <label className="text-xs text-workspace-400">Employee Contribution (%)</label>
+                  <div className="flex items-center bg-workspace-950/80 border border-slate-850 rounded-xl px-3 py-2">
                     <input
                       type="number"
                       value={cfg.employee_rate_percent}
@@ -265,13 +265,13 @@ export default function TaxSlabsPage() {
                       className="bg-transparent border-none text-white text-sm outline-none w-full font-mono"
                       step="0.01"
                     />
-                    <Percent className="h-3.5 w-3.5 text-slate-500 ml-1" />
+                    <Percent className="h-3.5 w-3.5 text-workspace-500 ml-1" />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs text-slate-400">Employer Contribution (%)</label>
-                  <div className="flex items-center bg-slate-950/80 border border-slate-850 rounded-xl px-3 py-2">
+                  <label className="text-xs text-workspace-400">Employer Contribution (%)</label>
+                  <div className="flex items-center bg-workspace-950/80 border border-slate-850 rounded-xl px-3 py-2">
                     <input
                       type="number"
                       value={cfg.employer_rate_percent}
@@ -279,13 +279,13 @@ export default function TaxSlabsPage() {
                       className="bg-transparent border-none text-white text-sm outline-none w-full font-mono"
                       step="0.01"
                     />
-                    <Percent className="h-3.5 w-3.5 text-slate-500 ml-1" />
+                    <Percent className="h-3.5 w-3.5 text-workspace-500 ml-1" />
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-2.5 items-start bg-slate-950/40 p-3 rounded-lg border border-slate-850/60 text-[10px] text-slate-500 leading-normal">
-                <Info className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+              <div className="flex gap-2.5 items-start bg-workspace-950/40 p-3 rounded-lg border border-slate-850/60 text-[10px] text-workspace-500 leading-normal">
+                <Info className="h-3.5 w-3.5 text-workspace-400 shrink-0" />
                 <span>
                   By default, Nepal SSF rules dictate an Employee contribution of 11% (deducted from basic salary) and an Employer contribution of 20% (added as overhead cost).
                 </span>
@@ -295,11 +295,11 @@ export default function TaxSlabsPage() {
         </div>
       ) : (
         // Tax Slabs Edit Table
-        <div className="bg-slate-900/30 backdrop-blur-md border border-slate-800/50 rounded-2xl overflow-hidden shadow-xl max-w-5xl">
+        <div className="bg-workspace-900/30 backdrop-blur-md border border-workspace-800/50 rounded-2xl overflow-hidden shadow-xl max-w-5xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-800/80 bg-slate-900/50 text-slate-400 text-xs font-semibold uppercase tracking-wider">
+                <tr className="border-b border-workspace-800/80 bg-workspace-900/50 text-workspace-400 text-xs font-semibold uppercase tracking-wider">
                   <th className="px-6 py-4 w-20">Order</th>
                   <th className="px-6 py-4">Minimum Amount (NPR)</th>
                   <th className="px-6 py-4">Maximum Amount (NPR)</th>
@@ -307,18 +307,18 @@ export default function TaxSlabsPage() {
                   <th className="px-6 py-4 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-850/60 text-sm text-slate-300">
+              <tbody className="divide-y divide-slate-850/60 text-sm text-workspace-300">
                 {taxSlabs.map((slab, idx) => {
                   if (slab.filing_status !== activeTab) return null;
-                  
+
                   return (
-                    <tr key={idx} className="hover:bg-slate-800/10 transition-all font-mono">
-                      <td className="px-6 py-3 font-semibold text-white">
+                    <tr key={idx} className="hover:bg-workspace-800/10 transition-all font-mono">
+                      <td className="px-6 py-3 font-semibold text-foreground">
                         {slab.slab_order}
                       </td>
                       <td className="px-6 py-3">
-                        <div className="flex items-center bg-slate-950/60 border border-slate-850 rounded-xl px-3 py-1.5 max-w-[200px]">
-                          <span className="text-slate-600 text-xs mr-1">Rs.</span>
+                        <div className="flex items-center bg-workspace-950/60 border border-slate-850 rounded-xl px-3 py-1.5 max-w-[200px]">
+                          <span className="text-workspace-600 text-xs mr-1">Rs.</span>
                           <input
                             type="number"
                             value={slab.min_amount}
@@ -328,19 +328,19 @@ export default function TaxSlabsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-3">
-                        <div className="flex items-center bg-slate-950/60 border border-slate-850 rounded-xl px-3 py-1.5 max-w-[200px]">
-                          <span className="text-slate-600 text-xs mr-1">Rs.</span>
+                        <div className="flex items-center bg-workspace-950/60 border border-slate-850 rounded-xl px-3 py-1.5 max-w-[200px]">
+                          <span className="text-workspace-600 text-xs mr-1">Rs.</span>
                           <input
                             type="number"
                             placeholder="Above"
                             value={slab.max_amount === null ? "" : slab.max_amount}
                             onChange={(e) => updateSlabField(idx, "max_amount", e.target.value === "" ? null : e.target.value)}
-                            className="bg-transparent border-none text-white text-sm outline-none w-full placeholder-slate-600"
+                            className="bg-transparent border-none text-white text-sm outline-none w-full placeholder-workspace-600"
                           />
                         </div>
                       </td>
                       <td className="px-6 py-3">
-                        <div className="flex items-center bg-slate-950/60 border border-slate-850 rounded-xl px-3 py-1.5 max-w-[120px]">
+                        <div className="flex items-center bg-workspace-950/60 border border-slate-850 rounded-xl px-3 py-1.5 max-w-[120px]">
                           <input
                             type="number"
                             value={slab.rate_percent}
@@ -348,13 +348,13 @@ export default function TaxSlabsPage() {
                             className="bg-transparent border-none text-white text-sm outline-none w-full"
                             step="0.1"
                           />
-                          <Percent className="h-3 w-3 text-slate-500" />
+                          <Percent className="h-3 w-3 text-workspace-500" />
                         </div>
                       </td>
                       <td className="px-6 py-3 text-right">
                         <button
                           onClick={() => removeSlab(idx)}
-                          className="p-1.5 rounded-lg bg-slate-900/60 border border-slate-850 hover:bg-rose-950/30 hover:border-rose-900/40 text-slate-400 hover:text-rose-400 transition-all"
+                          className="p-1.5 rounded-lg bg-workspace-900/60 border border-slate-850 hover:bg-rose-950/30 hover:border-rose-900/40 text-workspace-400 hover:text-rose-400 transition-all"
                           title="Delete Slab"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -366,18 +366,18 @@ export default function TaxSlabsPage() {
               </tbody>
             </table>
           </div>
-          
-          <div className="p-4 border-t border-slate-850/60 bg-slate-900/20 flex justify-between items-center">
+
+          <div className="p-4 border-t border-slate-850/60 bg-workspace-900/20 flex justify-between items-center">
             <button
               onClick={() => addSlab(activeTab as "single" | "married")}
-              className="flex items-center justify-center gap-1.5 text-xs font-semibold bg-slate-900 hover:bg-slate-850 text-purple-400 border border-slate-800 hover:border-slate-700 px-3 py-2 rounded-xl transition-all"
+              className="flex items-center justify-center gap-1.5 text-xs font-semibold bg-workspace-900 hover:bg-slate-850 text-brand-400 border border-workspace-800 hover:border-workspace-700 px-3 py-2 rounded-xl transition-all"
             >
               <Plus className="h-3.5 w-3.5" />
               Add Progressive Slab
             </button>
-            
-            <div className="text-[10px] text-slate-500 flex items-center gap-1.5">
-              <Info className="h-3.5 w-3.5 text-slate-500" />
+
+            <div className="text-[10px] text-workspace-500 flex items-center gap-1.5">
+              <Info className="h-3.5 w-3.5 text-workspace-500" />
               <span>Slab 1 is evaluated at 0% for SSF enrolled members in payroll calculations.</span>
             </div>
           </div>

@@ -30,12 +30,12 @@ export default function AnalyticsDashboard() {
     return d.toISOString().split("T")[0];
   });
   const [endDate, setEndDate] = useState(() => new Date().toISOString().split("T")[0]);
-  
+
   const [metrics, setMetrics] = useState<DailyMetric[]>([]);
   const [today, setToday] = useState<TodaySnapshot | null>(null);
   const [topItems, setTopItems] = useState<Array<{ name: string; category: string; quantity: number; revenue: number }>>([]);
   const [sources, setSources] = useState<Array<{ source: string; count: number }>>([]);
-  
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [triggeringAgg, setTriggeringAgg] = useState(false);
@@ -114,11 +114,11 @@ export default function AnalyticsDashboard() {
   // Heatmap rendering: get opacity based on occupancy rate
   const getHeatmapColor = (rateStr: string) => {
     const rate = parseFloat(rateStr);
-    if (rate === 0) return "bg-slate-900 border-slate-800 text-slate-600";
+    if (rate === 0) return "bg-workspace-900 border-workspace-800 text-workspace-600";
     if (rate < 25) return "bg-sky-950 border-sky-900 text-sky-400";
     if (rate < 50) return "bg-sky-900 border-sky-800 text-sky-300";
     if (rate < 75) return "bg-sky-700 border-sky-600 text-sky-100";
-    return "bg-sky-500 border-sky-400 text-slate-950 font-bold";
+    return "bg-sky-500 border-sky-400 text-workspace-950 font-bold";
   };
 
   return (
@@ -126,11 +126,11 @@ export default function AnalyticsDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <TrendingUp className="h-6 w-6 text-cyan-400" />
+          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+            <TrendingUp className="h-6 w-6 text-brand-400" />
             {t("title")}
           </h1>
-          <p className="text-slate-400 text-xs mt-0.5">
+          <p className="text-workspace-400 text-xs mt-0.5">
             {t("subtitle")}
           </p>
         </div>
@@ -140,7 +140,7 @@ export default function AnalyticsDashboard() {
             size="sm"
             onClick={handleForceAggregate}
             disabled={triggeringAgg}
-            className="border-slate-800 text-slate-300 hover:bg-slate-900"
+            className="border-workspace-800 text-workspace-300 hover:bg-workspace-900"
           >
             <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${triggeringAgg ? "animate-spin" : ""}`} />
             {locale === "ne" ? "पुनः गणना गर्नुहोस्" : "Force Re-aggregate"}
@@ -148,7 +148,7 @@ export default function AnalyticsDashboard() {
           <Button
             size="sm"
             onClick={fetchData}
-            className="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold"
+            className="bg-brand-500 hover:bg-brand-600 text-workspace-950 font-semibold"
           >
             {locale === "ne" ? "रिफ्रेस" : "Refresh"}
           </Button>
@@ -156,24 +156,24 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* Date Filters Card */}
-      <div className="bg-slate-900/40 border border-slate-800/80 rounded-xl p-4 flex flex-col md:flex-row md:items-end gap-4 shadow-lg">
+      <div className="bg-workspace-900/40 border border-workspace-800/80 rounded-xl p-4 flex flex-col md:flex-row md:items-end gap-4 shadow-lg">
         <div className="grid grid-cols-2 gap-4 flex-1">
           <div className="space-y-1.5">
-            <Label className="text-xs text-slate-400">{locale === "ne" ? "सुरु मिति" : "Start Date"}</Label>
+            <Label className="text-xs text-workspace-400">{locale === "ne" ? "सुरु मिति" : "Start Date"}</Label>
             <Input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="bg-slate-950 border-slate-800 text-white rounded-lg text-xs"
+              className="bg-workspace-950 border-workspace-800 text-white rounded-lg text-xs"
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs text-slate-400">{locale === "ne" ? "अन्तिम मिति" : "End Date"}</Label>
+            <Label className="text-xs text-workspace-400">{locale === "ne" ? "अन्तिम मिति" : "End Date"}</Label>
             <Input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="bg-slate-950 border-slate-800 text-white rounded-lg text-xs"
+              className="bg-workspace-950 border-workspace-800 text-white rounded-lg text-xs"
             />
           </div>
         </div>
@@ -181,7 +181,7 @@ export default function AnalyticsDashboard() {
           <Button
             variant="outline"
             size="sm"
-            className="text-xs border-slate-800 text-slate-400 hover:text-white"
+            className="text-xs border-workspace-800 text-workspace-400 hover:text-white"
             onClick={() => {
               const start = new Date();
               start.setDate(start.getDate() - 7);
@@ -194,7 +194,7 @@ export default function AnalyticsDashboard() {
           <Button
             variant="outline"
             size="sm"
-            className="text-xs border-slate-800 text-slate-400 hover:text-white"
+            className="text-xs border-workspace-800 text-workspace-400 hover:text-white"
             onClick={() => {
               const start = new Date();
               start.setDate(start.getDate() - 30);
@@ -207,7 +207,7 @@ export default function AnalyticsDashboard() {
           <Button
             variant="outline"
             size="sm"
-            className="text-xs border-slate-800 text-slate-400 hover:text-white"
+            className="text-xs border-workspace-800 text-workspace-400 hover:text-white"
             onClick={() => {
               const start = new Date();
               start.setDate(start.getDate() - 90);
@@ -235,8 +235,8 @@ export default function AnalyticsDashboard() {
             value: `${avgOccupancy.toFixed(1)}%`,
             desc: today ? `${locale === "ne" ? "आज: " : "Today: "}${today.occupancy_rate.toFixed(1)}%` : (locale === "ne" ? "उपलब्ध छैन" : "N/A"),
             icon: Bed,
-            color: "from-cyan-500 to-cyan-600",
-            glow: "shadow-cyan-500/20",
+            color: "from-brand-500 to-brand-600",
+            glow: "shadow-brand-500/20",
           },
           {
             title: locale === "ne" ? "औसत ADR" : "Average ADR",
@@ -251,8 +251,8 @@ export default function AnalyticsDashboard() {
             value: `${locale === "ne" ? "रु. " : "Rs. "}${avgRevPAR.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
             desc: today ? `${locale === "ne" ? "आज: " : "Today: "}${locale === "ne" ? "रु. " : "Rs. "}${today.revpar.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : (locale === "ne" ? "उपलब्ध छैन" : "N/A"),
             icon: Landmark,
-            color: "from-purple-500 to-purple-600",
-            glow: "shadow-purple-500/20",
+            color: "from-brand-500 to-brand-600",
+            glow: "shadow-brand-500/20",
           },
           {
             title: locale === "ne" ? "कुल राजस्व" : "Total Revenue",
@@ -273,9 +273,9 @@ export default function AnalyticsDashboard() {
         ].map((card, idx) => {
           const Icon = card.icon;
           return (
-            <Card key={idx} className="bg-slate-900/60 border-slate-800 hover:border-slate-700 transition-all group overflow-hidden">
+            <Card key={idx} className="bg-workspace-900/60 border-workspace-800 hover:border-workspace-700 transition-all group overflow-hidden">
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                <CardTitle className="text-[10px] font-semibold text-workspace-400 uppercase tracking-wider">
                   {card.title}
                 </CardTitle>
                 <div className={`p-1.5 rounded-lg bg-gradient-to-br ${card.color} shadow-md ${card.glow} group-hover:scale-105 transition-transform duration-200`}>
@@ -283,8 +283,8 @@ export default function AnalyticsDashboard() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-xl font-extrabold text-white tracking-tight">{card.value}</div>
-                <p className="text-[10px] text-slate-400 font-medium mt-0.5">{card.desc}</p>
+                <div className="text-xl font-extrabold text-foreground tracking-tight">{card.value}</div>
+                <p className="text-[10px] text-workspace-400 font-medium mt-0.5">{card.desc}</p>
               </CardContent>
             </Card>
           );
@@ -294,21 +294,21 @@ export default function AnalyticsDashboard() {
       {/* Main Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue Stacked Area Chart */}
-        <Card className="bg-slate-900/60 border-slate-800 lg:col-span-2">
+        <Card className="bg-workspace-900/60 border-workspace-800 lg:col-span-2">
           <CardHeader>
-            <CardTitle className="text-sm font-semibold text-white flex items-center gap-1.5">
-              <DollarSign className="h-4 w-4 text-cyan-400" />
+            <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+              <DollarSign className="h-4 w-4 text-brand-400" />
               {t("revenue_breakdown")}
             </CardTitle>
-            <CardDescription className="text-[10px] text-slate-400">
+            <CardDescription className="text-[10px] text-workspace-400">
               {locale === "ne" ? "यस अवधिमा कोठा बिलिङ, रेस्टुरेन्ट शुल्क र अतिरिक्त सेवाहरूको विश्लेषण।" : "Visualizes room billing, restaurant charges, and extras stack over the period."}
             </CardDescription>
           </CardHeader>
           <CardContent className="h-[280px]">
             {loading ? (
-              <div className="h-full flex items-center justify-center text-slate-400 text-xs">{locale === "ne" ? "लोड हुँदैछ..." : "Loading metrics..."}</div>
+              <div className="h-full flex items-center justify-center text-workspace-400 text-xs">{locale === "ne" ? "लोड हुँदैछ..." : "Loading metrics..."}</div>
             ) : metrics.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-slate-500 text-xs">{locale === "ne" ? "कुनै राजस्व डेटा फेला परेन।" : "No revenue data found."}</div>
+              <div className="h-full flex items-center justify-center text-workspace-500 text-xs">{locale === "ne" ? "कुनै राजस्व डेटा फेला परेन।" : "No revenue data found."}</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={revenueChartData}>
@@ -344,21 +344,21 @@ export default function AnalyticsDashboard() {
         </Card>
 
         {/* Occupancy Calendar Heatmap Grid */}
-        <Card className="bg-slate-900/60 border-slate-800 lg:col-span-1">
+        <Card className="bg-workspace-900/60 border-workspace-800 lg:col-span-1">
           <CardHeader>
-            <CardTitle className="text-sm font-semibold text-white flex items-center gap-1.5">
-              <Calendar className="h-4 w-4 text-cyan-400" />
+            <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+              <Calendar className="h-4 w-4 text-brand-400" />
               {locale === "ne" ? "कोठा ओगटिएको तातो नक्सा" : "Occupancy Heatmap"}
             </CardTitle>
-            <CardDescription className="text-[10px] text-slate-400">
+            <CardDescription className="text-[10px] text-workspace-400">
               {locale === "ne" ? "रङको तीव्रताले दैनिक कोठा ओगटिएको स्तर देखाउँछ।" : "Color intensity indicates daily occupancy levels."}
             </CardDescription>
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="h-[220px] flex items-center justify-center text-slate-400 text-xs">{locale === "ne" ? "लोड हुँदैछ..." : "Loading..."}</div>
+              <div className="h-[220px] flex items-center justify-center text-workspace-400 text-xs">{locale === "ne" ? "लोड हुँदैछ..." : "Loading..."}</div>
             ) : metrics.length === 0 ? (
-              <div className="h-[220px] flex items-center justify-center text-slate-500 text-xs">{locale === "ne" ? "कुनै लग रेकर्ड छैन।" : "No metrics log."}</div>
+              <div className="h-[220px] flex items-center justify-center text-workspace-500 text-xs">{locale === "ne" ? "कुनै लग रेकर्ड छैन।" : "No metrics log."}</div>
             ) : (
               <div className="space-y-4">
                 <div className="grid grid-cols-7 gap-1.5">
@@ -377,10 +377,10 @@ export default function AnalyticsDashboard() {
                   })}
                 </div>
                 {/* Legend bar */}
-                <div className="flex justify-between items-center text-[8.5px] text-slate-400 pt-2 border-t border-slate-800">
+                <div className="flex justify-between items-center text-[8.5px] text-workspace-400 pt-2 border-t border-workspace-800">
                   <span>{locale === "ne" ? "०% (खाली)" : "0% (Empty)"}</span>
                   <div className="flex gap-1">
-                    <span className="w-2.5 h-2.5 rounded bg-slate-900 border border-slate-800"></span>
+                    <span className="w-2.5 h-2.5 rounded bg-workspace-900 border border-workspace-800"></span>
                     <span className="w-2.5 h-2.5 rounded bg-sky-950 border border-sky-900"></span>
                     <span className="w-2.5 h-2.5 rounded bg-sky-900 border border-sky-800"></span>
                     <span className="w-2.5 h-2.5 rounded bg-sky-700 border border-sky-600"></span>
@@ -397,21 +397,21 @@ export default function AnalyticsDashboard() {
       {/* Sub-panels Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Booking Acquisition Pie Chart */}
-        <Card className="bg-slate-900/60 border-slate-800">
+        <Card className="bg-workspace-900/60 border-workspace-800">
           <CardHeader>
-            <CardTitle className="text-sm font-semibold text-white flex items-center gap-1.5">
-              <Users className="h-4 w-4 text-cyan-400" />
+            <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+              <Users className="h-4 w-4 text-brand-400" />
               {locale === "ne" ? "बुकिङ च्यानलहरू" : "Booking Acquisitions"}
             </CardTitle>
-            <CardDescription className="text-[10px] text-slate-400">
+            <CardDescription className="text-[10px] text-workspace-400">
               {locale === "ne" ? "छनौट गरिएको अवधिमा बुकिङ च्यानलहरूको वितरण स्थिति।" : "Acquisition channels distribution logic over the selected range."}
             </CardDescription>
           </CardHeader>
           <CardContent className="h-[240px] flex items-center justify-center">
             {loading ? (
-              <div className="text-slate-400 text-xs">{locale === "ne" ? "लोड हुँदैछ..." : "Loading..."}</div>
+              <div className="text-workspace-400 text-xs">{locale === "ne" ? "लोड हुँदैछ..." : "Loading..."}</div>
             ) : pieChartData.length === 0 ? (
-              <div className="text-slate-500 text-xs">{locale === "ne" ? "कुनै लग रेकर्ड छैन।" : "No channels log recorded."}</div>
+              <div className="text-workspace-500 text-xs">{locale === "ne" ? "कुनै लग रेकर्ड छैन।" : "No channels log recorded."}</div>
             ) : (
               <div className="w-full h-full flex flex-col sm:flex-row items-center gap-4">
                 <div className="flex-1 h-full w-full">
@@ -438,12 +438,12 @@ export default function AnalyticsDashboard() {
                   </ResponsiveContainer>
                 </div>
                 {/* Legend details */}
-                <div className="space-y-1.5 flex-1 w-full text-xs text-slate-400">
+                <div className="space-y-1.5 flex-1 w-full text-xs text-workspace-400">
                   {pieChartData.map((item, idx) => (
-                    <div key={idx} className="flex justify-between items-center bg-slate-950/40 p-2 rounded-lg border border-slate-900/55">
+                    <div key={idx} className="flex justify-between items-center bg-workspace-950/40 p-2 rounded-lg border border-workspace-900/55">
                       <div className="flex items-center gap-2">
                         <span className="h-2 w-2 rounded-full" style={{ backgroundColor: COLORS_PIE[idx % COLORS_PIE.length] }}></span>
-                        <span className="font-semibold text-slate-300">{item.name}</span>
+                        <span className="font-semibold text-workspace-300">{item.name}</span>
                       </div>
                       <span className="font-mono">{item.value} {locale === "ne" ? "बुकिङ(हरू)" : "reservation(s)"}</span>
                     </div>
@@ -455,21 +455,21 @@ export default function AnalyticsDashboard() {
         </Card>
 
         {/* Top Restaurant Menu Items */}
-        <Card className="bg-slate-900/60 border-slate-800">
+        <Card className="bg-workspace-900/60 border-workspace-800">
           <CardHeader>
-            <CardTitle className="text-sm font-semibold text-white flex items-center gap-1.5">
-              <Utensils className="h-4 w-4 text-cyan-400" />
+            <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+              <Utensils className="h-4 w-4 text-brand-400" />
               {locale === "ne" ? "उत्कृष्ट मेनु बिक्री उत्पादनहरू" : "Top Menu Sales Products"}
             </CardTitle>
-            <CardDescription className="text-[10px] text-slate-400">
+            <CardDescription className="text-[10px] text-workspace-400">
               {locale === "ne" ? "भान्साका उत्कृष्ट अर्डरहरूको राजस्व विश्लेषण।" : "Analyzes revenue performance of top restaurant kitchen orders."}
             </CardDescription>
           </CardHeader>
           <CardContent className="h-[240px]">
             {loading ? (
-              <div className="h-full flex items-center justify-center text-slate-400 text-xs">{locale === "ne" ? "लोड हुँदैछ..." : "Loading..."}</div>
+              <div className="h-full flex items-center justify-center text-workspace-400 text-xs">{locale === "ne" ? "लोड हुँदैछ..." : "Loading..."}</div>
             ) : barChartData.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-slate-500 text-xs">{locale === "ne" ? "कुनै अर्डर रेकर्ड छैन।" : "No restaurant orders."}</div>
+              <div className="h-full flex items-center justify-center text-workspace-500 text-xs">{locale === "ne" ? "कुनै अर्डर रेकर्ड छैन।" : "No restaurant orders."}</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={barChartData} layout="vertical" margin={{ left: 20 }}>

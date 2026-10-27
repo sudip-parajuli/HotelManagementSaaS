@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
 
@@ -26,11 +27,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", geistSans.variable, geistMono.variable)}>
-      <body className="antialiased">
+    <html suppressHydrationWarning lang="en" className={cn("font-sans", geistSans.variable, geistMono.variable)}>
+      <head><script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('staywired-theme');var d=t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d);document.documentElement.style.colorScheme=d?'dark':'light'}catch(e){}})()` }} /></head>
+      <body className="antialiased"><ThemeProvider>
         {children}
         <Toaster position="top-right" richColors />
-      </body>
+      </ThemeProvider></body>
     </html>
   );
 }

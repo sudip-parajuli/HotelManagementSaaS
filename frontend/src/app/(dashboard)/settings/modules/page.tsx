@@ -100,7 +100,7 @@ export default function ModulesSettingsPage() {
   if (loading && !tenantInfo) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
+        <Loader2 className="h-6 w-6 animate-spin text-brand-400" />
       </div>
     );
   }
@@ -110,7 +110,7 @@ export default function ModulesSettingsPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-xl font-bold">Modules &amp; Features</h1>
-          <p className="text-sm text-slate-400">Manage your active modules and browse available add-ons.</p>
+          <p className="text-sm text-workspace-400">Manage your active modules and browse available add-ons.</p>
         </div>
       </div>
 
@@ -120,19 +120,19 @@ export default function ModulesSettingsPage() {
 
           {/* Active modules */}
           <section>
-            <h2 className="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-workspace-300 mb-3 flex items-center gap-2">
               <Check className="h-4 w-4 text-emerald-400" />
               Active Modules ({activeModules.length})
             </h2>
             {activeModules.length === 0 ? (
-              <Card className="bg-slate-900 border-slate-800 p-6 text-center text-slate-500">
+              <Card className="bg-workspace-900 border-workspace-800 p-6 text-center text-workspace-500">
                 <ShoppingCart className="h-8 w-8 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">No active modules yet. Browse available modules below.</p>
               </Card>
             ) : (
               <div className="grid sm:grid-cols-2 gap-3">
                 {activeModules.map((mod) => (
-                  <Card key={mod.key} className="bg-slate-900 border-slate-800 p-4">
+                  <Card key={mod.key} className="bg-workspace-900 border-workspace-800 p-4">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
@@ -144,8 +144,8 @@ export default function ModulesSettingsPage() {
                           )}
                           <StatusBadge status={tenantInfo?.subscriptions.find((s) => s.module_key === mod.key)?.status} />
                         </div>
-                        <div className="text-xs text-slate-500 mt-0.5 line-clamp-1">{mod.description}</div>
-                        <div className="text-xs text-slate-400 mt-1">
+                        <div className="text-xs text-workspace-500 mt-0.5 line-clamp-1">{mod.description}</div>
+                        <div className="text-xs text-workspace-400 mt-1">
                           NPR {parseFloat(mod.price_monthly || "0").toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo
                         </div>
                       </div>
@@ -169,28 +169,28 @@ export default function ModulesSettingsPage() {
 
           {/* Available modules grouped by category */}
           <section>
-            <h2 className="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
-              <Plus className="h-4 w-4 text-cyan-400" />
+            <h2 className="text-sm font-semibold text-workspace-300 mb-3 flex items-center gap-2">
+              <Plus className="h-4 w-4 text-brand-400" />
               Available Modules
             </h2>
             {Object.keys(groupedAvailable).length === 0 ? (
-              <Card className="bg-slate-900 border-slate-800 p-6 text-center text-slate-500">
+              <Card className="bg-workspace-900 border-workspace-800 p-6 text-center text-workspace-500">
                 <p className="text-sm">All available modules are already activated.</p>
               </Card>
             ) : (
               Object.entries(groupedAvailable).map(([cat, mods]) => (
                 <div key={cat} className="mb-6">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-workspace-500 mb-2">
                     {CATEGORY_LABELS[cat] || cat}
                   </h3>
                   <div className="grid sm:grid-cols-2 gap-3">
                     {mods.map((mod) => (
-                      <Card key={mod.key} className="bg-slate-900 border-slate-800 p-4">
+                      <Card key={mod.key} className="bg-workspace-900 border-workspace-800 p-4">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0 flex-1">
                             <div className="font-medium text-sm">{mod.name}</div>
-                            <div className="text-xs text-slate-500 line-clamp-1">{mod.description}</div>
-                            <div className="text-xs text-slate-400 mt-1">
+                            <div className="text-xs text-workspace-500 line-clamp-1">{mod.description}</div>
+                            <div className="text-xs text-workspace-400 mt-1">
                               NPR {parseFloat(mod.price_monthly || "0").toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo
                             </div>
                           </div>
@@ -217,27 +217,27 @@ export default function ModulesSettingsPage() {
 
         {/* Billing summary sidebar */}
         <div>
-          <Card className="bg-slate-900 border-slate-800 p-4 sticky top-20">
+          <Card className="bg-workspace-900 border-workspace-800 p-4 sticky top-20">
             <h3 className="font-semibold text-sm mb-4 flex items-center gap-2">
-              <CreditCard className="h-4 w-4 text-cyan-400" />
+              <CreditCard className="h-4 w-4 text-brand-400" />
               Billing Summary
             </h3>
 
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">Monthly total</span>
+                <span className="text-workspace-400">Monthly total</span>
                 <span className="font-semibold">
                   NPR {parseFloat(tenantInfo?.monthly_total || "0").toLocaleString("en-IN", { maximumFractionDigits: 0 })}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">Active modules</span>
+                <span className="text-workspace-400">Active modules</span>
                 <span>{activeModules.length}</span>
               </div>
 
               {(tenantInfo?.subscriptions ?? []).length > 0 && (
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400 flex items-center gap-1">
+                  <span className="text-workspace-400 flex items-center gap-1">
                     <Check className="h-3.5 w-3.5" /> Active subs
                   </span>
                   <span>{tenantInfo?.subscriptions.filter((s) => s.status === "active").length || 0}</span>
@@ -245,15 +245,15 @@ export default function ModulesSettingsPage() {
               )}
             </div>
 
-            <div className="border-t border-slate-800 mt-4 pt-4 space-y-2">
+            <div className="border-t border-workspace-800 mt-4 pt-4 space-y-2">
               {activeModules.map((mod) => {
                 const sub = tenantInfo?.subscriptions.find((s) => s.module_key === mod.key);
                 return (
                   <div key={mod.key} className="flex items-center justify-between text-[11px]">
-                    <span className="text-slate-500">{mod.name}</span>
-                    <span className="text-slate-400">
+                    <span className="text-workspace-500">{mod.name}</span>
+                    <span className="text-workspace-400">
                       NPR {parseFloat(sub?.price || mod.price_monthly || "0").toLocaleString("en-IN", { maximumFractionDigits: 0 })}
-                      <span className="text-slate-600">/{sub?.billing_cycle === "yearly" ? "yr" : "mo"}</span>
+                      <span className="text-workspace-600">/{sub?.billing_cycle === "yearly" ? "yr" : "mo"}</span>
                     </span>
                   </div>
                 );
@@ -269,14 +269,14 @@ export default function ModulesSettingsPage() {
 function StatusBadge({ status }: { status?: string }) {
   const colors: Record<string, string> = {
     active: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-    trial: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+    trial: "bg-brand-500/20 text-brand-400 border-brand-500/30",
     suspended: "bg-amber-500/20 text-amber-400 border-amber-500/30",
     cancelled: "bg-red-500/20 text-red-400 border-red-500/30",
   };
   return (
     <Badge variant="outline" className={cn(
       "text-[10px] capitalize",
-      colors[status || ""] || "bg-slate-500/20 text-slate-400"
+      colors[status || ""] || "bg-workspace-500/20 text-workspace-400"
     )}>
       {status || "unknown"}
     </Badge>

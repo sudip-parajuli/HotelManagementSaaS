@@ -41,17 +41,17 @@ function LiveTimerDisplay({
     onTick?.(elapsed, remaining);
   }, [elapsed, remaining, onTick]);
 
-  if (ended) return <span className="text-slate-500 text-2xl font-mono">--:--:--</span>;
+  if (ended) return <span className="text-workspace-500 text-2xl font-mono">--:--:--</span>;
 
   return (
     <div className="flex items-baseline gap-4">
       <div>
-        <div className="text-[10px] text-slate-500 uppercase tracking-wider">Elapsed</div>
-        <div className="text-2xl font-mono font-bold text-white">{elapsedStr}</div>
+        <div className="text-[10px] text-workspace-500 uppercase tracking-wider">Elapsed</div>
+        <div className="text-2xl font-mono font-bold text-foreground">{elapsedStr}</div>
       </div>
-      <div className="text-slate-700 text-2xl font-mono">/</div>
+      <div className="text-workspace-700 text-2xl font-mono">/</div>
       <div>
-        <div className="text-[10px] text-slate-500 uppercase tracking-wider">Remaining</div>
+        <div className="text-[10px] text-workspace-500 uppercase tracking-wider">Remaining</div>
         <div className={cn(
           "text-2xl font-mono font-bold",
           inOverage ? "text-red-400 animate-pulse" : remaining < 600 ? "text-amber-400" : "text-emerald-400"
@@ -116,7 +116,7 @@ export default function SessionDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
+        <Loader2 className="h-6 w-6 animate-spin text-brand-400" />
       </div>
     );
   }
@@ -132,7 +132,7 @@ export default function SessionDetailPage() {
       {/* Back */}
       <button
         onClick={() => router.push("/sessions")}
-        className="flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-4 transition-colors"
+        className="flex items-center gap-1 text-sm text-workspace-400 hover:text-white mb-4 transition-colors"
       >
         <ArrowLeft className="h-3.5 w-3.5" /> Back to Dashboard
       </button>
@@ -141,7 +141,7 @@ export default function SessionDetailPage() {
         {/* Main — Timer + Actions */}
         <div className="lg:col-span-2 space-y-4">
           {/* Session header */}
-          <Card className="bg-slate-900 border-slate-800 p-6">
+          <Card className="bg-workspace-900 border-workspace-800 p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <div className="flex items-center gap-2">
@@ -149,12 +149,12 @@ export default function SessionDetailPage() {
                   <Badge className={cn(
                     isActive && "bg-emerald-500/20 text-emerald-400",
                     isPaused && "bg-amber-500/20 text-amber-400",
-                    isEnded && "bg-slate-500/20 text-slate-400",
+                    isEnded && "bg-workspace-500/20 text-workspace-400",
                   )}>
                     {session.status}
                   </Badge>
                 </div>
-                <div className="flex items-center gap-3 text-sm text-slate-400 mt-1">
+                <div className="flex items-center gap-3 text-sm text-workspace-400 mt-1">
                   <span className="flex items-center gap-1"><User className="h-3 w-3" /> {session.guest_name}</span>
                   {session.guest_phone && (
                     <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {session.guest_phone}</span>
@@ -174,7 +174,7 @@ export default function SessionDetailPage() {
 
           {/* Action buttons */}
           {!isEnded && (
-            <Card className="bg-slate-900 border-slate-800 p-4">
+            <Card className="bg-workspace-900 border-workspace-800 p-4">
               <div className="flex flex-wrap gap-2">
                 {isActive && (
                   <Button
@@ -208,15 +208,15 @@ export default function SessionDetailPage() {
 
               {/* Extend */}
               {(isActive || isPaused) && (
-                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-800">
+                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-workspace-800">
                   <Input
                     type="number"
                     value={extendMinutes}
                     onChange={(e) => setExtendMinutes(parseInt(e.target.value) || 0)}
-                    className="bg-slate-950 border-slate-800 w-20 text-sm"
+                    className="bg-workspace-950 border-workspace-800 w-20 text-sm"
                     min={1}
                   />
-                  <span className="text-xs text-slate-500">min</span>
+                  <span className="text-xs text-workspace-500">min</span>
                   <Button
                     size="sm"
                     variant="outline"
@@ -232,13 +232,13 @@ export default function SessionDetailPage() {
           )}
 
           {/* Charges */}
-          <Card className="bg-slate-900 border-slate-800 p-4">
+          <Card className="bg-workspace-900 border-workspace-800 p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <DollarSign className="h-4 w-4 text-cyan-400" /> Charges
+              <DollarSign className="h-4 w-4 text-brand-400" /> Charges
             </h3>
             <div className="space-y-1.5 text-sm">
               <div className="flex justify-between">
-                <span className="text-slate-400">Base amount ({session.paid_duration_minutes} min paid)</span>
+                <span className="text-workspace-400">Base amount ({session.paid_duration_minutes} min paid)</span>
                 <span>NPR {parseFloat(session.base_amount).toLocaleString("en-IN")}</span>
               </div>
               {session.overage_minutes > 0 && (
@@ -247,7 +247,7 @@ export default function SessionDetailPage() {
                   <span>+ NPR {parseFloat(session.overage_amount).toLocaleString("en-IN")}</span>
                 </div>
               )}
-              <div className="flex justify-between font-semibold border-t border-slate-800 pt-1.5 mt-1.5">
+              <div className="flex justify-between font-semibold border-t border-workspace-800 pt-1.5 mt-1.5">
                 <span>Total</span>
                 <span>NPR {parseFloat(session.total_amount).toLocaleString("en-IN")}</span>
               </div>
@@ -259,15 +259,15 @@ export default function SessionDetailPage() {
         <div className="space-y-4">
           {/* Live status */}
           {live && (
-            <Card className="bg-slate-900 border-slate-800 p-4">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Live Status</h3>
+            <Card className="bg-workspace-900 border-workspace-800 p-4">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-workspace-500 mb-3">Live Status</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Elapsed</span>
+                  <span className="text-workspace-400">Elapsed</span>
                   <span>{live.elapsed_minutes} min</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Remaining</span>
+                  <span className="text-workspace-400">Remaining</span>
                   <span className={live.remaining_minutes < 10 ? "text-red-400" : "text-emerald-400"}>
                     {live.remaining_minutes} min
                   </span>
@@ -289,15 +289,15 @@ export default function SessionDetailPage() {
 
           {/* Extension history — shown when extensions field is populated */}
           {(session as any).extensions && (session as any).extensions.length > 0 && (
-            <Card className="bg-slate-900 border-slate-800 p-4">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1">
+            <Card className="bg-workspace-900 border-workspace-800 p-4">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-workspace-500 mb-3 flex items-center gap-1">
                 <History className="h-3 w-3" /> Extensions
               </h3>
               <div className="space-y-1.5">
                 {(session as any).extensions.map((ext: any, i: number) => (
                   <div key={i} className="flex justify-between text-xs">
-                    <span className="text-slate-400">+{ext.extended_by_minutes} min</span>
-                    <span className="text-slate-500">NPR {parseFloat(ext.additional_amount || "0").toLocaleString("en-IN")}</span>
+                    <span className="text-workspace-400">+{ext.extended_by_minutes} min</span>
+                    <span className="text-workspace-500">NPR {parseFloat(ext.additional_amount || "0").toLocaleString("en-IN")}</span>
                   </div>
                 ))}
               </div>

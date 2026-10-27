@@ -20,7 +20,7 @@ export default function BookingCalendarPage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
-  
+
   const t = useTranslations("Bookings");
   const tData = useTransData();
   const locale = useLocale();
@@ -60,7 +60,7 @@ export default function BookingCalendarPage() {
       setRooms(roomsRes.data.results || []);
       setRoomTypes(typesRes.data.results || []);
       setReservations(resRes.data.results || []);
-      
+
       setStats({
         arrivals: statsRes.data.arrivals_count || 0,
         departures: statsRes.data.departures_count || 0,
@@ -107,14 +107,14 @@ export default function BookingCalendarPage() {
       {/* Header Info */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-white tracking-tight">{t("title")}</h1>
-          <p className="text-slate-400 text-sm">
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">{t("title")}</h1>
+          <p className="text-workspace-400 text-sm">
             {t("subtitle")}
           </p>
         </div>
 
         <Link href="/bookings/new">
-          <Button className="bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold gap-2 shadow-lg shadow-cyan-500/20">
+          <Button className="bg-gradient-to-tr from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-semibold gap-2 shadow-lg shadow-brand-500/20">
             <Plus className="h-4 w-4" />
             {t("book_stay")}
           </Button>
@@ -123,20 +123,20 @@ export default function BookingCalendarPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="bg-slate-900/40 border-slate-800 shadow-md">
+        <Card className="bg-workspace-900/40 border-workspace-800 shadow-md">
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-xs font-semibold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+            <CardTitle className="text-xs font-semibold text-brand-400 uppercase tracking-wider flex items-center gap-1.5">
               <CalendarDays className="h-4 w-4" />
               {t("arrivals_today")}
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <div className="text-2xl font-extrabold text-white">
+            <div className="text-2xl font-extrabold text-foreground">
               {t("guests_count", { count: stats.arrivals })}
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-slate-900/40 border-slate-800 shadow-md">
+        <Card className="bg-workspace-900/40 border-workspace-800 shadow-md">
           <CardHeader className="p-4 pb-2">
             <CardTitle className="text-xs font-semibold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
               <Users className="h-4 w-4" />
@@ -144,12 +144,12 @@ export default function BookingCalendarPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <div className="text-2xl font-extrabold text-white">
+            <div className="text-2xl font-extrabold text-foreground">
               {t("rooms_count", { count: stats.departures })}
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-slate-900/40 border-slate-800 shadow-md">
+        <Card className="bg-workspace-900/40 border-workspace-800 shadow-md">
           <CardHeader className="p-4 pb-2">
             <CardTitle className="text-xs font-semibold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
               <UserCheck className="h-4 w-4" />
@@ -157,7 +157,7 @@ export default function BookingCalendarPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <div className="text-2xl font-extrabold text-white">
+            <div className="text-2xl font-extrabold text-foreground">
               {t("guests_count", { count: stats.inHouse })}
             </div>
           </CardContent>
@@ -165,14 +165,14 @@ export default function BookingCalendarPage() {
       </div>
 
       {/* Date Switcher & Filter Controls Row */}
-      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between rounded-xl border border-slate-900 bg-slate-900/30 p-4">
+      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between rounded-xl border border-workspace-900 bg-workspace-900/30 p-4">
         {/* Date navigators */}
         <div className="flex items-center gap-2">
           <Button
             onClick={handlePrevRange}
             variant="ghost"
             size="icon"
-            className="h-10 w-10 text-slate-400 hover:text-white border border-slate-800 hover:bg-slate-900"
+            className="h-10 w-10 text-workspace-400 hover:text-white border border-workspace-800 hover:bg-workspace-900"
           >
             <ChevronLeft className="h-5 w-5" />
           </Button>
@@ -180,7 +180,7 @@ export default function BookingCalendarPage() {
           <Button
             onClick={handleToday}
             variant="ghost"
-            className="h-10 text-slate-300 hover:text-white font-medium border border-slate-800 hover:bg-slate-900 px-4"
+            className="h-10 text-workspace-300 hover:text-white font-medium border border-workspace-800 hover:bg-workspace-900 px-4"
           >
             {t("today")}
           </Button>
@@ -189,12 +189,12 @@ export default function BookingCalendarPage() {
             onClick={handleNextRange}
             variant="ghost"
             size="icon"
-            className="h-10 w-10 text-slate-400 hover:text-white border border-slate-800 hover:bg-slate-900"
+            className="h-10 w-10 text-workspace-400 hover:text-white border border-workspace-800 hover:bg-workspace-900"
           >
             <ChevronRight className="h-5 w-5" />
           </Button>
 
-          <span className="text-xs text-slate-400 font-bold ml-2">
+          <span className="text-xs text-workspace-400 font-bold ml-2">
             {format(startDate, "MMMM d, yyyy")} — {format(addDays(startDate, 13), "MMMM d, yyyy")}
           </span>
         </div>
@@ -205,7 +205,7 @@ export default function BookingCalendarPage() {
           <select
             value={floor}
             onChange={(e) => setFloor(e.target.value)}
-            className="rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-cyan-500 flex-1 lg:flex-none"
+            className="rounded-lg bg-workspace-950 border border-workspace-800 text-workspace-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-brand-500 flex-1 lg:flex-none"
           >
             <option value="all">{t("all_floors")}</option>
             {uniqueFloors.map((f) => (
@@ -219,7 +219,7 @@ export default function BookingCalendarPage() {
           <select
             value={roomType}
             onChange={(e) => setRoomType(e.target.value)}
-            className="rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-cyan-500 flex-1 lg:flex-none"
+            className="rounded-lg bg-workspace-950 border border-workspace-800 text-workspace-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-brand-500 flex-1 lg:flex-none"
           >
             <option value="all">{t("all_types")}</option>
             {roomTypes.map((rt) => (
@@ -234,8 +234,8 @@ export default function BookingCalendarPage() {
       {/* Calendar Grid Canvas */}
       {isLoading ? (
         <div className="py-20 flex flex-col items-center justify-center space-y-4">
-          <Loader2 className="h-10 w-10 animate-spin text-cyan-400" />
-          <p className="text-sm text-slate-400 font-medium">{t("sync_calendar")}</p>
+          <Loader2 className="h-10 w-10 animate-spin text-brand-400" />
+          <p className="text-sm text-workspace-400 font-medium">{t("sync_calendar")}</p>
         </div>
       ) : (
         <BookingCalendar

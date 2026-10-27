@@ -19,21 +19,21 @@ export const GuestCard: React.FC<GuestCardProps> = ({ reservation, onCheckIn, on
   const tData = useTransData();
 
   const getSourceColor = (src: string) => {
-    if (src.startsWith("ota")) return "bg-purple-500/10 text-purple-400 border-purple-500/20";
-    if (src === "online") return "bg-cyan-500/10 text-cyan-400 border-cyan-500/20";
-    return "bg-slate-500/10 text-slate-400 border-slate-500/20";
+    if (src.startsWith("ota")) return "bg-brand-500/10 text-brand-400 border-brand-500/20";
+    if (src === "online") return "bg-brand-500/10 text-brand-400 border-brand-500/20";
+    return "bg-workspace-500/10 text-workspace-400 border-workspace-500/20";
   };
 
   return (
-    <Card className="bg-slate-900/35 border-slate-800/80 hover:border-slate-800 hover:bg-slate-900/50 transition-all rounded-xl shadow-md overflow-hidden group">
+    <Card className="bg-workspace-900/35 border-workspace-800/80 hover:border-workspace-800 hover:bg-workspace-900/50 transition-all rounded-xl shadow-md overflow-hidden group">
       <CardContent className="p-4 space-y-4">
         {/* Guest Details */}
         <div className="flex items-start justify-between">
           <div className="space-y-1">
-            <h4 className="font-semibold text-sm text-slate-100 group-hover:text-white transition-colors">
+            <h4 className="font-semibold text-sm text-workspace-100 group-hover:text-foreground transition-colors">
               {guest.first_name} {guest.last_name}
             </h4>
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
+            <div className="flex items-center gap-1.5 text-[11px] text-workspace-500 font-medium">
               <Phone className="h-3 w-3" />
               <span>{guest.phone}</span>
             </div>
@@ -44,29 +44,29 @@ export const GuestCard: React.FC<GuestCardProps> = ({ reservation, onCheckIn, on
         </div>
 
         {/* Room & Pricing details */}
-        <div className="grid grid-cols-2 gap-2.5 text-[11px] bg-slate-950/40 p-2.5 rounded-lg border border-slate-900/60">
-          <div className="flex items-center gap-1.5 text-slate-400">
-            <Home className="h-3.5 w-3.5 text-cyan-500" />
-            <span className="font-bold text-slate-200">{t("room")} {room.room_number}</span>
+        <div className="grid grid-cols-2 gap-2.5 text-[11px] bg-workspace-950/40 p-2.5 rounded-lg border border-workspace-900/60">
+          <div className="flex items-center gap-1.5 text-workspace-400">
+            <Home className="h-3.5 w-3.5 text-brand-500" />
+            <span className="font-bold text-workspace-200">{t("room")} {room.room_number}</span>
           </div>
           <div className="text-right">
-            <span className="text-slate-500">{t("total")}: </span>
+            <span className="text-workspace-500">{t("total")}: </span>
             <span className="font-bold text-emerald-400">Rs. {Number(total_amount).toLocaleString()}</span>
           </div>
-          <div className="col-span-2 text-slate-500 text-[10px] font-medium">
+          <div className="col-span-2 text-workspace-500 text-[10px] font-medium">
             {t("class")}: {tData(room.room_type.name)}
           </div>
         </div>
 
         {/* Date breakdown */}
-        <div className="flex items-center justify-between text-[10px] text-slate-500 border-t border-slate-900/60 pt-3">
+        <div className="flex items-center justify-between text-[10px] text-workspace-500 border-t border-workspace-900/60 pt-3">
           <div className="flex items-center gap-1">
-            <Calendar className="h-3 w-3 text-slate-600" />
+            <Calendar className="h-3 w-3 text-workspace-600" />
             <span>{check_in_date}</span>
           </div>
-          <ArrowRight className="h-3 w-3 text-slate-700" />
+          <ArrowRight className="h-3 w-3 text-workspace-700" />
           <div className="flex items-center gap-1">
-            <Calendar className="h-3 w-3 text-slate-600" />
+            <Calendar className="h-3 w-3 text-workspace-600" />
             <span>{check_out_date}</span>
           </div>
         </div>
@@ -76,7 +76,7 @@ export const GuestCard: React.FC<GuestCardProps> = ({ reservation, onCheckIn, on
           {status === "confirmed" && onCheckIn && (
             <Button
               onClick={() => onCheckIn(reservation)}
-              className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs h-9 gap-1.5 rounded-lg shadow-lg shadow-cyan-600/10"
+              className="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs h-9 gap-1.5 rounded-lg shadow-lg shadow-brand-600/10"
             >
               {t("check_in_guest")}
             </Button>

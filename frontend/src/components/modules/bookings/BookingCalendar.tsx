@@ -18,10 +18,10 @@ interface BookingCalendarProps {
 
 const statusColors: Record<string, string> = {
   pending: "bg-amber-500/80 border-amber-500 text-white hover:bg-amber-500 shadow-md shadow-amber-500/10",
-  confirmed: "bg-cyan-500/80 border-cyan-500 text-white hover:bg-cyan-500 shadow-md shadow-cyan-500/10",
+  confirmed: "bg-brand-500/80 border-brand-500 text-white hover:bg-brand-500 shadow-md shadow-brand-500/10",
   checked_in: "bg-emerald-500/80 border-emerald-500 text-white hover:bg-emerald-500 shadow-md shadow-emerald-500/10",
-  checked_out: "bg-slate-600/80 border-slate-600 text-slate-200 hover:bg-slate-600",
-  cancelled: "bg-rose-500/50 border-rose-500/50 text-slate-400 line-through",
+  checked_out: "bg-workspace-600/80 border-workspace-600 text-workspace-200 hover:bg-workspace-600",
+  cancelled: "bg-rose-500/50 border-rose-500/50 text-workspace-400 line-through",
 };
 
 export const BookingCalendar: React.FC<BookingCalendarProps> = ({
@@ -42,13 +42,13 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
   const formatDateKey = (d: Date) => format(d, "yyyy-MM-dd");
 
   return (
-    <div className="rounded-xl border border-slate-900 bg-slate-950/20 overflow-x-auto shadow-2xl">
+    <div className="rounded-xl border border-workspace-900 bg-workspace-950/20 overflow-x-auto shadow-2xl">
       <div className="min-w-[980px]">
         {/* X-Axis Column Headers */}
-        <div className="grid grid-cols-15 border-b border-slate-900 bg-slate-900/30 sticky top-0 z-10 backdrop-blur-md">
+        <div className="grid grid-cols-15 border-b border-workspace-900 bg-workspace-900/30 sticky top-0 z-10 backdrop-blur-md">
           {/* Room info sticky left spacer */}
-          <div className="col-span-2 p-3 font-bold text-xs uppercase tracking-wider text-slate-500 flex items-center gap-1.5 border-r border-slate-900 bg-slate-950/80">
-            <Bed className="h-3.5 w-3.5 text-cyan-400" />
+          <div className="col-span-2 p-3 font-bold text-xs uppercase tracking-wider text-workspace-500 flex items-center gap-1.5 border-r border-workspace-900 bg-workspace-950/80">
+            <Bed className="h-3.5 w-3.5 text-brand-400" />
             {tSidebar("rooms")}
           </div>
           {/* Date headers */}
@@ -70,15 +70,15 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
             return (
               <div
                 key={i}
-                className={`col-span-1 p-2 text-center border-r border-slate-900/40 select-none flex flex-col justify-center items-center gap-0.5 ${
-                  isToday ? "bg-cyan-500/10 text-cyan-400 font-bold" : "text-slate-400"
+                className={`col-span-1 p-2 text-center border-r border-workspace-900/40 select-none flex flex-col justify-center items-center gap-0.5 ${
+                  isToday ? "bg-brand-500/10 text-brand-400 font-bold" : "text-workspace-400"
                 }`}
               >
                 <span className="text-[10px] uppercase font-semibold tracking-wider">
                   {displayDayName}
                 </span>
                 <span className={`text-xs h-5 w-5 rounded-full flex items-center justify-center font-bold ${
-                  isToday ? "bg-cyan-500 text-white" : ""
+                  isToday ? "bg-brand-500 text-white" : ""
                 }`}>
                   {dayNum}
                 </span>
@@ -88,13 +88,13 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
         </div>
 
         {/* Y-Axis Rows */}
-        <div className="divide-y divide-slate-900/60">
+        <div className="divide-y divide-workspace-900/60">
           {rooms.map((room) => {
             // Filter reservations for this room that fall within the current timeline window range
             const roomBookings = reservations.filter((res) => {
               if (res.room?.id !== room.id) return false;
               if (res.status === "cancelled") return false; // Hide cancelled bookings on calendar
-              
+
               const resStart = new Date(res.check_in_date);
               const resEnd = new Date(res.check_out_date);
               const calStart = startDate;
@@ -106,11 +106,11 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
             return (
               <div key={room.id} className="grid grid-cols-15 group relative items-stretch h-14">
                 {/* Room Identifier Card */}
-                <div className="col-span-2 p-3 border-r border-slate-900 bg-slate-950/80 flex flex-col justify-center sticky left-0 z-10">
-                  <span className="font-extrabold text-sm text-white group-hover:text-cyan-400 transition-colors">
+                <div className="col-span-2 p-3 border-r border-workspace-900 bg-workspace-950/80 flex flex-col justify-center sticky left-0 z-10">
+                  <span className="font-extrabold text-sm text-white group-hover:text-brand-400 transition-colors">
                     {room.room_number}
                   </span>
-                  <span className="text-[10px] text-slate-500 truncate">
+                  <span className="text-[10px] text-workspace-500 truncate">
                     {tData(room.room_type?.name)}
                   </span>
                 </div>
@@ -123,7 +123,7 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
                       <div
                         key={i}
                         onClick={() => onCellClick(room, dateStr)}
-                        className="col-span-1 border-r border-slate-900/40 hover:bg-slate-900/40 cursor-crosshair transition-colors h-full"
+                        className="col-span-1 border-r border-workspace-900/40 hover:bg-workspace-900/40 cursor-crosshair transition-colors h-full"
                       />
                     );
                   })}
@@ -144,7 +144,7 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
                       // Adjust duration if starting earlier
                       duration += startDaysDiff;
                     }
-                    
+
                     // Cap duration to fit remaining slots
                     const remainingSlots = 14 - leftOffset;
                     let displaySpan = duration;
@@ -189,7 +189,7 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
           })}
 
           {rooms.length === 0 && (
-            <div className="p-10 text-center text-slate-500 text-xs">
+            <div className="p-10 text-center text-workspace-500 text-xs">
               {locale === "ne" ? "यो तल्ला/वर्ग फिल्टरमा कुनै कोठाहरू तोकिएका छैनन्।" : "No rooms config mapped to this floor/class filter."}
             </div>
           )}

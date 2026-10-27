@@ -102,12 +102,12 @@ export default function HousekeepingManagerPage() {
     try {
       const taskIds: number[] = [];
       const roomsToAssign = boardRooms.filter((r) => selectedRoomIds.includes(r.room_id));
-      
+
       const pendingTaskRooms = roomsToAssign.filter((r) => r.active_task);
       taskIds.push(...pendingTaskRooms.map((r) => r.active_task!.id));
 
       if (taskIds.length === 0) {
-        alert(locale === "ne" 
+        alert(locale === "ne"
           ? "चयन गरिएका कोठाहरूमा कुनै सक्रिय सफाइ कार्यहरू छैनन्। केवल बाँकी रहेका सफाइ कार्यहरू भएका कोठाहरू मात्र तोक्न सकिन्छ।"
           : "Selected rooms do not have any active housekeeping tasks. Only rooms with pending cleaning tasks can be assigned.");
         setSubmitting(false);
@@ -178,11 +178,11 @@ export default function HousekeepingManagerPage() {
       case "dirty":
         return "border-rose-500/30 text-rose-400 bg-rose-500/5";
       case "maintenance":
-        return "border-slate-800 text-slate-400 bg-slate-900/50";
+        return "border-workspace-800 text-workspace-400 bg-workspace-900/50";
       case "occupied":
-        return "border-cyan-500/30 text-cyan-400 bg-cyan-500/5";
+        return "border-brand-500/30 text-brand-400 bg-brand-500/5";
       default:
-        return "border-slate-900 text-slate-500 bg-slate-950";
+        return "border-workspace-900 text-workspace-500 bg-workspace-950";
     }
   };
 
@@ -206,14 +206,14 @@ export default function HousekeepingManagerPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/40 p-4 border border-slate-900 rounded-xl backdrop-blur-md">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-workspace-900/40 p-4 border border-workspace-900 rounded-xl backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 bg-cyan-500/10 rounded-lg flex items-center justify-center border border-cyan-500/20">
-            <Paintbrush className="h-5 w-5 text-cyan-400" />
+          <div className="h-10 w-10 bg-brand-500/10 rounded-lg flex items-center justify-center border border-brand-500/20">
+            <Paintbrush className="h-5 w-5 text-brand-400" />
           </div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">{t("title")}</h1>
-            <p className="text-xs text-slate-500 mt-0.5">{t("subtitle")}</p>
+            <h1 className="text-xl font-bold bg-gradient-to-r text-foreground">{t("title")}</h1>
+            <p className="text-xs text-workspace-500 mt-0.5">{t("subtitle")}</p>
           </div>
         </div>
 
@@ -222,7 +222,7 @@ export default function HousekeepingManagerPage() {
             variant={activeTab === "board" ? "secondary" : "outline"}
             size="sm"
             onClick={() => setActiveTab("board")}
-            className="border-slate-800 text-xs"
+            className="border-workspace-800 text-xs"
           >
             {locale === "ne" ? "कोठाहरूको बोर्ड" : "Rooms Board"}
           </Button>
@@ -230,7 +230,7 @@ export default function HousekeepingManagerPage() {
             variant={activeTab === "maintenance" ? "secondary" : "outline"}
             size="sm"
             onClick={() => setActiveTab("maintenance")}
-            className="border-slate-800 text-xs"
+            className="border-workspace-800 text-xs"
           >
             {locale === "ne" ? "मर्मतसम्भार अनुरोधहरू" : "Maintenance Requests"}
           </Button>
@@ -239,7 +239,7 @@ export default function HousekeepingManagerPage() {
             size="icon"
             onClick={() => loadData(true)}
             disabled={refreshing}
-            className="text-slate-400 hover:text-slate-100 h-8 w-8"
+            className="text-workspace-400 hover:text-workspace-100 h-8 w-8"
           >
             <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
           </Button>
@@ -248,52 +248,52 @@ export default function HousekeepingManagerPage() {
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-24 gap-3">
-          <Loader2 className="h-8 w-8 text-cyan-500 animate-spin" />
-          <span className="text-sm text-slate-400">
+          <Loader2 className="h-8 w-8 text-brand-500 animate-spin" />
+          <span className="text-sm text-workspace-400">
             {locale === "ne" ? "हाउसकिपिङ बोर्ड लोड हुँदैछ..." : "Loading housekeeping board..."}
           </span>
         </div>
       ) : (
         <>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <Card className="bg-slate-900/50 border-slate-900">
+            <Card className="bg-workspace-900/50 border-workspace-900">
               <CardContent className="p-4 flex flex-col justify-center">
-                <span className="text-xs text-slate-500 block uppercase tracking-wider font-semibold">
+                <span className="text-xs text-workspace-500 block uppercase tracking-wider font-semibold">
                   {locale === "ne" ? "जम्मा कोठाहरू" : "Total Rooms"}
                 </span>
-                <span className="text-2xl font-bold text-slate-100 mt-1">{stats.total}</span>
+                <span className="text-2xl font-bold text-workspace-100 mt-1">{stats.total}</span>
               </CardContent>
             </Card>
-            <Card className="bg-slate-900/50 border-slate-900">
+            <Card className="bg-workspace-900/50 border-workspace-900">
               <CardContent className="p-4 flex flex-col justify-center">
-                <span className="text-xs text-slate-500 block uppercase tracking-wider font-semibold">
+                <span className="text-xs text-workspace-500 block uppercase tracking-wider font-semibold">
                   {locale === "ne" ? "सफा / उपलब्ध" : "Clean / Available"}
                 </span>
                 <span className="text-2xl font-bold text-emerald-400 mt-1">{stats.clean}</span>
               </CardContent>
             </Card>
-            <Card className="bg-slate-900/50 border-slate-900">
+            <Card className="bg-workspace-900/50 border-workspace-900">
               <CardContent className="p-4 flex flex-col justify-center">
-                <span className="text-xs text-slate-500 block uppercase tracking-wider font-semibold">
+                <span className="text-xs text-workspace-500 block uppercase tracking-wider font-semibold">
                   {locale === "ne" ? "फोहोर / चेक-आउट" : "Dirty / Check-outs"}
                 </span>
                 <span className="text-2xl font-bold text-rose-400 mt-1">{stats.dirty}</span>
               </CardContent>
             </Card>
-            <Card className="bg-slate-900/50 border-slate-900">
+            <Card className="bg-workspace-900/50 border-workspace-900">
               <CardContent className="p-4 flex flex-col justify-center">
-                <span className="text-xs text-slate-500 block uppercase tracking-wider font-semibold">
+                <span className="text-xs text-workspace-500 block uppercase tracking-wider font-semibold">
                   {locale === "ne" ? "सफाइ हुँदै" : "In Cleaning"}
                 </span>
-                <span className="text-2xl font-bold text-blue-400 mt-1">{stats.cleaning}</span>
+                <span className="text-2xl font-bold text-brand-400 mt-1">{stats.cleaning}</span>
               </CardContent>
             </Card>
-            <Card className="bg-slate-900/50 border-slate-900">
+            <Card className="bg-workspace-900/50 border-workspace-900">
               <CardContent className="p-4 flex flex-col justify-center">
-                <span className="text-xs text-slate-500 block uppercase tracking-wider font-semibold">
+                <span className="text-xs text-workspace-500 block uppercase tracking-wider font-semibold">
                   {locale === "ne" ? "मर्मतसम्भार" : "Maintenance"}
                 </span>
-                <span className="text-2xl font-bold text-slate-400 mt-1">{stats.maint}</span>
+                <span className="text-2xl font-bold text-workspace-400 mt-1">{stats.maint}</span>
               </CardContent>
             </Card>
           </div>
@@ -301,19 +301,19 @@ export default function HousekeepingManagerPage() {
           {activeTab === "board" ? (
             <div className="space-y-6">
               {selectedRoomIds.length > 0 && (
-                <div className="p-4 bg-slate-900/60 border border-cyan-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2 duration-250">
+                <div className="p-4 bg-workspace-900/60 border border-brand-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2 duration-250">
                   <div className="flex items-center gap-2">
-                    <CheckSquare className="h-5 w-5 text-cyan-400" />
-                    <span className="text-sm font-semibold text-slate-200">
-                      {locale === "ne" 
-                        ? `${selectedRoomIds.length} कोठाहरू सफाइका लागि छानिएका छन्` 
+                    <CheckSquare className="h-5 w-5 text-brand-400" />
+                    <span className="text-sm font-semibold text-workspace-200">
+                      {locale === "ne"
+                        ? `${selectedRoomIds.length} कोठाहरू सफाइका लागि छानिएका छन्`
                         : `${selectedRoomIds.length} rooms selected for cleaning assignment`}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-2.5 w-full sm:w-auto">
                     <Select value={assignedStaffId} onValueChange={(val) => setAssignedStaffId(val || "none")}>
-                      <SelectTrigger className="w-[180px] bg-slate-950 border-slate-800 text-xs h-9">
+                      <SelectTrigger className="w-[180px] bg-workspace-950 border-workspace-800 text-xs h-9">
                         <SelectValue placeholder={locale === "ne" ? "हाउसकिपर तोक्नुहोस्" : "Assign housekeeper"}>
                           {(value) => {
                             if (value === "none") return locale === "ne" ? "कर्मचारी छान्नुहोस्..." : "Choose Staff...";
@@ -322,7 +322,7 @@ export default function HousekeepingManagerPage() {
                           }}
                         </SelectValue>
                       </SelectTrigger>
-                      <SelectContent className="bg-slate-900 border-slate-800 text-slate-200">
+                      <SelectContent className="bg-workspace-900 border-workspace-800 text-workspace-200">
                         <SelectItem value="none">
                           {locale === "ne" ? "कर्मचारी छान्नुहोस्..." : "Choose Staff..."}
                         </SelectItem>
@@ -338,17 +338,17 @@ export default function HousekeepingManagerPage() {
                       onClick={handleBulkAssign}
                       disabled={submitting || assignedStaffId === "none"}
                       size="sm"
-                      className="bg-cyan-600 hover:bg-cyan-500 text-white font-medium"
+                      className="bg-brand-600 hover:bg-brand-500 text-white font-medium"
                     >
-                      {submitting 
-                        ? (locale === "ne" ? "तोकिँदै..." : "Assigning...") 
+                      {submitting
+                        ? (locale === "ne" ? "तोकिँदै..." : "Assigning...")
                         : (locale === "ne" ? "जिम्मेवारी तोक्नुहोस्" : "Assign Tasks")}
                     </Button>
                     <Button
                       variant="ghost"
                       onClick={() => setSelectedRoomIds([])}
                       size="sm"
-                      className="text-slate-400 hover:text-slate-200"
+                      className="text-workspace-400 hover:text-workspace-200"
                     >
                       {locale === "ne" ? "रद्द गर्नुहोस्" : "Cancel"}
                     </Button>
@@ -359,9 +359,9 @@ export default function HousekeepingManagerPage() {
               <div className="space-y-8">
                 {Object.entries(roomsByFloor).map(([floor, rooms]) => (
                   <div key={floor} className="space-y-3">
-                    <div className="flex items-center gap-2 border-b border-slate-900 pb-2">
-                      <Layers className="h-4 w-4 text-cyan-500" />
-                      <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                    <div className="flex items-center gap-2 border-b border-workspace-900 pb-2">
+                      <Layers className="h-4 w-4 text-brand-500" />
+                      <h2 className="text-xs font-bold uppercase tracking-wider text-workspace-400">
                         {locale === "ne" ? `${floor} तल्ला` : `Floor ${floor}`}
                       </h2>
                     </div>
@@ -373,19 +373,19 @@ export default function HousekeepingManagerPage() {
                           <Card
                             key={room.room_id}
                             className={cn(
-                              "relative group border transition-all duration-300 overflow-hidden bg-slate-900/40 hover:shadow-md hover:border-slate-700",
-                              isSelected ? "ring-1 ring-cyan-500/70 border-cyan-500 bg-cyan-500/[0.01]" : ""
+                              "relative group border transition-all duration-300 overflow-hidden bg-workspace-900/40 hover:shadow-md hover:border-workspace-700",
+                              isSelected ? "ring-1 ring-brand-500/70 border-brand-500 bg-brand-500/[0.01]" : ""
                             )}
                           >
-                            <CardHeader className="p-3.5 pb-2 flex flex-row items-center justify-between bg-slate-950/20 border-b border-slate-900/40">
+                            <CardHeader className="p-3.5 pb-2 flex flex-row items-center justify-between bg-workspace-950/20 border-b border-workspace-900/40">
                               <div className="flex items-center gap-2">
                                 <input
                                   type="checkbox"
                                   checked={isSelected}
                                   onChange={() => toggleSelectRoom(room.room_id)}
-                                  className="h-3.5 w-3.5 rounded border-slate-800 bg-slate-950 text-cyan-500 accent-cyan-500 cursor-pointer focus:ring-offset-0 focus:ring-0"
+                                  className="h-3.5 w-3.5 rounded border-workspace-800 bg-workspace-950 text-brand-500 accent-cyan-500 cursor-pointer focus:ring-offset-0 focus:ring-0"
                                 />
-                                <span className="font-extrabold text-sm text-slate-100">
+                                <span className="font-extrabold text-sm text-workspace-100">
                                   {locale === "ne" ? `कोठा ${room.room_number}` : `Room ${room.room_number}`}
                                 </span>
                               </div>
@@ -394,35 +394,35 @@ export default function HousekeepingManagerPage() {
                               </Badge>
                             </CardHeader>
                             <CardContent className="p-3.5 space-y-3 text-xs">
-                              <div className="text-[10px] text-slate-500 font-medium">
+                              <div className="text-[10px] text-workspace-500 font-medium">
                                 {locale === "ne" ? "प्रकार: " : "Type: "} {tData(room.room_type_name)}
                               </div>
 
                               {room.active_task ? (
-                                <div className="space-y-1.5 p-2 bg-slate-950/40 rounded-lg border border-slate-900/50">
+                                <div className="space-y-1.5 p-2 bg-workspace-950/40 rounded-lg border border-workspace-900/50">
                                   <div className="flex items-center justify-between gap-2">
-                                    <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wide">
+                                    <span className="text-[10px] font-bold text-workspace-300 uppercase tracking-wide">
                                       {tData(room.active_task.task_type)}
                                     </span>
                                     <Badge
                                       className={`text-[8.5px] px-1 py-0 capitalize ${
                                         room.active_task.status === "in_progress"
-                                          ? "bg-blue-500/15 text-blue-400 border-blue-500/20"
+                                          ? "bg-brand-500/15 text-brand-400 border-brand-500/20"
                                           : "bg-amber-500/15 text-amber-400 border-amber-500/20"
                                       }`}
                                     >
                                       {tData(room.active_task.status)}
                                     </Badge>
                                   </div>
-                                  <div className="text-[10px] text-slate-400 flex items-center gap-1">
-                                    <UserCheck className="h-3 w-3 text-cyan-500" />
+                                  <div className="text-[10px] text-workspace-400 flex items-center gap-1">
+                                    <UserCheck className="h-3 w-3 text-brand-500" />
                                     <span>
                                       {room.active_task.assigned_to_name || (locale === "ne" ? "तोकिएको छैन" : "Unassigned")}
                                     </span>
                                   </div>
                                 </div>
                               ) : (
-                                <div className="text-[10px] text-slate-600 italic py-2">
+                                <div className="text-[10px] text-workspace-600 italic py-2">
                                   {locale === "ne" ? "कुनै सक्रिय कार्य छैन" : "No active cleaning task"}
                                 </div>
                               )}
@@ -436,7 +436,7 @@ export default function HousekeepingManagerPage() {
                                     setTargetRoomId(room.room_id);
                                     setIsMaintenanceOpen(true);
                                   }}
-                                  className="h-6 px-2 text-[9px] bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/65"
+                                  className="h-6 px-2 text-[9px] bg-workspace-800 text-workspace-400 hover:text-workspace-200 border border-workspace-700/65"
                                 >
                                   {locale === "ne" ? "मर्मत" : "Maint."}
                                 </Button>
@@ -451,10 +451,10 @@ export default function HousekeepingManagerPage() {
               </div>
             </div>
           ) : (
-            <div className="overflow-x-auto bg-slate-900/20 border border-slate-900 rounded-xl p-4">
+            <div className="overflow-x-auto bg-workspace-900/20 border border-workspace-900 rounded-xl p-4">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-slate-900 text-slate-500 font-bold uppercase tracking-wider">
+                  <tr className="border-b border-workspace-900 text-workspace-500 font-bold uppercase tracking-wider">
                     <th className="pb-3.5 pl-2">{locale === "ne" ? "कोठा" : "Room"}</th>
                     <th className="pb-3.5">{locale === "ne" ? "वर्ग" : "Category"}</th>
                     <th className="pb-3.5">{locale === "ne" ? "विवरण" : "Description"}</th>
@@ -464,36 +464,36 @@ export default function HousekeepingManagerPage() {
                     <th className="pb-3.5 pr-2 text-right">{locale === "ne" ? "कार्यहरू" : "Actions"}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-900/60">
+                <tbody className="divide-y divide-workspace-900/60">
                   {maintenanceRequests.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="text-center py-10 text-slate-500 italic">
+                      <td colSpan={7} className="text-center py-10 text-workspace-500 italic">
                         {locale === "ne" ? "कुनै मर्मतसम्भार अनुरोधहरू दर्ता छैनन्।" : "No maintenance requests recorded."}
                       </td>
                     </tr>
                   ) : (
                     maintenanceRequests.map((req) => (
-                      <tr key={req.id} className="text-slate-300 hover:bg-slate-950/20">
-                        <td className="py-3.5 pl-2 font-bold text-slate-200">
+                      <tr key={req.id} className="text-workspace-300 hover:bg-workspace-950/20">
+                        <td className="py-3.5 pl-2 font-bold text-workspace-200">
                           {locale === "ne" ? `कोठा ${req.room_number}` : `Room ${req.room_number}`}
                         </td>
                         <td className="py-3.5 capitalize font-medium">{tData(req.category)}</td>
                         <td className="py-3.5 max-w-[200px] truncate">{req.description}</td>
-                        <td className="py-3.5 text-slate-400">{req.reported_by_name}</td>
+                        <td className="py-3.5 text-workspace-400">{req.reported_by_name}</td>
                         <td className="py-3.5">
                           <Badge
                             className={`capitalize text-[9px] px-1.5 py-0.5 border ${
                               req.status === "resolved"
                                 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                                 : req.status === "in_progress"
-                                ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                                ? "bg-brand-500/10 text-brand-400 border-brand-500/20"
                                 : "bg-red-500/10 text-red-400 border-red-500/20"
                             }`}
                           >
                             {tData(req.status)}
                           </Badge>
                         </td>
-                        <td className="py-3.5 max-w-[200px] truncate text-slate-400">
+                        <td className="py-3.5 max-w-[200px] truncate text-workspace-400">
                           {req.resolution_notes || "N/A"}
                         </td>
                         <td className="py-3.5 pr-2 text-right">
@@ -521,14 +521,14 @@ export default function HousekeepingManagerPage() {
       )}
 
       <Dialog open={isMaintenanceOpen} onOpenChange={setIsMaintenanceOpen}>
-        <DialogContent className="sm:max-w-[420px] bg-slate-950 border-slate-900 text-slate-100">
+        <DialogContent className="sm:max-w-[420px] bg-workspace-950 border-workspace-900 text-workspace-100">
           <DialogHeader>
             <DialogTitle className="text-sm font-bold flex items-center gap-2">
               <AlertTriangle className="h-4.5 w-4.5 text-amber-500" />
               {locale === "ne" ? "मर्मतसम्भार समस्या दर्ता गर्नुहोस्" : "Report Maintenance Issue"}
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs">
-              {locale === "ne" 
+            <DialogDescription className="text-workspace-500 text-xs">
+              {locale === "ne"
                 ? "कोठा स्वतः 'मर्मतसम्भार' स्थितिमा परिणत हुनेछ र मर्मत टिकट सिर्जना हुनेछ।"
                 : "Room status transitions automatically to 'maintenance' and logs a repair ticket."}
             </DialogDescription>
@@ -536,12 +536,12 @@ export default function HousekeepingManagerPage() {
 
           <div className="space-y-4 py-2">
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-400">{locale === "ne" ? "वर्ग" : "Category"}</Label>
+              <Label className="text-xs text-workspace-400">{locale === "ne" ? "वर्ग" : "Category"}</Label>
               <Select
                 value={mCategory}
                 onValueChange={(val) => setMCategory(val as MaintenanceCategory)}
               >
-                <SelectTrigger className="bg-slate-900 border-slate-800 text-xs text-slate-200">
+                <SelectTrigger className="bg-workspace-900 border-workspace-800 text-xs text-workspace-200">
                   <SelectValue placeholder="Select category">
                     {(value) => {
                       const c = CATEGORIES.find(item => item.value === value);
@@ -550,7 +550,7 @@ export default function HousekeepingManagerPage() {
                     }}
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="bg-slate-900 border-slate-800 text-slate-200">
+                <SelectContent className="bg-workspace-900 border-workspace-800 text-workspace-200">
                   {CATEGORIES.map((c) => (
                     <SelectItem key={c.value} value={c.value} className="text-xs">
                       {locale === "ne" ? tData(c.value) : c.label}
@@ -561,7 +561,7 @@ export default function HousekeepingManagerPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="m-desc" className="text-xs text-slate-400">
+              <Label htmlFor="m-desc" className="text-xs text-workspace-400">
                 {locale === "ne" ? "समस्याको विवरण" : "Issue Specification"}
               </Label>
               <Textarea
@@ -569,23 +569,23 @@ export default function HousekeepingManagerPage() {
                 placeholder={locale === "ne" ? "जस्तै: ढल चुहावट, AC ले आवाज निकाल्दैछ..." : "E.g. Leaking toilet pipe, AC compressor makes noise..."}
                 value={mDescription}
                 onChange={(e) => setMDescription(e.target.value)}
-                className="bg-slate-900 border-slate-800 text-xs"
+                className="bg-workspace-900 border-workspace-800 text-xs"
               />
             </div>
           </div>
 
-          <DialogFooter className="border-t border-slate-900 pt-3">
-            <Button size="sm" variant="outline" onClick={() => setIsMaintenanceOpen(false)} className="border-slate-800">
+          <DialogFooter className="border-t border-workspace-900 pt-3">
+            <Button size="sm" variant="outline" onClick={() => setIsMaintenanceOpen(false)} className="border-workspace-800">
               {locale === "ne" ? "रद्द गर्नुहोस्" : "Cancel"}
             </Button>
             <Button
               size="sm"
               onClick={handleCreateMaintenance}
               disabled={submitting || !mDescription.trim()}
-              className="bg-cyan-600 hover:bg-cyan-500 text-white font-semibold"
+              className="bg-brand-600 hover:bg-brand-500 text-white font-semibold"
             >
-              {submitting 
-                ? (locale === "ne" ? "दर्ता हुँदै..." : "Reporting...") 
+              {submitting
+                ? (locale === "ne" ? "दर्ता हुँदै..." : "Reporting...")
                 : (locale === "ne" ? "समस्या दर्ता गर्नुहोस्" : "Report Issue")}
             </Button>
           </DialogFooter>
@@ -593,21 +593,21 @@ export default function HousekeepingManagerPage() {
       </Dialog>
 
       <Dialog open={isResolveOpen} onOpenChange={setIsResolveOpen}>
-        <DialogContent className="sm:max-w-[420px] bg-slate-950 border-slate-900 text-slate-100">
+        <DialogContent className="sm:max-w-[420px] bg-workspace-950 border-workspace-900 text-workspace-100">
           <DialogHeader>
             <DialogTitle className="text-sm font-bold flex items-center gap-2">
               <ShieldCheck className="h-5 w-5 text-emerald-500" />
               {locale === "ne" ? "मर्मतसम्भार अनुरोध समाधान गर्नुहोस्" : "Resolve Repair Request"}
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs">
-              {locale === "ne" 
+            <DialogDescription className="text-workspace-500 text-xs">
+              {locale === "ne"
                 ? "यो अनुरोध समाधान भएको रूपमा चिन्ह लगाउनुहोस्। कोठा सफाइ जाँचको लागि पुनः 'फोहोर' स्थितिमा जानेछ।"
                 : "Mark this request as resolved. Room status transitions back to 'dirty' for cleaning check."}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-1.5 py-2">
-            <Label htmlFor="res-notes" className="text-xs text-slate-400">
+            <Label htmlFor="res-notes" className="text-xs text-workspace-400">
               {locale === "ne" ? "समाधान विवरण" : "Resolution Logs"}
             </Label>
             <Textarea
@@ -615,12 +615,12 @@ export default function HousekeepingManagerPage() {
               placeholder={locale === "ne" ? "के कस्तो मर्मत कार्य गरियो विवरण उल्लेख गर्नुहोस्..." : "Detail what repairs were conducted..."}
               value={resolutionNotes}
               onChange={(e) => setResolutionNotes(e.target.value)}
-              className="bg-slate-900 border-slate-800 text-xs"
+              className="bg-workspace-900 border-workspace-800 text-xs"
             />
           </div>
 
-          <DialogFooter className="border-t border-slate-900 pt-3">
-            <Button size="sm" variant="outline" onClick={() => setIsResolveOpen(false)} className="border-slate-800">
+          <DialogFooter className="border-t border-workspace-900 pt-3">
+            <Button size="sm" variant="outline" onClick={() => setIsResolveOpen(false)} className="border-workspace-800">
               {locale === "ne" ? "रद्द गर्नुहोस्" : "Cancel"}
             </Button>
             <Button
@@ -629,8 +629,8 @@ export default function HousekeepingManagerPage() {
               disabled={submitting || !resolutionNotes.trim()}
               className="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold"
             >
-              {submitting 
-                ? (locale === "ne" ? "समाधान हुँदै..." : "Resolving...") 
+              {submitting
+                ? (locale === "ne" ? "समाधान हुँदै..." : "Resolving...")
                 : (locale === "ne" ? "समाधान सम्पन्न" : "Complete Resolve")}
             </Button>
           </DialogFooter>

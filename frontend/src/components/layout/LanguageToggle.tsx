@@ -22,14 +22,14 @@ export function LanguageToggle() {
   };
 
   return (
-    <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-full p-0.5 shadow-inner">
+    <div className="flex items-center gap-1 bg-workspace-900 border border-workspace-800 rounded-full p-0.5 shadow-inner">
       <button
         type="button"
         onClick={() => handleToggle("en")}
         className={`px-2.5 py-1 text-[10px] font-bold rounded-full transition-all ${
           currentLang === "en"
-            ? "bg-cyan-500 text-slate-950 shadow-sm shadow-cyan-500/20"
-            : "text-slate-400 hover:text-white"
+            ? "bg-brand-500 text-workspace-950 shadow-sm shadow-brand-500/20"
+            : "text-workspace-400 hover:text-white"
         }`}
       >
         EN
@@ -39,8 +39,8 @@ export function LanguageToggle() {
         onClick={() => handleToggle("ne")}
         className={`px-2.5 py-1 text-[10px] font-bold rounded-full transition-all ${
           currentLang === "ne"
-            ? "bg-cyan-500 text-slate-950 shadow-sm shadow-cyan-500/20"
-            : "text-slate-400 hover:text-white"
+            ? "bg-brand-500 text-workspace-950 shadow-sm shadow-brand-500/20"
+            : "text-workspace-400 hover:text-white"
         }`}
       >
         नेपाली

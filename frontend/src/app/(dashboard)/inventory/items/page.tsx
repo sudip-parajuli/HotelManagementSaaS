@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  Package, 
-  Search, 
-  Filter, 
-  Plus, 
-  AlertTriangle, 
-  Check, 
+import {
+  Package,
+  Search,
+  Filter,
+  Plus,
+  AlertTriangle,
+  Check,
   SlidersHorizontal,
   ChevronDown
 } from "lucide-react";
@@ -29,7 +29,7 @@ export default function InventoryItemsPage() {
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [filteredItems, setFilteredItems] = useState<InventoryItem[]>([]);
-  
+
   // Filtering & Search
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<number | "all">("all");
@@ -39,7 +39,7 @@ export default function InventoryItemsPage() {
   const tCommon = useTranslations("Common");
   const tData = useTransData();
   const locale = useLocale();
-  
+
   // Sheet: New Item
   const [isNewItemOpen, setIsNewItemOpen] = useState(false);
   const [newItem, setNewItem] = useState({
@@ -121,7 +121,7 @@ export default function InventoryItemsPage() {
   const handleNewItemSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newItem.name || !newItem.sku || !newItem.category_id) return;
-    
+
     try {
       await inventoryApi.createItem({
         name: newItem.name,
@@ -177,7 +177,7 @@ export default function InventoryItemsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-workspace-200 to-workspace-400 bg-clip-text text-transparent">
             {t("stock_ledger")}
           </h1>
           <p className="text-muted-foreground text-sm">
@@ -194,39 +194,39 @@ export default function InventoryItemsPage() {
                 </Button>
               }
             />
-            <SheetContent className="bg-slate-900 border-slate-800 text-white overflow-y-auto w-full sm:max-w-md">
+            <SheetContent className="bg-workspace-900 border-workspace-800 text-foreground overflow-y-auto w-full sm:max-w-md">
               <SheetHeader className="pb-6">
-                <SheetTitle className="text-xl font-bold text-white">{t("new_item_title")}</SheetTitle>
+                <SheetTitle className="text-xl font-bold text-foreground">{t("new_item_title")}</SheetTitle>
               </SheetHeader>
-              <form onSubmit={handleNewItemSubmit} className="space-y-4 text-slate-300">
+              <form onSubmit={handleNewItemSubmit} className="space-y-4 text-workspace-300">
                 <div className="space-y-1">
                   <Label htmlFor="name">{t("item_name")}</Label>
-                  <Input 
+                  <Input
                     id="name"
                     value={newItem.name}
                     onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white" 
+                    className="bg-workspace-950 border-workspace-800 text-white"
                     required
                   />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="sku">{t("sku_code")}</Label>
-                  <Input 
+                  <Input
                     id="sku"
                     value={newItem.sku}
                     onChange={(e) => setNewItem({ ...newItem, sku: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white" 
+                    className="bg-workspace-950 border-workspace-800 text-white"
                     placeholder="e.g. RAW-CHK-01"
                     required
                   />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="category">{t("category")}</Label>
-                  <select 
+                  <select
                     id="category"
                     value={newItem.category_id}
                     onChange={(e) => setNewItem({ ...newItem, category_id: e.target.value })}
-                    className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                    className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
                     required
                   >
                     <option value="">{t("select_category")}</option>
@@ -237,11 +237,11 @@ export default function InventoryItemsPage() {
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="unit">{t("measurement_unit")}</Label>
-                  <select 
+                  <select
                     id="unit"
                     value={newItem.unit}
                     onChange={(e) => setNewItem({ ...newItem, unit: e.target.value as InventoryUnit })}
-                    className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                    className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
                   >
                     <option value="piece">{tData("piece")}</option>
                     <option value="kg">{locale === "ne" ? "किलोग्राम (के.जी.)" : "Kilogram (kg)"}</option>
@@ -253,54 +253,54 @@ export default function InventoryItemsPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <Label htmlFor="reorder">{t("reorder_level")}</Label>
-                    <Input 
+                    <Input
                       id="reorder"
                       type="number"
                       step="any"
                       value={newItem.reorder_level}
                       onChange={(e) => setNewItem({ ...newItem, reorder_level: parseFloat(e.target.value) || 0 })}
-                      className="bg-slate-950 border-slate-800 text-white"
+                      className="bg-workspace-950 border-workspace-800 text-white"
                     />
                   </div>
                   <div className="space-y-1">
                     <Label htmlFor="max">{t("max_capacity")}</Label>
-                    <Input 
+                    <Input
                       id="max"
                       type="number"
                       step="any"
                       value={newItem.max_stock}
                       onChange={(e) => setNewItem({ ...newItem, max_stock: parseFloat(e.target.value) || 0 })}
-                      className="bg-slate-950 border-slate-800 text-white"
+                      className="bg-workspace-950 border-workspace-800 text-white"
                     />
                   </div>
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="price">{t("cost_price")}</Label>
-                  <Input 
+                  <Input
                     id="price"
                     type="number"
                     step="0.01"
                     value={newItem.cost_price}
                     onChange={(e) => setNewItem({ ...newItem, cost_price: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white"
+                    className="bg-workspace-950 border-workspace-800 text-white"
                   />
                 </div>
                 <div className="flex flex-col gap-2 pt-2">
                   <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
-                    <input 
+                    <input
                       type="checkbox"
                       checked={newItem.is_perishable}
                       onChange={(e) => setNewItem({ ...newItem, is_perishable: e.target.checked })}
-                      className="w-4 h-4 accent-emerald-500 rounded border-slate-800 bg-slate-950"
+                      className="w-4 h-4 accent-emerald-500 rounded border-workspace-800 bg-workspace-950"
                     />
                     {t("is_perishable")}
                   </label>
                   <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
-                    <input 
+                    <input
                       type="checkbox"
                       checked={newItem.expiry_tracking}
                       onChange={(e) => setNewItem({ ...newItem, expiry_tracking: e.target.checked })}
-                      className="w-4 h-4 accent-emerald-500 rounded border-slate-800 bg-slate-950"
+                      className="w-4 h-4 accent-emerald-500 rounded border-workspace-800 bg-workspace-950"
                     />
                     {t("enable_expiry")}
                   </label>
@@ -315,15 +315,15 @@ export default function InventoryItemsPage() {
       </div>
 
       {/* Filters Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-slate-900/30 p-4 rounded-xl border border-slate-850/80 backdrop-blur-md">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-workspace-900/30 p-4 rounded-xl border border-slate-850/80 backdrop-blur-md">
         {/* Search */}
         <div className="md:col-span-5 relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
-          <Input 
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-workspace-500" />
+          <Input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder={t("search_placeholder")}
-            className="pl-9 bg-slate-950/50 border-slate-800 text-white"
+            className="pl-9 bg-workspace-950/50 border-workspace-800 text-white"
           />
         </div>
         {/* Category selector */}
@@ -331,7 +331,7 @@ export default function InventoryItemsPage() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value === "all" ? "all" : parseInt(e.target.value))}
-            className="w-full h-10 px-3 rounded-md bg-slate-950/50 border border-slate-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full h-10 px-3 rounded-md bg-workspace-950/50 border border-workspace-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
           >
             <option value="all">{t("all_categories")}</option>
             {categories.map((c) => (
@@ -341,12 +341,12 @@ export default function InventoryItemsPage() {
         </div>
         {/* Low stock toggle */}
         <div className="md:col-span-4 flex items-center justify-end">
-          <label className="flex items-center gap-2 text-sm text-slate-400 cursor-pointer select-none">
+          <label className="flex items-center gap-2 text-sm text-workspace-400 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={filterLowStock}
               onChange={(e) => setFilterLowStock(e.target.checked)}
-              className="w-4 h-4 accent-amber-500 rounded border-slate-800 bg-slate-950"
+              className="w-4 h-4 accent-amber-500 rounded border-workspace-800 bg-workspace-950"
             />
             <AlertTriangle className="h-4 w-4 text-amber-500" />
             {t("show_low_stock")}
@@ -355,7 +355,7 @@ export default function InventoryItemsPage() {
       </div>
 
       {/* Items Table / List */}
-      <Card className="bg-slate-900/20 border-slate-800/60 shadow-xl overflow-hidden">
+      <Card className="bg-workspace-900/20 border-workspace-800/60 shadow-xl overflow-hidden">
         <CardContent className="p-0 overflow-x-auto">
           {isLoading ? (
             <div className="flex items-center justify-center p-12">
@@ -363,13 +363,13 @@ export default function InventoryItemsPage() {
             </div>
           ) : filteredItems.length === 0 ? (
             <div className="text-center py-16 space-y-3">
-              <Package className="h-12 w-12 text-slate-600 mx-auto" />
-              <p className="text-slate-400 font-medium">{t("no_items_found")}</p>
+              <Package className="h-12 w-12 text-workspace-600 mx-auto" />
+              <p className="text-workspace-400 font-medium">{t("no_items_found")}</p>
             </div>
           ) : (
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-slate-800/60 text-slate-400 font-semibold bg-slate-950/20">
+                <tr className="border-b border-workspace-800/60 text-workspace-400 font-semibold bg-workspace-950/20">
                   <th className="py-3 px-4">{t("item_details")}</th>
                   <th className="py-3 px-4">{t("category")}</th>
                   <th className="py-3 px-4">{t("sku")}</th>
@@ -384,42 +384,42 @@ export default function InventoryItemsPage() {
                 {filteredItems.map((item) => {
                   const isLow = parseFloat(item.current_stock) <= parseFloat(item.reorder_level);
                   return (
-                    <tr 
-                      key={item.id} 
-                      className={`border-b border-slate-900/50 hover:bg-slate-950/10 transition-colors ${
+                    <tr
+                      key={item.id}
+                      className={`border-b border-workspace-900/50 hover:bg-workspace-950/10 transition-colors ${
                         isLow ? "bg-amber-950/5 hover:bg-amber-950/10" : ""
                       }`}
                     >
                       <td className="py-3 px-4">
-                        <div className="font-bold text-white text-sm">{item.name}</div>
-                        <div className="text-slate-500 text-[10px]">
+                        <div className="font-bold text-foreground text-sm">{item.name}</div>
+                        <div className="text-workspace-500 text-[10px]">
                           {locale === "ne" ? tData(item.unit) : item.unit.toUpperCase()}
                         </div>
                       </td>
-                      <td className="py-3 px-4 text-slate-400 font-medium">{tData(item.category_name)}</td>
-                      <td className="py-3 px-4 text-slate-400 font-mono font-bold">{item.sku}</td>
+                      <td className="py-3 px-4 text-workspace-400 font-medium">{tData(item.category_name)}</td>
+                      <td className="py-3 px-4 text-workspace-400 font-mono font-bold">{item.sku}</td>
                       <td className="py-3 px-4">
                         <div className={`font-bold ${isLow ? "text-amber-500" : "text-white"}`}>
                           {parseFloat(item.current_stock).toFixed(2)} {tData(item.unit)}
                         </div>
                       </td>
-                      <td className="py-3 px-4 text-slate-500 font-medium">
+                      <td className="py-3 px-4 text-workspace-500 font-medium">
                         {parseFloat(item.reorder_level).toFixed(2)} {tData(item.unit)}
                       </td>
-                      <td className="py-3 px-4 text-slate-300 font-bold">
+                      <td className="py-3 px-4 text-workspace-300 font-bold">
                         {locale === "ne" ? `रु. ${parseFloat(item.cost_price).toFixed(2)}` : `Rs. ${parseFloat(item.cost_price).toFixed(2)}`}
                       </td>
                       <td className="py-3 px-4">
-                        <Badge variant="outline" className={item.is_perishable ? "border-amber-500/20 text-amber-500 bg-amber-500/5" : "border-slate-800 text-slate-500 bg-slate-950"}>
+                        <Badge variant="outline" className={item.is_perishable ? "border-amber-500/20 text-amber-500 bg-amber-500/5" : "border-workspace-800 text-workspace-500 bg-workspace-950"}>
                           {item.is_perishable ? (locale === "ne" ? "हो" : "Yes") : (locale === "ne" ? "होइन" : "No")}
                         </Badge>
                       </td>
                       <td className="py-3 px-4 text-right">
-                        <Button 
+                        <Button
                           onClick={() => setSelectedItemForAdjust(item)}
-                          size="sm" 
-                          variant="ghost" 
-                          className="h-8 text-emerald-500 hover:bg-slate-800/80 hover:text-white"
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 text-emerald-500 hover:bg-workspace-800/80 hover:text-white"
                         >
                           {t("adjust")}
                         </Button>
@@ -435,18 +435,18 @@ export default function InventoryItemsPage() {
 
       {/* Dialog: Stock Adjustment */}
       <Dialog open={selectedItemForAdjust !== null} onOpenChange={() => setSelectedItemForAdjust(null)}>
-        <DialogContent className="bg-slate-900 border-slate-800 text-white w-full sm:max-w-md">
+        <DialogContent className="bg-workspace-900 border-workspace-800 text-foreground w-full sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-white flex items-center gap-2">
+            <DialogTitle className="text-lg font-bold text-foreground flex items-center gap-2">
               <SlidersHorizontal className="h-5 w-5 text-emerald-500" />
               {t("adjust_title")}
             </DialogTitle>
           </DialogHeader>
           {selectedItemForAdjust && (
             <form onSubmit={handleAdjustSubmit} className="space-y-4 pt-2">
-              <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs space-y-1">
-                <div>{locale === "ne" ? "सामग्री:" : "Item:"} <span className="font-bold text-white">{selectedItemForAdjust.name}</span></div>
-                <div>SKU: <span className="font-mono text-slate-400">{selectedItemForAdjust.sku}</span></div>
+              <div className="bg-workspace-950 p-3 rounded-lg border border-workspace-800 text-xs space-y-1">
+                <div>{locale === "ne" ? "सामग्री:" : "Item:"} <span className="font-bold text-foreground">{selectedItemForAdjust.name}</span></div>
+                <div>SKU: <span className="font-mono text-workspace-400">{selectedItemForAdjust.sku}</span></div>
                 <div>
                   {locale === "ne" ? "हालको मौज्दात:" : "Current Stock:"}{" "}
                   <span className="font-bold text-emerald-500">
@@ -456,24 +456,24 @@ export default function InventoryItemsPage() {
               </div>
               <div className="space-y-1">
                 <Label htmlFor="qty">{t("relative_change")}</Label>
-                <Input 
+                <Input
                   id="qty"
                   type="number"
                   step="any"
                   value={adjustData.quantity}
                   onChange={(e) => setAdjustData({ ...adjustData, quantity: e.target.value })}
                   placeholder={locale === "ne" ? "उदा. +५.५० (थप) वा -३.०० (घटाउ)" : "e.g. +5.50 (addition) or -3.00 (subtraction)"}
-                  className="bg-slate-950 border-slate-800 text-white"
+                  className="bg-workspace-950 border-workspace-800 text-white"
                   required
                 />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="mov_type">{t("movement_type")}</Label>
-                <select 
+                <select
                   id="mov_type"
                   value={adjustData.movement_type}
                   onChange={(e) => setAdjustData({ ...adjustData, movement_type: e.target.value })}
-                  className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="adjustment">{tData("adjustment")}</option>
                   <option value="manual_in">{tData("manual_in")}</option>
@@ -483,16 +483,16 @@ export default function InventoryItemsPage() {
               </div>
               <div className="space-y-1">
                 <Label htmlFor="notes">{t("audit_notes")}</Label>
-                <Textarea 
+                <Textarea
                   id="notes"
                   value={adjustData.notes}
                   onChange={(e) => setAdjustData({ ...adjustData, notes: e.target.value })}
                   placeholder={locale === "ne" ? "उदा. प्याकेजिङ बिग्रेको, भौतिक मौज्दात र रेकर्ड नमिलेको..." : "e.g. Broken packaging, physical stock count mismatch..."}
-                  className="bg-slate-950 border-slate-800 text-white text-xs h-20"
+                  className="bg-workspace-950 border-workspace-800 text-white text-xs h-20"
                 />
               </div>
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                <Button type="button" variant="ghost" onClick={() => setSelectedItemForAdjust(null)} className="h-9 hover:bg-slate-800 text-slate-400">
+              <div className="flex justify-end gap-3 pt-4 border-t border-workspace-800">
+                <Button type="button" variant="ghost" onClick={() => setSelectedItemForAdjust(null)} className="h-9 hover:bg-workspace-800 text-workspace-400">
                   {tCommon("cancel")}
                 </Button>
                 <Button type="submit" className="h-9 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white">

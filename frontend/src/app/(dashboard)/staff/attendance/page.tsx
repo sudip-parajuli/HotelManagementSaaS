@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  CheckCircle2, 
-  XCircle, 
-  Calendar, 
-  User, 
-  Clock, 
-  MapPin, 
+import {
+  CheckCircle2,
+  XCircle,
+  Calendar,
+  User,
+  Clock,
+  MapPin,
   Check,
   FileSpreadsheet,
   AlertTriangle
@@ -86,8 +86,8 @@ export default function AttendancePage() {
     try {
       const res = await hrApi.clockIn(parseInt(selectedStaffId), enteredPin);
       setConsoleMessage({
-        text: locale === "ne" 
-          ? `सफल! क्लक-इन भयो: ${format(new Date(res.data.clock_in!), "hh:mm a")}` 
+        text: locale === "ne"
+          ? `सफल! क्लक-इन भयो: ${format(new Date(res.data.clock_in!), "hh:mm a")}`
           : `Success! Clocked in at ${format(new Date(res.data.clock_in!), "hh:mm a")}`,
         success: true
       });
@@ -122,7 +122,7 @@ export default function AttendancePage() {
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-workspace-200 to-workspace-400 bg-clip-text text-transparent">
           {locale === "ne" ? "उपस्थिति लग र घडी कन्सोल" : "Attendance logs & Clock Console"}
         </h1>
         <p className="text-muted-foreground text-sm">
@@ -135,13 +135,13 @@ export default function AttendancePage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Clock-in Console */}
         <div className="lg:col-span-4 space-y-6">
-          <Card className="bg-slate-900/30 border-slate-800/80 shadow-2xl backdrop-blur-md">
-            <CardHeader className="pb-4 border-b border-slate-900">
-              <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
+          <Card className="bg-workspace-900/30 border-workspace-800/80 shadow-2xl backdrop-blur-md">
+            <CardHeader className="pb-4 border-b border-workspace-900">
+              <CardTitle className="text-lg font-bold text-foreground flex items-center gap-2">
                 <Clock className="h-5 w-5 text-indigo-400" />
                 {locale === "ne" ? "कर्मचारी टर्मिनल" : "Staff Terminal"}
               </CardTitle>
-              <CardDescription className="text-slate-400 text-xs">
+              <CardDescription className="text-workspace-400 text-xs">
                 {locale === "ne"
                   ? "आफ्नो नाम छान्नुहोस् र घडी सुरु (Clock In) वा बन्द (Clock Out) गर्न आफ्नो ४-अङ्कको पिन प्रविष्ट गर्नुहोस्।"
                   : "Select your name and enter your 4-digit PIN to clock in or out."}
@@ -150,15 +150,15 @@ export default function AttendancePage() {
             <CardContent className="p-5 space-y-4">
               {/* Select Staff */}
               <div className="space-y-1">
-                <Label htmlFor="cstaff" className="text-xs text-slate-400">{locale === "ne" ? "कर्मचारी छान्नुहोस्" : "Select Employee"}</Label>
-                <select 
+                <Label htmlFor="cstaff" className="text-xs text-workspace-400">{locale === "ne" ? "कर्मचारी छान्नुहोस्" : "Select Employee"}</Label>
+                <select
                   id="cstaff"
                   value={selectedStaffId}
                   onChange={(e) => {
                     setSelectedStaffId(e.target.value);
                     setConsoleMessage(null);
                   }}
-                  className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none"
+                  className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm focus:outline-none"
                 >
                   <option value="">{locale === "ne" ? "आफ्नो प्रोफाइल छान्नुहोस्..." : "Choose your profile..."}</option>
                   {members.map((m) => (
@@ -169,10 +169,10 @@ export default function AttendancePage() {
 
               {/* PIN Display */}
               <div className="space-y-1">
-                <Label className="text-xs text-slate-400">{locale === "ne" ? "पिन कोड प्रविष्ट" : "PIN Entry Code"}</Label>
-                <div className="h-12 w-full bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-center gap-3 font-mono text-2xl font-bold tracking-widest text-white">
+                <Label className="text-xs text-workspace-400">{locale === "ne" ? "पिन कोड प्रविष्ट" : "PIN Entry Code"}</Label>
+                <div className="h-12 w-full bg-workspace-950 border border-workspace-800 rounded-lg flex items-center justify-center gap-3 font-mono text-2xl font-bold tracking-widest text-foreground">
                   {Array.from({ length: 4 }).map((_, idx) => (
-                    <span key={idx} className={idx < enteredPin.length ? "text-indigo-400" : "text-slate-800"}>
+                    <span key={idx} className={idx < enteredPin.length ? "text-indigo-400" : "text-workspace-800"}>
                       {idx < enteredPin.length ? "●" : "○"}
                     </span>
                   ))}
@@ -182,29 +182,29 @@ export default function AttendancePage() {
               {/* PIN Pad 0-9 */}
               <div className="grid grid-cols-3 gap-2 max-w-[240px] mx-auto pt-2">
                 {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((num) => (
-                  <Button 
-                    key={num} 
-                    type="button" 
-                    onClick={() => handlePinBtnClick(num)} 
-                    variant="outline" 
-                    className="h-11 border-slate-850 bg-slate-900/40 text-white hover:bg-slate-800 text-lg font-bold"
+                  <Button
+                    key={num}
+                    type="button"
+                    onClick={() => handlePinBtnClick(num)}
+                    variant="outline"
+                    className="h-11 border-slate-850 bg-workspace-900/40 text-white hover:bg-workspace-800 text-lg font-bold"
                   >
                     {num}
                   </Button>
                 ))}
-                <Button 
-                  type="button" 
-                  onClick={handlePinClear} 
-                  variant="ghost" 
+                <Button
+                  type="button"
+                  onClick={handlePinClear}
+                  variant="ghost"
                   className="h-11 text-red-400 hover:text-red-300 font-bold"
                 >
                   {locale === "ne" ? "साफ" : "Clear"}
                 </Button>
-                <Button 
-                  type="button" 
-                  onClick={() => handlePinBtnClick("0")} 
-                  variant="outline" 
-                  className="h-11 border-slate-850 bg-slate-900/40 text-white hover:bg-slate-800 text-lg font-bold"
+                <Button
+                  type="button"
+                  onClick={() => handlePinBtnClick("0")}
+                  variant="outline"
+                  className="h-11 border-slate-850 bg-workspace-900/40 text-white hover:bg-workspace-800 text-lg font-bold"
                 >
                   0
                 </Button>
@@ -214,7 +214,7 @@ export default function AttendancePage() {
               {/* Console message block */}
               {consoleMessage && (
                 <div className={`p-3 rounded-lg border flex items-start gap-2.5 text-xs ${
-                  consoleMessage.success 
+                  consoleMessage.success
                     ? "bg-emerald-950/20 border-emerald-500/20 text-emerald-400"
                     : "bg-red-950/20 border-red-500/20 text-red-400"
                 }`}>
@@ -229,15 +229,15 @@ export default function AttendancePage() {
 
               {/* Action Buttons */}
               <div className="grid grid-cols-2 gap-4 pt-3">
-                <Button 
-                  onClick={handleClockIn} 
+                <Button
+                  onClick={handleClockIn}
                   disabled={!selectedStaffId || enteredPin.length !== 4}
                   className="bg-emerald-600 hover:bg-emerald-500 text-white h-10 font-bold text-xs"
                 >
                   {locale === "ne" ? "क्लक इन (Clock In)" : "Clock In"}
                 </Button>
-                <Button 
-                  onClick={handleClockOut} 
+                <Button
+                  onClick={handleClockOut}
                   disabled={!selectedStaffId || enteredPin.length !== 4}
                   className="bg-indigo-600 hover:bg-indigo-500 text-white h-10 font-bold text-xs"
                 >
@@ -250,13 +250,13 @@ export default function AttendancePage() {
 
         {/* Right: Attendance Logs List */}
         <div className="lg:col-span-8 space-y-6">
-          <Card className="bg-slate-900/20 border-slate-800/60 shadow-xl overflow-hidden">
-            <CardHeader className="p-5 border-b border-slate-900/60 flex flex-row flex-wrap items-center justify-between gap-4">
+          <Card className="bg-workspace-900/20 border-workspace-800/60 shadow-xl overflow-hidden">
+            <CardHeader className="p-5 border-b border-workspace-900/60 flex flex-row flex-wrap items-center justify-between gap-4">
               <div>
-                <CardTitle className="text-base font-bold text-white">
+                <CardTitle className="text-base font-bold text-foreground">
                   {locale === "ne" ? "दैनिक उपस्थिति रेकर्ड" : "Daily Attendance Records"}
                 </CardTitle>
-                <CardDescription className="text-slate-400 text-xs">
+                <CardDescription className="text-workspace-400 text-xs">
                   {locale === "ne" ? "रोस्टर लग, घण्टा लग, र म्यानुअल ओभरराइडहरू।" : "Roster logs, hours logged, and manual overrides."}
                 </CardDescription>
               </div>
@@ -266,7 +266,7 @@ export default function AttendancePage() {
                 <select
                   value={currentMonth}
                   onChange={(e) => setCurrentMonth(parseInt(e.target.value))}
-                  className="h-8 px-2 rounded bg-slate-950 border border-slate-800 text-white text-xs font-semibold"
+                  className="h-8 px-2 rounded bg-workspace-950 border border-workspace-800 text-white text-xs font-semibold"
                 >
                   {Array.from({ length: 12 }, (_, i) => (
                     <option key={i + 1} value={i + 1}>
@@ -277,7 +277,7 @@ export default function AttendancePage() {
                 <select
                   value={currentYear}
                   onChange={(e) => setCurrentYear(parseInt(e.target.value))}
-                  className="h-8 px-2 rounded bg-slate-950 border border-slate-800 text-white text-xs font-semibold"
+                  className="h-8 px-2 rounded bg-workspace-950 border border-workspace-800 text-white text-xs font-semibold"
                 >
                   <option value={2026}>2026</option>
                   <option value={2027}>2027</option>
@@ -292,15 +292,15 @@ export default function AttendancePage() {
                 </div>
               ) : attendanceLogs.length === 0 ? (
                 <div className="text-center py-16 space-y-3">
-                  <Calendar className="h-10 w-10 text-slate-600 mx-auto" />
-                  <p className="text-slate-400 text-sm">
+                  <Calendar className="h-10 w-10 text-workspace-600 mx-auto" />
+                  <p className="text-workspace-400 text-sm">
                     {locale === "ne" ? "यस महिनाको उपस्थिति रेकर्ड फेला परेन" : "No attendance records registered for this month"}
                   </p>
                 </div>
               ) : (
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-800/60 text-slate-400 font-semibold bg-slate-950/10">
+                    <tr className="border-b border-workspace-800/60 text-workspace-400 font-semibold bg-workspace-950/10">
                       <th className="py-3 px-4">{locale === "ne" ? "मिति" : "Date"}</th>
                       <th className="py-3 px-4">{locale === "ne" ? "कर्मचारी" : "Employee"}</th>
                       <th className="py-3 px-4">{locale === "ne" ? "क्लक इन" : "Clock In"}</th>
@@ -314,23 +314,23 @@ export default function AttendancePage() {
                       const isAbsent = log.status === "absent";
                       const isLeave = log.status === "leave";
                       return (
-                        <tr key={log.id} className="border-b border-slate-900/50 hover:bg-slate-950/10 transition-colors">
-                          <td className="py-3 px-4 font-mono font-semibold text-slate-400">{log.date}</td>
-                          <td className="py-3 px-4 font-bold text-white text-sm">{log.staff_name}</td>
-                          <td className="py-3 px-4 text-slate-300 font-mono font-medium">
+                        <tr key={log.id} className="border-b border-workspace-900/50 hover:bg-workspace-950/10 transition-colors">
+                          <td className="py-3 px-4 font-mono font-semibold text-workspace-400">{log.date}</td>
+                          <td className="py-3 px-4 font-bold text-foreground text-sm">{log.staff_name}</td>
+                          <td className="py-3 px-4 text-workspace-300 font-mono font-medium">
                             {log.clock_in ? format(new Date(log.clock_in), "hh:mm a") : "—"}
                           </td>
-                          <td className="py-3 px-4 text-slate-300 font-mono font-medium">
+                          <td className="py-3 px-4 text-workspace-300 font-mono font-medium">
                             {log.clock_out ? format(new Date(log.clock_out), "hh:mm a") : "—"}
                           </td>
                           <td className="py-3 px-4">
-                            <Badge 
-                              variant="outline" 
+                            <Badge
+                              variant="outline"
                               className={`capitalize ${
-                                isAbsent 
+                                isAbsent
                                   ? "border-red-500/20 text-red-500 bg-red-500/5"
                                   : isLeave
-                                  ? "border-blue-500/20 text-blue-400 bg-blue-500/5"
+                                  ? "border-brand-500/20 text-brand-400 bg-brand-500/5"
                                   : "border-emerald-500/20 text-emerald-500 bg-emerald-500/5"
                               }`}
                             >
@@ -338,8 +338,8 @@ export default function AttendancePage() {
                             </Badge>
                           </td>
                           <td className="py-3 px-4 text-right font-mono font-bold text-indigo-400">
-                            {parseFloat(log.overtime_hours) > 0 
-                              ? (locale === "ne" ? `${log.overtime_hours} घण्टा` : `${log.overtime_hours} hrs`) 
+                            {parseFloat(log.overtime_hours) > 0
+                              ? (locale === "ne" ? `${log.overtime_hours} घण्टा` : `${log.overtime_hours} hrs`)
                               : "—"}
                           </td>
                         </tr>

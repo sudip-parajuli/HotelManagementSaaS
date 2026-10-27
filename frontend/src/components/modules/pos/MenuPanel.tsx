@@ -98,15 +98,15 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
       {/* Search & Filter Header */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-2.5 h-4.5 w-4.5 text-slate-500" />
+          <Search className="absolute left-3 top-2.5 h-4.5 w-4.5 text-workspace-500" />
           <Input
             placeholder={t("search_placeholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-slate-900/60 border-slate-800 text-slate-100 placeholder-slate-500 focus-visible:ring-cyan-500"
+            className="pl-10 bg-workspace-900/60 border-workspace-800 text-workspace-100 placeholder-workspace-500 focus-visible:ring-brand-500"
           />
         </div>
-        
+
         {/* Diet Toggles */}
         <div className="flex gap-2">
           <Button
@@ -114,10 +114,10 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
             size="sm"
             onClick={() => setVegOnly(!vegOnly)}
             className={cn(
-              "border-slate-800 transition-all font-medium text-xs",
-              vegOnly 
-                ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 hover:text-emerald-400" 
-                : "bg-slate-900/60 text-slate-400 hover:bg-slate-850 hover:text-slate-100"
+              "border-workspace-800 transition-all font-medium text-xs",
+              vegOnly
+                ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 hover:text-emerald-400"
+                : "bg-workspace-900/60 text-workspace-400 hover:bg-slate-850 hover:text-workspace-100"
             )}
           >
             {vegOnly && <Check className="h-3 w-3 mr-1" />}
@@ -128,10 +128,10 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
             size="sm"
             onClick={() => setVeganOnly(!veganOnly)}
             className={cn(
-              "border-slate-800 transition-all font-medium text-xs",
-              veganOnly 
-                ? "bg-green-500/15 border-green-500/30 text-green-400 hover:bg-green-500/20 hover:text-green-400" 
-                : "bg-slate-900/60 text-slate-400 hover:bg-slate-850 hover:text-slate-100"
+              "border-workspace-800 transition-all font-medium text-xs",
+              veganOnly
+                ? "bg-green-500/15 border-green-500/30 text-green-400 hover:bg-green-500/20 hover:text-green-400"
+                : "bg-workspace-900/60 text-workspace-400 hover:bg-slate-850 hover:text-workspace-100"
             )}
           >
             {veganOnly && <Check className="h-3 w-3 mr-1" />}
@@ -147,10 +147,10 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
           size="sm"
           onClick={() => setSelectedCategoryId(null)}
           className={cn(
-            "rounded-full px-4 border-slate-800 font-medium text-xs whitespace-nowrap",
+            "rounded-full px-4 border-workspace-800 font-medium text-xs whitespace-nowrap",
             selectedCategoryId === null
-              ? "bg-cyan-600 text-white hover:bg-cyan-500 border-cyan-600/30"
-              : "bg-slate-900/60 text-slate-300 hover:bg-slate-850"
+              ? "bg-brand-600 text-white hover:bg-brand-500 border-brand-600/30"
+              : "bg-workspace-900/60 text-workspace-300 hover:bg-slate-850"
           )}
         >
           <Sparkles className="h-3.5 w-3.5 mr-1.5" />
@@ -163,10 +163,10 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
             size="sm"
             onClick={() => setSelectedCategoryId(cat.id)}
             className={cn(
-              "rounded-full px-4 border-slate-800 font-medium text-xs whitespace-nowrap flex items-center gap-1.5",
+              "rounded-full px-4 border-workspace-800 font-medium text-xs whitespace-nowrap flex items-center gap-1.5",
               selectedCategoryId === cat.id
-                ? "bg-cyan-600 text-white hover:bg-cyan-500 border-cyan-600/30"
-                : "bg-slate-900/60 text-slate-300 hover:bg-slate-850"
+                ? "bg-brand-600 text-white hover:bg-brand-500 border-brand-600/30"
+                : "bg-workspace-900/60 text-workspace-300 hover:bg-slate-850"
             )}
           >
             {renderCategoryIcon(cat.icon || "utensils")}
@@ -178,12 +178,12 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
       {/* Items Grid */}
       <div className="flex-1 overflow-y-auto pr-1">
         {filteredItems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-48 border border-dashed border-slate-800 rounded-xl bg-slate-950/20">
-            <UtensilsCrossed className="h-10 w-10 text-slate-600 mb-2" />
-            <p className="text-sm text-slate-400 font-medium">
+          <div className="flex flex-col items-center justify-center h-48 border border-dashed border-workspace-800 rounded-xl bg-workspace-950/20">
+            <UtensilsCrossed className="h-10 w-10 text-workspace-600 mb-2" />
+            <p className="text-sm text-workspace-400 font-medium">
               {locale === "ne" ? "कुनै मेनु सामग्री फेला परेन" : "No menu items found"}
             </p>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-workspace-500">
               {locale === "ne"
                 ? "कृपया फिल्टर वा खोज क्वेरी समायोजन गर्ने प्रयास गर्नुहोस्।"
                 : "Try adjusting your filters or search query."}

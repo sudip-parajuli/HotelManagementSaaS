@@ -44,13 +44,13 @@ export default function AdminLayout({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+      <div className="min-h-screen flex items-center justify-center bg-workspace-950 text-foreground">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-12 w-12 rounded-xl bg-gradient-to-tr from-purple-500 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/20 animate-pulse">
+          <div className="h-12 w-12 rounded-xl bg-gradient-to-tr from-brand-500 to-brand-600 flex items-center justify-center shadow-lg shadow-brand-500/20 animate-pulse">
             <ShieldAlert className="h-6 w-6 text-white" />
           </div>
-          <div className="flex items-center gap-2 text-slate-400">
-            <Loader2 className="h-4 w-4 animate-spin text-purple-500" />
+          <div className="flex items-center gap-2 text-workspace-400">
+            <Loader2 className="h-4 w-4 animate-spin text-brand-500" />
             <span className="text-sm font-medium">Loading admin panel...</span>
           </div>
         </div>
@@ -67,11 +67,11 @@ export default function AdminLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <div className="flex h-screen bg-slate-950 text-slate-100 overflow-hidden">
+      <div className="flex h-screen bg-workspace-950 text-workspace-100 overflow-hidden">
         <AdminSidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="min-w-0 flex-1 flex flex-col overflow-hidden">
           <AdminNavbar />
-          <main className="flex-1 overflow-y-auto p-6">
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6">
             <div className="max-w-7xl mx-auto space-y-6">
               {children}
             </div>

@@ -90,37 +90,37 @@ export default function TablesPage() {
       case "occupied":
         return "bg-rose-500/10 border-rose-500/30 text-rose-400 hover:bg-rose-500/20";
       case "reserved":
-        return "bg-blue-500/10 border-blue-500/30 text-blue-400 hover:bg-blue-500/20";
+        return "bg-brand-500/10 border-brand-500/30 text-brand-400 hover:bg-brand-500/20";
       case "cleaning":
         return "bg-amber-500/10 border-amber-500/30 text-amber-400 hover:bg-amber-500/20";
       default:
-        return "bg-slate-900 border-slate-800 text-slate-400";
+        return "bg-workspace-900 border-workspace-800 text-workspace-400";
     }
   };
 
   return (
     <div className="p-6 space-y-6">
       {/* Header Tabs Navigation */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/40 p-4 border border-slate-900 rounded-xl backdrop-blur-md">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-workspace-900/40 p-4 border border-workspace-900 rounded-xl backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 bg-cyan-500/10 rounded-lg flex items-center justify-center border border-cyan-500/20">
-            <LayoutGrid className="h-5 w-5 text-cyan-400" />
+          <div className="h-10 w-10 bg-brand-500/10 rounded-lg flex items-center justify-center border border-brand-500/20">
+            <LayoutGrid className="h-5 w-5 text-brand-400" />
           </div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">{t("tables_title")}</h1>
-            <p className="text-xs text-slate-500 mt-0.5">{t("tables_subtitle")}</p>
+            <h1 className="text-xl font-bold bg-gradient-to-r text-foreground">{t("tables_title")}</h1>
+            <p className="text-xs text-workspace-500 mt-0.5">{t("tables_subtitle")}</p>
           </div>
         </div>
 
         {/* Route Swaps Navigation */}
         <div className="flex items-center gap-2">
           <Link href="/pos">
-            <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-950 text-xs">
+            <Button variant="outline" size="sm" className="border-workspace-800 text-workspace-300 hover:bg-workspace-950 text-xs">
               <Utensils className="h-4 w-4 mr-1.5" /> {locale === "ne" ? "अर्डर टर्मिनल" : "Ordering Terminal"}
             </Button>
           </Link>
           <Link href="/pos/kds">
-            <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-950 text-xs">
+            <Button variant="outline" size="sm" className="border-workspace-800 text-workspace-300 hover:bg-workspace-950 text-xs">
               <ChefHat className="h-4 w-4 mr-1.5" /> {t("kds_view")}
             </Button>
           </Link>
@@ -129,7 +129,7 @@ export default function TablesPage() {
             size="icon"
             onClick={() => loadData(true)}
             disabled={refreshing}
-            className="text-slate-400 hover:text-slate-100 hover:bg-slate-900"
+            className="text-workspace-400 hover:text-workspace-100 hover:bg-workspace-900"
           >
             <RefreshCw className={cn("h-4.5 w-4.5", refreshing && "animate-spin")} />
           </Button>
@@ -138,18 +138,18 @@ export default function TablesPage() {
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
-          <Loader2 className="h-8 w-8 text-cyan-500 animate-spin" />
-          <span className="text-sm font-medium text-slate-400">
+          <Loader2 className="h-8 w-8 text-brand-500 animate-spin" />
+          <span className="text-sm font-medium text-workspace-400">
             {locale === "ne" ? "टेबल विवरण लोड हुँदैछ..." : "Loading tables data..."}
           </span>
         </div>
       ) : Object.keys(tablesByArea).length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 border border-dashed border-slate-900 rounded-xl bg-slate-950/20">
-          <HelpCircle className="h-12 w-12 text-slate-700 mb-2" />
-          <p className="text-sm text-slate-400 font-semibold">
+        <div className="flex flex-col items-center justify-center py-16 border border-dashed border-workspace-900 rounded-xl bg-workspace-950/20">
+          <HelpCircle className="h-12 w-12 text-workspace-700 mb-2" />
+          <p className="text-sm text-workspace-400 font-semibold">
             {locale === "ne" ? "कुनै डाइनिङ क्षेत्र कन्फिगर गरिएको छैन" : "No Dining Areas configured"}
           </p>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-workspace-500 mt-1">
             {locale === "ne"
               ? "एडमिन पोर्टलमा डाइनिङ क्षेत्र र टेबलहरू कन्फिगर गर्नुहोस्।"
               : "Configure Dining Areas and Tables in the admin portal."}
@@ -159,12 +159,12 @@ export default function TablesPage() {
         <div className="space-y-8">
           {Object.entries(tablesByArea).map(([areaName, areaTables]) => (
             <div key={areaName} className="space-y-4">
-              <div className="flex items-center gap-2 border-b border-slate-900 pb-2">
-                <Layers className="h-4 w-4 text-cyan-500" />
-                <h2 className="text-sm font-bold uppercase tracking-wider text-slate-300">
+              <div className="flex items-center gap-2 border-b border-workspace-900 pb-2">
+                <Layers className="h-4 w-4 text-brand-500" />
+                <h2 className="text-sm font-bold uppercase tracking-wider text-workspace-300">
                   {locale === "ne" ? tData(areaName) : areaName}
                 </h2>
-                <span className="text-xs text-slate-500 font-mono">
+                <span className="text-xs text-workspace-500 font-mono">
                   {locale === "ne" ? `(${areaTables.length} टेबलहरू)` : `(${areaTables.length} tables)`}
                 </span>
               </div>
@@ -186,23 +186,23 @@ export default function TablesPage() {
                         <span className="font-extrabold text-base tracking-tight">
                           {locale === "ne" ? `टेबल ${table.table_number}` : `T-${table.table_number}`}
                         </span>
-                        <Badge className="text-[9px] capitalize px-1.5 py-0 border-slate-800" variant="secondary">
+                        <Badge className="text-[9px] capitalize px-1.5 py-0 border-workspace-800" variant="secondary">
                           {tData(table.status)}
                         </Badge>
                       </div>
 
                       <div className="space-y-1 mt-2">
-                        <span className="text-[10px] text-slate-500 block font-medium">
+                        <span className="text-[10px] text-workspace-500 block font-medium">
                           {locale === "ne"
                             ? `क्षमता: ${table.capacity} व्यक्ति`
                             : `Capacity: ${table.capacity} Pax`}
                         </span>
                         {linkedOrder && (
                           <div className="space-y-0.5">
-                            <span className="text-[10px] font-semibold text-slate-300 block truncate">
+                            <span className="text-[10px] font-semibold text-workspace-300 block truncate">
                               {locale === "ne" ? `अर्डर #${linkedOrder.id}` : `Order #${linkedOrder.id}`}
                             </span>
-                            <span className="text-[10px] text-cyan-400 font-extrabold block">
+                            <span className="text-[10px] text-brand-400 font-extrabold block">
                               Rs. {parseFloat(linkedOrder.total_amount).toFixed(2)}
                             </span>
                           </div>

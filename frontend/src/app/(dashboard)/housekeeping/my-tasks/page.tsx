@@ -19,7 +19,7 @@ import { useTransData } from "@/lib/hooks/useTransData";
 
 export default function MyTasksPage() {
   const user = useAuthStore((s) => s.user);
-  
+
   const t = useTranslations("Housekeeping");
   const tData = useTransData();
   const locale = useLocale();
@@ -119,19 +119,19 @@ export default function MyTasksPage() {
       case "high":
         return "bg-amber-500/15 text-amber-400 border-amber-500/20";
       case "normal":
-        return "bg-cyan-500/15 text-cyan-400 border-cyan-500/20";
+        return "bg-brand-500/15 text-brand-400 border-brand-500/20";
       default:
-        return "bg-slate-900 text-slate-500 border-slate-800";
+        return "bg-workspace-900 text-workspace-500 border-workspace-800";
     }
   };
 
   return (
     <div className="p-4 space-y-5 max-w-lg mx-auto pb-16">
       {/* Mobile Header */}
-      <div className="flex justify-between items-center bg-slate-900/40 p-3.5 border border-slate-900 rounded-xl backdrop-blur-md">
+      <div className="flex justify-between items-center bg-workspace-900/40 p-3.5 border border-workspace-900 rounded-xl backdrop-blur-md">
         <div className="flex items-center gap-2">
-          <Paintbrush className="h-5 w-5 text-cyan-400" />
-          <h1 className="text-base font-bold text-slate-100">
+          <Paintbrush className="h-5 w-5 text-brand-400" />
+          <h1 className="text-base font-bold text-workspace-100">
             {locale === "ne" ? "मेरो सफाइ कार्यहरू" : "My Cleaning Duties"}
           </h1>
         </div>
@@ -140,7 +140,7 @@ export default function MyTasksPage() {
           size="icon"
           onClick={() => loadMyTasks(true)}
           disabled={refreshing}
-          className="text-slate-400 h-8 w-8 hover:bg-slate-900"
+          className="text-workspace-400 h-8 w-8 hover:bg-workspace-900"
         >
           <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
         </Button>
@@ -148,18 +148,18 @@ export default function MyTasksPage() {
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
-          <Loader2 className="h-7 w-7 text-cyan-500 animate-spin" />
-          <span className="text-xs text-slate-400">
+          <Loader2 className="h-7 w-7 text-brand-500 animate-spin" />
+          <span className="text-xs text-workspace-400">
             {locale === "ne" ? "तपाईंको जिम्मेवारीहरू लोड हुँदैछ..." : "Loading your assignments..."}
           </span>
         </div>
       ) : tasks.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed border-slate-900 rounded-2xl bg-slate-950/20 p-6">
+        <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed border-workspace-900 rounded-2xl bg-workspace-950/20 p-6">
           <CheckCircle2 className="h-10 w-10 text-emerald-500 mb-2.5" />
-          <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wide">
+          <h3 className="text-sm font-bold text-workspace-200 uppercase tracking-wide">
             {locale === "ne" ? "सबै कार्यहरू सम्पन्न भए" : "All Duties Completed"}
           </h3>
-          <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+          <p className="text-xs text-workspace-500 mt-1.5 leading-relaxed">
             {locale === "ne"
               ? "राम्रो काम! तपाईंको लागि आज कुनै सफाइ वा मर्मत कार्य बाँकी छैन।"
               : "Good job! You have no pending cleaning or turndown tasks assigned for today."}
@@ -168,13 +168,13 @@ export default function MyTasksPage() {
       ) : (
         <div className="space-y-4">
           {tasks.map((task) => (
-            <Card key={task.id} className="bg-slate-900/60 border-slate-800 backdrop-blur-md overflow-hidden">
-              <CardHeader className="p-3.5 pb-2 flex flex-row items-center justify-between border-b border-slate-900/40 bg-slate-950/25">
+            <Card key={task.id} className="bg-workspace-900/60 border-workspace-800 backdrop-blur-md overflow-hidden">
+              <CardHeader className="p-3.5 pb-2 flex flex-row items-center justify-between border-b border-workspace-900/40 bg-workspace-950/25">
                 <div className="space-y-0.5">
-                  <span className="text-[10px] text-slate-500 font-mono">
+                  <span className="text-[10px] text-workspace-500 font-mono">
                     {locale === "ne" ? `कार्य ID: #${task.id}` : `Task ID: #${task.id}`}
                   </span>
-                  <span className="font-extrabold text-base text-slate-100 block">
+                  <span className="font-extrabold text-base text-workspace-100 block">
                     {locale === "ne" ? `कोठा नं ${task.room_number}` : `Room ${task.room_number}`}
                   </span>
                 </div>
@@ -182,21 +182,21 @@ export default function MyTasksPage() {
                   <Badge className={cn("text-[9px] uppercase px-1.5 py-0 border", getPriorityColor(task.priority))} variant="outline">
                     {tData(task.priority)}
                   </Badge>
-                  <Badge className="text-[9px] uppercase px-1.5 py-0 bg-slate-900 border-slate-800 text-slate-300">
+                  <Badge className="text-[9px] uppercase px-1.5 py-0 bg-workspace-900 border-workspace-800 text-workspace-300">
                     {tData(task.task_type)}
                   </Badge>
                 </div>
               </CardHeader>
               <CardContent className="p-3.5 space-y-2 text-xs">
                 {task.notes && (
-                  <div className="p-2 rounded bg-slate-950/30 text-slate-400 border border-slate-900 text-[10px] leading-relaxed">
-                    <span className="font-bold text-slate-300 block mb-0.5">
+                  <div className="p-2 rounded bg-workspace-950/30 text-workspace-400 border border-workspace-900 text-[10px] leading-relaxed">
+                    <span className="font-bold text-workspace-300 block mb-0.5">
                       {locale === "ne" ? "निर्देशनहरू:" : "Instructions:"}
                     </span>
                     {tData(task.notes)}
                   </div>
                 )}
-                <div className="flex justify-between items-center text-[10px] text-slate-500 pt-1">
+                <div className="flex justify-between items-center text-[10px] text-workspace-500 pt-1">
                   <span>
                     {locale === "ne" ? `द्वारा ट्रिगर गरिएको: ${tData(task.triggered_by)}` : `Triggered by: ${task.triggered_by}`}
                   </span>
@@ -208,11 +208,11 @@ export default function MyTasksPage() {
                 </div>
               </CardContent>
 
-              <CardFooter className="p-3 border-t border-slate-900 bg-slate-950/20 flex gap-2.5">
+              <CardFooter className="p-3 border-t border-workspace-900 bg-workspace-950/20 flex gap-2.5">
                 {task.status === "pending" ? (
                   <Button
                     onClick={() => handleStartTask(task.id)}
-                    className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs py-2 shadow-sm flex items-center justify-center gap-1.5"
+                    className="w-full bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs py-2 shadow-sm flex items-center justify-center gap-1.5"
                   >
                     <Play className="h-3.5 w-3.5 fill-current" />
                     {locale === "ne" ? "सफाइ सुरु गर्नुहोस्" : "Start Cleaning"}
@@ -226,7 +226,7 @@ export default function MyTasksPage() {
                         setIssueStatusType("skipped");
                         setIsIssueOpen(true);
                       }}
-                      className="flex-1 border-slate-800 text-slate-400 hover:text-slate-200 text-xs py-2"
+                      className="flex-1 border-workspace-800 text-workspace-400 hover:text-workspace-200 text-xs py-2"
                     >
                       {locale === "ne" ? "छोड्नुहोस् / समस्या" : "Skip / Issue"}
                     </Button>
@@ -250,13 +250,13 @@ export default function MyTasksPage() {
 
       {/* Complete Task Dialog */}
       <Dialog open={isCompleteOpen} onOpenChange={setIsCompleteOpen}>
-        <DialogContent className="sm:max-w-[400px] bg-slate-950 border-slate-900 text-slate-100">
+        <DialogContent className="sm:max-w-[400px] bg-workspace-950 border-workspace-900 text-workspace-100">
           <DialogHeader>
             <DialogTitle className="text-sm font-bold flex items-center gap-2">
               <CheckCircle2 className="h-4.5 w-4.5 text-emerald-500" />
               {locale === "ne" ? "सफाइ सम्पन्न गर्नुहोस्" : "Complete Cleaning"}
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs">
+            <DialogDescription className="text-workspace-500 text-xs">
               {locale === "ne"
                 ? "टिपोटहरू प्रविष्ट गर्नुहोस् वा सफा कोठाको फोटो अपलोड गर्नुहोस्। कोठाको स्थिति उपलब्धमा परिमार्जन हुनेछ।"
                 : "Log comments or upload a photo of the clean room. Room status shifts to available."}
@@ -265,8 +265,8 @@ export default function MyTasksPage() {
 
           <div className="space-y-3.5 py-2">
             <div className="space-y-1.5">
-              <Label htmlFor="comp-photo" className="text-xs text-slate-400 flex items-center gap-1">
-                <Camera className="h-3.5 w-3.5 text-cyan-400" />
+              <Label htmlFor="comp-photo" className="text-xs text-workspace-400 flex items-center gap-1">
+                <Camera className="h-3.5 w-3.5 text-brand-400" />
                 {locale === "ne" ? "सम्पन्नता फोटोको मार्ग" : "Completion Photo Path"}
               </Label>
               <Input
@@ -274,12 +274,12 @@ export default function MyTasksPage() {
                 placeholder={locale === "ne" ? "उदा. photos/room_101_clean.jpg" : "E.g. photos/room_101_clean.jpg"}
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
-                className="bg-slate-900 border-slate-800 text-xs"
+                className="bg-workspace-900 border-workspace-800 text-xs"
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="comp-notes" className="text-xs text-slate-400">
+              <Label htmlFor="comp-notes" className="text-xs text-workspace-400">
                 {locale === "ne" ? "टिपोट / अडिटहरू" : "Comments / Audits"}
               </Label>
               <Textarea
@@ -287,13 +287,13 @@ export default function MyTasksPage() {
                 placeholder={locale === "ne" ? "उदा. मिनीबार पुन: भण्डारण गरियो, ओछ्यानको तन्ना फेरियो..." : "E.g. Minibar restocked, bedsheet changed..."}
                 value={completionNotes}
                 onChange={(e) => setCompletionNotes(e.target.value)}
-                className="bg-slate-900 border-slate-800 text-xs"
+                className="bg-workspace-900 border-workspace-800 text-xs"
               />
             </div>
           </div>
 
-          <DialogFooter className="border-t border-slate-900 pt-3">
-            <Button size="sm" variant="outline" onClick={() => setIsCompleteOpen(false)} className="border-slate-800 text-xs">
+          <DialogFooter className="border-t border-workspace-900 pt-3">
+            <Button size="sm" variant="outline" onClick={() => setIsCompleteOpen(false)} className="border-workspace-800 text-xs">
               {locale === "ne" ? "रद्द" : "Cancel"}
             </Button>
             <Button
@@ -312,13 +312,13 @@ export default function MyTasksPage() {
 
       {/* Skip or Issue Dialog */}
       <Dialog open={isIssueOpen} onOpenChange={setIsIssueOpen}>
-        <DialogContent className="sm:max-w-[400px] bg-slate-950 border-slate-900 text-slate-100">
+        <DialogContent className="sm:max-w-[400px] bg-workspace-950 border-workspace-900 text-workspace-100">
           <DialogHeader>
             <DialogTitle className="text-sm font-bold flex items-center gap-2">
               <AlertOctagon className="h-4.5 w-4.5 text-red-500" />
               {locale === "ne" ? "कार्य छोड्ने वा समस्या रिपोर्ट गर्नुहोस्" : "Report Skip or Problem"}
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs">
+            <DialogDescription className="text-workspace-500 text-xs">
               {locale === "ne"
                 ? "सफाइ छोड्न चाहनुहुन्छ (DND) वा कुनै समस्या रिपोर्ट गर्न चाहनुहुन्छ छनौट गर्नुहोस्।"
                 : "State if you want to skip cleaning (DND) or if an issue was reported."}
@@ -327,7 +327,7 @@ export default function MyTasksPage() {
 
           <div className="space-y-3.5 py-2">
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-400">
+              <Label className="text-xs text-workspace-400">
                 {locale === "ne" ? "स्थिति कार्य" : "Status Action"}
               </Label>
               <div className="flex gap-2">
@@ -335,7 +335,7 @@ export default function MyTasksPage() {
                   size="xs"
                   variant={issueStatusType === "skipped" ? "secondary" : "outline"}
                   onClick={() => setIssueStatusType("skipped")}
-                  className="flex-1 border-slate-800"
+                  className="flex-1 border-workspace-800"
                 >
                   {locale === "ne" ? "DND / सफाइ छोड्नुहोस्" : "DND / Skip Cleaning"}
                 </Button>
@@ -343,7 +343,7 @@ export default function MyTasksPage() {
                   size="xs"
                   variant={issueStatusType === "issue_reported" ? "secondary" : "outline"}
                   onClick={() => setIssueStatusType("issue_reported")}
-                  className="flex-1 border-slate-800 text-red-400 hover:text-red-300"
+                  className="flex-1 border-workspace-800 text-red-400 hover:text-red-300"
                 >
                   {locale === "ne" ? "समस्या रिपोर्ट" : "Report Issue"}
                 </Button>
@@ -351,7 +351,7 @@ export default function MyTasksPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="issue-notes" className="text-xs text-slate-400">
+              <Label htmlFor="issue-notes" className="text-xs text-workspace-400">
                 {locale === "ne" ? "टिपोट / विवरण" : "Notes / Details"}
               </Label>
               <Textarea
@@ -359,13 +359,13 @@ export default function MyTasksPage() {
                 placeholder={locale === "ne" ? "उदा. पाहुनाले ढोकाको ह्यान्डलमा DND चिन्ह राखेका छन्..." : "E.g. Guest placed DND sign on door knob..."}
                 value={issueNotes}
                 onChange={(e) => setIssueNotes(e.target.value)}
-                className="bg-slate-900 border-slate-800 text-xs"
+                className="bg-workspace-900 border-workspace-800 text-xs"
               />
             </div>
           </div>
 
-          <DialogFooter className="border-t border-slate-900 pt-3">
-            <Button size="sm" variant="outline" onClick={() => setIsIssueOpen(false)} className="border-slate-800 text-xs">
+          <DialogFooter className="border-t border-workspace-900 pt-3">
+            <Button size="sm" variant="outline" onClick={() => setIsIssueOpen(false)} className="border-workspace-800 text-xs">
               {locale === "ne" ? "रद्द" : "Cancel"}
             </Button>
             <Button

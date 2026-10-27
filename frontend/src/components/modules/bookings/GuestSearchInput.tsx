@@ -53,17 +53,17 @@ export const GuestSearchInput: React.FC<GuestSearchInputProps> = ({ onSelect, on
             setIsOpen(true);
           }}
           placeholder={t("guest_search_placeholder")}
-          className="bg-slate-900 border-slate-800 text-slate-100 placeholder:text-slate-600 rounded-lg pl-10 h-10 w-full"
+          className="bg-workspace-900 border-workspace-800 text-workspace-100 placeholder:text-workspace-600 rounded-lg pl-10 h-10 w-full"
           onFocus={() => setIsOpen(true)}
         />
-        <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-500" />
+        <Search className="absolute left-3.5 top-3 h-4 w-4 text-workspace-500" />
       </div>
 
       {isOpen && query.trim().length >= 2 && (
-        <div className="absolute z-50 w-full rounded-xl border border-slate-900 bg-slate-950 p-2 shadow-2xl space-y-1 max-h-[260px] overflow-y-auto">
+        <div className="absolute z-50 w-full rounded-xl border border-workspace-900 bg-workspace-950 p-2 shadow-2xl space-y-1 max-h-[260px] overflow-y-auto">
           {loading ? (
-            <div className="flex items-center justify-center py-6 gap-2 text-slate-400 text-xs font-medium">
-              <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
+            <div className="flex items-center justify-center py-6 gap-2 text-workspace-400 text-xs font-medium">
+              <Loader2 className="h-4 w-4 animate-spin text-brand-400" />
               {locale === "ne" ? "खोजिँदैछ..." : "Searching guest ledger..."}
             </div>
           ) : (
@@ -76,13 +76,13 @@ export const GuestSearchInput: React.FC<GuestSearchInputProps> = ({ onSelect, on
                     setIsOpen(false);
                     setQuery("");
                   }}
-                  className="flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-900 cursor-pointer group transition-colors"
+                  className="flex items-center justify-between p-2.5 rounded-lg hover:bg-workspace-900 cursor-pointer group transition-colors"
                 >
                   <div className="space-y-0.5">
-                    <p className="font-semibold text-sm text-slate-200 group-hover:text-white">
+                    <p className="font-semibold text-sm text-workspace-200 group-hover:text-white">
                       {guest.first_name} {guest.last_name}
                     </p>
-                    <div className="flex items-center gap-4 text-xs text-slate-500">
+                    <div className="flex items-center gap-4 text-xs text-workspace-500">
                       <span className="flex items-center gap-1">
                         <Phone className="h-3 w-3" />
                         {guest.phone}
@@ -95,18 +95,18 @@ export const GuestSearchInput: React.FC<GuestSearchInputProps> = ({ onSelect, on
                       )}
                     </div>
                   </div>
-                  <User className="h-4 w-4 text-slate-600 group-hover:text-cyan-400" />
+                  <User className="h-4 w-4 text-workspace-600 group-hover:text-brand-400" />
                 </div>
               ))}
 
-              <div className="border-t border-slate-900/60 pt-1">
+              <div className="border-t border-workspace-900/60 pt-1">
                 <Button
                   onClick={() => {
                     onAddNew(query);
                     setIsOpen(false);
                   }}
                   variant="ghost"
-                  className="w-full justify-start text-xs font-semibold text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/5 h-9 gap-2"
+                  className="w-full justify-start text-xs font-semibold text-brand-400 hover:text-brand-300 hover:bg-brand-500/5 h-9 gap-2"
                 >
                   <Plus className="h-4 w-4" />
                   {locale === "ne" ? `"${query}" को लागि नयाँ प्रोफाइल सिर्जना गर्नुहोस्` : `Create profile for "${query}"`}

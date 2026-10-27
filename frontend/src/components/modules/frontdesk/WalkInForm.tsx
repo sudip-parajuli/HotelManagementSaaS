@@ -164,52 +164,52 @@ export const WalkInForm: React.FC<WalkInFormProps> = ({ isOpen, onClose, onConfi
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-slate-950 border-slate-900 text-slate-100 max-w-2xl rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh]">
+      <DialogContent className="bg-workspace-950 border-workspace-900 text-workspace-100 max-w-2xl rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh]">
         <form onSubmit={handleSubmit} className="space-y-5">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-white flex items-center gap-2">
-              <UserPlus className="h-5 w-5 text-cyan-400" />
+            <DialogTitle className="text-lg font-bold text-foreground flex items-center gap-2">
+              <UserPlus className="h-5 w-5 text-brand-400" />
               {t("walkin_title")}
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs">
+            <DialogDescription className="text-workspace-500 text-xs">
               {t("subtitle")}
             </DialogDescription>
           </DialogHeader>
 
           {loadingMetadata ? (
-            <div className="flex items-center justify-center py-12 gap-2 text-xs text-slate-400">
-              <Loader2 className="h-5 w-5 animate-spin text-cyan-400" />
+            <div className="flex items-center justify-center py-12 gap-2 text-xs text-workspace-400">
+              <Loader2 className="h-5 w-5 animate-spin text-brand-400" />
               {tCommon("loading")}
             </div>
           ) : (
             <div className="space-y-4 text-xs">
               {/* SECTION 1: Guest Profile */}
               <div className="space-y-3">
-                <h4 className="font-extrabold text-cyan-400 uppercase tracking-wider text-[10px] border-b border-slate-900/60 pb-1">{tBookings("guest_details")}</h4>
+                <h4 className="font-extrabold text-brand-400 uppercase tracking-wider text-[10px] border-b border-workspace-900/60 pb-1">{tBookings("guest_details")}</h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <Label htmlFor="w-first" className="text-slate-400 font-bold uppercase text-[9px]">{t("first_name")}</Label>
-                    <Input id="w-first" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Ramesh" required className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9" />
+                    <Label htmlFor="w-first" className="text-workspace-400 font-bold uppercase text-[9px]">{t("first_name")}</Label>
+                    <Input id="w-first" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Ramesh" required className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-9" />
                   </div>
                   <div className="space-y-1">
-                    <Label htmlFor="w-last" className="text-slate-400 font-bold uppercase text-[9px]">{t("last_name")}</Label>
-                    <Input id="w-last" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Sharma" required className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9" />
+                    <Label htmlFor="w-last" className="text-workspace-400 font-bold uppercase text-[9px]">{t("last_name")}</Label>
+                    <Input id="w-last" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Sharma" required className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-9" />
                   </div>
                   <div className="space-y-1">
-                    <Label htmlFor="w-phone" className="text-slate-400 font-bold uppercase text-[9px]">{t("phone_number")}</Label>
-                    <Input id="w-phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="9841XXXXXX" required className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9" />
+                    <Label htmlFor="w-phone" className="text-workspace-400 font-bold uppercase text-[9px]">{t("phone_number")}</Label>
+                    <Input id="w-phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="9841XXXXXX" required className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-9" />
                   </div>
                   <div className="space-y-1">
-                    <Label htmlFor="w-email" className="text-slate-400 font-bold uppercase text-[9px]">{tBookings("email")}</Label>
-                    <Input id="w-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ramesh@gmail.com" className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9" />
+                    <Label htmlFor="w-email" className="text-workspace-400 font-bold uppercase text-[9px]">{tBookings("email")}</Label>
+                    <Input id="w-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ramesh@gmail.com" className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-9" />
                   </div>
                   <div className="space-y-1">
-                    <Label htmlFor="w-nat" className="text-slate-400 font-bold uppercase text-[9px]">{tBookings("nationality")}</Label>
-                    <Input id="w-nat" value={nationality} onChange={(e) => setNationality(e.target.value)} className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9" />
+                    <Label htmlFor="w-nat" className="text-workspace-400 font-bold uppercase text-[9px]">{tBookings("nationality")}</Label>
+                    <Input id="w-nat" value={nationality} onChange={(e) => setNationality(e.target.value)} className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-9" />
                   </div>
                   <div className="space-y-1">
-                    <Label htmlFor="w-idtype" className="text-slate-400 font-bold uppercase text-[9px]">{locale === "ne" ? "परिचयपत्र प्रकार" : "ID Card Type"}</Label>
-                    <select id="w-idtype" value={idType} onChange={(e) => setIdType(e.target.value)} className="w-full rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-xs p-2 h-9 outline-none cursor-pointer">
+                    <Label htmlFor="w-idtype" className="text-workspace-400 font-bold uppercase text-[9px]">{locale === "ne" ? "परिचयपत्र प्रकार" : "ID Card Type"}</Label>
+                    <select id="w-idtype" value={idType} onChange={(e) => setIdType(e.target.value)} className="w-full rounded-lg bg-workspace-900 border border-workspace-800 text-workspace-300 text-xs p-2 h-9 outline-none cursor-pointer">
                       <option value="citizenship">{tData("citizenship")}</option>
                       <option value="passport">{tData("passport")}</option>
                       <option value="driving_license">{locale === "ne" ? "सवारी चालक अनुमति पत्र" : "Driving License"}</option>
@@ -217,44 +217,44 @@ export const WalkInForm: React.FC<WalkInFormProps> = ({ isOpen, onClose, onConfi
                     </select>
                   </div>
                   <div className="space-y-1 col-span-2">
-                    <Label htmlFor="w-idnum" className="text-slate-400 font-bold uppercase text-[9px]">{locale === "ne" ? "परिचयपत्र नम्बर" : "ID Card Number"}</Label>
-                    <Input id="w-idnum" value={idNumber} onChange={(e) => setIdNumber(e.target.value)} placeholder="ID Document Reference" className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9" />
+                    <Label htmlFor="w-idnum" className="text-workspace-400 font-bold uppercase text-[9px]">{locale === "ne" ? "परिचयपत्र नम्बर" : "ID Card Number"}</Label>
+                    <Input id="w-idnum" value={idNumber} onChange={(e) => setIdNumber(e.target.value)} placeholder="ID Document Reference" className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-9" />
                   </div>
                 </div>
               </div>
 
               {/* SECTION 2: Room & Stay */}
               <div className="space-y-3 pt-2">
-                <h4 className="font-extrabold text-cyan-400 uppercase tracking-wider text-[10px] border-b border-slate-900/60 pb-1">{locale === "ne" ? "कोठा र बसाई अवधि" : "Room Class & Stay Duration"}</h4>
+                <h4 className="font-extrabold text-brand-400 uppercase tracking-wider text-[10px] border-b border-workspace-900/60 pb-1">{locale === "ne" ? "कोठा र बसाई अवधि" : "Room Class & Stay Duration"}</h4>
                 <div className="grid grid-cols-3 gap-3">
                   <div className="space-y-1">
-                    <Label htmlFor="w-checkout" className="text-slate-400 font-bold uppercase text-[9px]">{t("checkout_date")}</Label>
-                    <Input id="w-checkout" type="date" value={checkOutDate} onChange={(e) => setCheckOutDate(e.target.value)} required className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9" />
+                    <Label htmlFor="w-checkout" className="text-workspace-400 font-bold uppercase text-[9px]">{t("checkout_date")}</Label>
+                    <Input id="w-checkout" type="date" value={checkOutDate} onChange={(e) => setCheckOutDate(e.target.value)} required className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-9" />
                   </div>
                   <div className="space-y-1">
-                    <Label htmlFor="w-class" className="text-slate-400 font-bold uppercase text-[9px]">{t("class")}</Label>
-                    <select id="w-class" value={selectedRoomTypeId} onChange={(e) => setSelectedRoomTypeId(Number(e.target.value))} className="w-full rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-xs p-2 h-9 outline-none cursor-pointer">
+                    <Label htmlFor="w-class" className="text-workspace-400 font-bold uppercase text-[9px]">{t("class")}</Label>
+                    <select id="w-class" value={selectedRoomTypeId} onChange={(e) => setSelectedRoomTypeId(Number(e.target.value))} className="w-full rounded-lg bg-workspace-900 border border-workspace-800 text-workspace-300 text-xs p-2 h-9 outline-none cursor-pointer">
                       {roomTypes.map((t) => (
                         <option key={t.id} value={t.id}>{tData(t.name)}</option>
                       ))}
                     </select>
                   </div>
                   <div className="space-y-1">
-                    <Label htmlFor="w-adults" className="text-slate-400 font-bold uppercase text-[9px]">{locale === "ne" ? "पाहुना संख्या (वयस्क)" : "Adults Count"}</Label>
-                    <Input id="w-adults" type="number" min={1} value={adults} onChange={(e) => setAdults(Number(e.target.value))} className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9" />
+                    <Label htmlFor="w-adults" className="text-workspace-400 font-bold uppercase text-[9px]">{locale === "ne" ? "पाहुना संख्या (वयस्क)" : "Adults Count"}</Label>
+                    <Input id="w-adults" type="number" min={1} value={adults} onChange={(e) => setAdults(Number(e.target.value))} className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-9" />
                   </div>
                 </div>
 
                 {/* Available Rooms Select */}
                 {checkOutDate && (
                   <div className="space-y-2 pt-1.5">
-                    <Label className="text-slate-400 font-bold uppercase text-[9px] flex items-center gap-1">
-                      <Sparkles className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+                    <Label className="text-workspace-400 font-bold uppercase text-[9px] flex items-center gap-1">
+                      <Sparkles className="h-3.5 w-3.5 text-brand-400 animate-pulse" />
                       {t("select_room")}
                     </Label>
                     {checkingRooms ? (
-                      <div className="flex items-center gap-1.5 text-slate-500 py-2 text-[11px] font-medium">
-                        <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-400" />
+                      <div className="flex items-center gap-1.5 text-workspace-500 py-2 text-[11px] font-medium">
+                        <Loader2 className="h-3.5 w-3.5 animate-spin text-brand-400" />
                         {locale === "ne" ? "कोठा खोजिँदैछ..." : "Checking room ledger..."}
                       </div>
                     ) : availableRooms.length > 0 ? (
@@ -265,8 +265,8 @@ export const WalkInForm: React.FC<WalkInFormProps> = ({ isOpen, onClose, onConfi
                               onClick={() => setSelectedRoomId(room.id)}
                               className={`p-2 rounded-lg border text-center cursor-pointer font-bold transition-all text-xs ${
                                 selectedRoomId === room.id
-                                  ? "bg-cyan-500/10 border-cyan-500 text-cyan-400"
-                                  : "bg-slate-950/40 border-slate-900 text-slate-500 hover:border-slate-800"
+                                  ? "bg-brand-500/10 border-brand-500 text-brand-400"
+                                  : "bg-workspace-950/40 border-workspace-900 text-workspace-500 hover:border-workspace-800"
                               }`}
                             >
                             {room.room_number}
@@ -282,41 +282,41 @@ export const WalkInForm: React.FC<WalkInFormProps> = ({ isOpen, onClose, onConfi
 
               {/* SECTION 3: Check-in Params */}
               <div className="space-y-3 pt-2">
-                <h4 className="font-extrabold text-cyan-400 uppercase tracking-wider text-[10px] border-b border-slate-900/60 pb-1">{t("stay_summary")}</h4>
+                <h4 className="font-extrabold text-brand-400 uppercase tracking-wider text-[10px] border-b border-workspace-900/60 pb-1">{t("stay_summary")}</h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <Label htmlFor="w-key" className="text-slate-400 font-bold uppercase text-[9px] flex items-center gap-1">
-                      <Key className="h-3 w-3 text-cyan-400" />
+                    <Label htmlFor="w-key" className="text-workspace-400 font-bold uppercase text-[9px] flex items-center gap-1">
+                      <Key className="h-3 w-3 text-brand-400" />
                       {t("assigned_key")}
                     </Label>
-                    <Input id="w-key" value={keyIssued} onChange={(e) => setKeyIssued(e.target.value)} placeholder="e.g. CARD-KEY-305" required className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9" />
+                    <Input id="w-key" value={keyIssued} onChange={(e) => setKeyIssued(e.target.value)} placeholder="e.g. CARD-KEY-305" required className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-9" />
                   </div>
                   <div className="space-y-1">
-                    <Label htmlFor="w-locker" className="text-slate-400 font-bold uppercase text-[9px]">{t("locker")}</Label>
-                    <Input id="w-locker" value={lockerNumber} onChange={(e) => setLockerNumber(e.target.value)} placeholder="e.g. L-15" className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9" />
+                    <Label htmlFor="w-locker" className="text-workspace-400 font-bold uppercase text-[9px]">{t("locker")}</Label>
+                    <Input id="w-locker" value={lockerNumber} onChange={(e) => setLockerNumber(e.target.value)} placeholder="e.g. L-15" className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg h-9" />
                   </div>
                   <div className="space-y-1 col-span-2">
-                    <Label htmlFor="w-notes" className="text-slate-400 font-bold uppercase text-[9px]">{t("notes")}</Label>
-                    <Textarea id="w-notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="e.g. Walk-in guest directly assigned. Settled cash payments." className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg p-2 h-14 min-h-[50px]" />
+                    <Label htmlFor="w-notes" className="text-workspace-400 font-bold uppercase text-[9px]">{t("notes")}</Label>
+                    <Textarea id="w-notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="e.g. Walk-in guest directly assigned. Settled cash payments." className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg p-2 h-14 min-h-[50px]" />
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          <DialogFooter className="pt-2 border-t border-slate-900/60">
+          <DialogFooter className="pt-2 border-t border-workspace-900/60">
             <Button
               type="button"
               onClick={onClose}
               variant="ghost"
-              className="border border-slate-800 text-slate-400 hover:text-white rounded-lg h-10"
+              className="border border-workspace-800 text-workspace-400 hover:text-white rounded-lg h-10"
             >
               {tCommon("cancel")}
             </Button>
             <Button
               type="submit"
               disabled={submitting || !selectedRoomId || !keyIssued.trim()}
-              className="bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold rounded-lg h-10 px-5 gap-1.5 shadow-lg shadow-cyan-500/10"
+              className="bg-gradient-to-tr from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-lg h-10 px-5 gap-1.5 shadow-lg shadow-brand-500/10"
             >
               {submitting ? (
                 <>

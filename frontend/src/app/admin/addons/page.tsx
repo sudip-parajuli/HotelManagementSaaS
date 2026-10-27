@@ -20,12 +20,12 @@ const CATEGORY_OPTIONS = [
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
-  universal: "bg-blue-500/15 text-blue-400 border-blue-500/20",
+  universal: "bg-brand-500/15 text-brand-400 border-brand-500/20",
   hospitality: "bg-violet-500/15 text-violet-400 border-violet-500/20",
   fnd: "bg-amber-500/15 text-amber-400 border-amber-500/20",
-  gaming: "bg-cyan-500/15 text-cyan-400 border-cyan-500/20",
+  gaming: "bg-brand-500/15 text-brand-400 border-brand-500/20",
   coworking: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
-  wellness: "bg-pink-500/15 text-pink-400 border-pink-500/20",
+  wellness: "bg-brand-500/15 text-brand-400 border-brand-500/20",
 };
 
 const BUSINESS_TYPE_OPTIONS = [
@@ -121,7 +121,7 @@ export default function AddonMarketplacePage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <ShoppingBag className="text-indigo-400" size={22} />
             Module Catalog
           </h1>
@@ -257,7 +257,7 @@ function CatalogTab({
                   </div>
                 </div>
 
-                <h3 className="font-semibold text-white mt-2">
+                <h3 className="font-semibold text-foreground mt-2">
                   {addon.icon_name && <span className="mr-1.5 text-lg">{addon.icon_name}</span>}
                   {addon.name}
                 </h3>
@@ -267,7 +267,7 @@ function CatalogTab({
                 <div className="mt-4 pt-3 border-t border-zinc-800 flex items-center gap-4 text-xs flex-wrap">
                   <div className="flex items-center gap-1 text-zinc-400">
                     <DollarSign size={11} className="text-indigo-400" />
-                    <span className="font-semibold text-white">
+                    <span className="font-semibold text-foreground">
                       {addon.price_monthly ? `NPR ${Number(addon.price_monthly).toLocaleString()}` : "Free"}
                     </span>
                     {addon.price_monthly && <span>/mo</span>}
@@ -306,7 +306,7 @@ function RequestsTab({
     pending: "bg-amber-500/15 text-amber-400 border border-amber-500/20",
     approved: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20",
     rejected: "bg-red-500/15 text-red-400 border border-red-500/20",
-    active: "bg-blue-500/15 text-blue-400 border border-blue-500/20",
+    active: "bg-brand-500/15 text-brand-400 border border-brand-500/20",
   };
 
   if (requests.length === 0) {
@@ -331,7 +331,7 @@ function RequestsTab({
         <tbody>
           {requests.map((req) => (
             <tr key={req.id} className="border-b border-zinc-800/50 hover:bg-zinc-800/20 transition-colors">
-              <td className="px-4 py-3 font-medium text-white">{req.tenant_name}</td>
+              <td className="px-4 py-3 font-medium text-foreground">{req.tenant_name}</td>
               <td className="px-4 py-3">
                 <p className="text-zinc-200">{req.addon_name}</p>
                 {req.message && <p className="text-xs text-zinc-500 mt-0.5 max-w-[200px] truncate" title={req.message}>{req.message}</p>}
@@ -422,7 +422,7 @@ function ModuleFormModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div className="w-full max-w-2xl bg-zinc-900 border border-zinc-700 rounded-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-        <h3 className="text-lg font-bold text-white mb-5">
+        <h3 className="text-lg font-bold text-foreground mb-5">
           {initial ? "Edit Module" : "Create Module"}
         </h3>
 

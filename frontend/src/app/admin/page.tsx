@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { 
-  Building2, 
-  DollarSign, 
-  Clock, 
-  Plus, 
-  TrendingUp, 
-  Users, 
+import {
+  Building2,
+  DollarSign,
+  Clock,
+  Plus,
+  TrendingUp,
+  Users,
   Sparkles,
   ArrowRight,
   Activity,
@@ -80,8 +80,8 @@ export default function SuperAdminDashboard() {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="flex flex-col items-center gap-2">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
-          <p className="text-slate-400 text-sm">Aggregating platform metrics...</p>
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-500 border-t-transparent" />
+          <p className="text-workspace-400 text-sm">Aggregating platform metrics...</p>
         </div>
       </div>
     );
@@ -99,14 +99,14 @@ export default function SuperAdminDashboard() {
       value: metrics.active_tenants,
       description: `Out of ${metrics.total_tenants} onboarded`,
       icon: Building2,
-      color: "from-cyan-500 to-blue-600",
+      color: "from-brand-500 to-brand-600",
     },
     {
       title: "Monthly Recurring Revenue",
       value: `NPR ${(metrics.mrr || 0).toLocaleString()}`,
       description: `Plan: NPR ${(metrics.plan_mrr || 0).toLocaleString()} | Modules: NPR ${(metrics.module_mrr || 0).toLocaleString()}`,
       icon: DollarSign,
-      color: "from-purple-500 to-pink-600",
+      color: "from-brand-500 to-brand-600",
     },
     {
       title: "Trial Tenants",
@@ -127,20 +127,20 @@ export default function SuperAdminDashboard() {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-6 rounded-2xl">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-workspace-900/40 backdrop-blur-md border border-workspace-800/60 p-6 rounded-2xl">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-purple-400" />
+          <h1 className="text-3xl font-normal font-serif tracking-tight text-foreground flex items-center gap-2">
+            <Sparkles className="h-6 w-6 text-brand-400" />
             Platform Overview
           </h1>
-          <p className="text-slate-400 text-sm">
+          <p className="text-workspace-400 text-sm">
             Monitor tenants, module adoption, subscription billing, and system health.
           </p>
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <Link
             href="/admin/tenants/new"
-            className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-medium text-sm px-4 py-2.5 rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/30 transition-all w-full sm:w-auto"
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-medium text-sm px-4 py-2.5 rounded-xl shadow-lg shadow-brand-500/20 hover:shadow-brand-500/30 transition-all w-full sm:w-auto"
           >
             <Plus className="h-4 w-4" />
             Onboard New Tenant
@@ -155,19 +155,19 @@ export default function SuperAdminDashboard() {
           return (
             <div
               key={idx}
-              className="bg-slate-900/30 backdrop-blur-md border border-slate-800/50 p-6 rounded-2xl flex flex-col justify-between shadow-lg relative overflow-hidden group hover:border-slate-700 transition-all"
+              className="bg-workspace-900/30 backdrop-blur-md border border-workspace-800/50 p-6 rounded-2xl flex flex-col justify-between shadow-lg relative overflow-hidden group hover:border-workspace-700 transition-all"
             >
               <div className="absolute top-0 right-0 h-24 w-24 bg-gradient-to-br opacity-5 group-hover:opacity-10 blur-xl rounded-full transition-all" />
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{card.title}</p>
-                  <h3 className="text-2xl font-bold text-white tracking-tight mt-1.5">{card.value}</h3>
+                  <p className="text-xs font-semibold text-workspace-400 uppercase tracking-wider">{card.title}</p>
+                  <h3 className="text-3xl font-normal font-serif text-foreground tracking-tight mt-1.5">{card.value}</h3>
                 </div>
                 <div className={`p-2 rounded-xl bg-gradient-to-tr ${card.color} text-white shadow-md`}>
                   <Icon className="h-5 w-5" />
                 </div>
               </div>
-              <p className="text-slate-500 text-xs mt-4">{card.description}</p>
+              <p className="text-workspace-500 text-xs mt-4">{card.description}</p>
             </div>
           );
         })}
@@ -176,9 +176,9 @@ export default function SuperAdminDashboard() {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue Growth */}
-        <div className="lg:col-span-2 bg-slate-900/30 backdrop-blur-md border border-slate-800/50 p-6 rounded-2xl shadow-xl">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
-            <TrendingUp className="h-5 w-5 text-purple-400" />
+        <div className="lg:col-span-2 bg-workspace-900/30 backdrop-blur-md border border-workspace-800/50 p-6 rounded-2xl shadow-xl">
+          <h2 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-4">
+            <TrendingUp className="h-5 w-5 text-brand-400" />
             Monthly Revenue Growth
           </h2>
           <div className="h-[260px] w-full">
@@ -204,9 +204,9 @@ export default function SuperAdminDashboard() {
         </div>
 
         {/* Top Modules by Adoption */}
-        <div className="bg-slate-900/30 backdrop-blur-md border border-slate-800/50 p-6 rounded-2xl shadow-xl">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
-            <Puzzle className="h-5 w-5 text-purple-400" />
+        <div className="bg-workspace-900/30 backdrop-blur-md border border-workspace-800/50 p-6 rounded-2xl shadow-xl">
+          <h2 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-4">
+            <Puzzle className="h-5 w-5 text-brand-400" />
             Top Modules by Adoption
           </h2>
           <div className="h-[260px] w-full">
@@ -228,15 +228,15 @@ export default function SuperAdminDashboard() {
 
       {/* Module Adoption Table */}
       {moduleRevenue.length > 0 && (
-        <div className="bg-slate-900/30 backdrop-blur-md border border-slate-800/50 p-6 rounded-2xl shadow-xl">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
-            <BarChart3 className="h-5 w-5 text-purple-400" />
+        <div className="bg-workspace-900/30 backdrop-blur-md border border-workspace-800/50 p-6 rounded-2xl shadow-xl">
+          <h2 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-4">
+            <BarChart3 className="h-5 w-5 text-brand-400" />
             Module Adoption &amp; Revenue
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-sm">
               <thead>
-                <tr className="border-b border-slate-800 text-slate-400 font-semibold text-xs uppercase tracking-wider">
+                <tr className="border-b border-workspace-800 text-workspace-400 font-semibold text-xs uppercase tracking-wider">
                   <th className="pb-3 pl-2">Module</th>
                   <th className="pb-3">Category</th>
                   <th className="pb-3">Price</th>
@@ -245,13 +245,13 @@ export default function SuperAdminDashboard() {
                   <th className="pb-3 pr-2">% of Total MRR</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-900 text-slate-300">
+              <tbody className="divide-y divide-workspace-900 text-workspace-300">
                 {moduleRevenue.map((mod) => {
                   const pct = totalModuleMrr > 0 ? ((mod.mrr / totalModuleMrr) * 100).toFixed(1) : "0";
                   return (
-                    <tr key={mod.key} className="hover:bg-slate-900/40 transition-colors">
-                      <td className="py-3 pl-2 font-medium text-white flex items-center gap-2">
-                        <span className="text-cyan-400">{MODULE_ICONS[mod.key]}</span>
+                    <tr key={mod.key} className="hover:bg-workspace-900/40 transition-colors">
+                      <td className="py-3 pl-2 font-medium text-foreground flex items-center gap-2">
+                        <span className="text-brand-400">{MODULE_ICONS[mod.key]}</span>
                         {mod.name}
                         {mod.is_core && <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-bold">CORE</span>}
                       </td>
@@ -259,14 +259,14 @@ export default function SuperAdminDashboard() {
                       <td className="py-3 text-xs">NPR {parseFloat(mod.price_monthly || "0").toLocaleString()}/mo</td>
                       <td className="py-3">
                         <div className="flex items-center gap-2">
-                          <div className="h-1.5 w-16 rounded-full bg-slate-800 overflow-hidden">
-                            <div className="h-full rounded-full bg-purple-500" style={{ width: `${Math.min((mod.active_tenants / metrics.total_tenants) * 100, 100)}%` }} />
+                          <div className="h-1.5 w-16 rounded-full bg-workspace-800 overflow-hidden">
+                            <div className="h-full rounded-full bg-brand-500" style={{ width: `${Math.min((mod.active_tenants / metrics.total_tenants) * 100, 100)}%` }} />
                           </div>
                           <span className="text-xs">{mod.active_tenants}</span>
                         </div>
                       </td>
-                      <td className="py-3 text-xs font-medium text-white">NPR {mod.mrr.toLocaleString()}</td>
-                      <td className="py-3 pr-2 text-xs text-slate-400">{pct}%</td>
+                      <td className="py-3 text-xs font-medium text-foreground">NPR {mod.mrr.toLocaleString()}</td>
+                      <td className="py-3 pr-2 text-xs text-workspace-400">{pct}%</td>
                     </tr>
                   );
                 })}
@@ -278,15 +278,15 @@ export default function SuperAdminDashboard() {
 
       {/* Tenant Health */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-slate-900/30 backdrop-blur-md border border-slate-800/50 p-6 rounded-2xl shadow-xl">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
-            <Activity className="h-5 w-5 text-purple-400" />
+        <div className="lg:col-span-2 bg-workspace-900/30 backdrop-blur-md border border-workspace-800/50 p-6 rounded-2xl shadow-xl">
+          <h2 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-4">
+            <Activity className="h-5 w-5 text-brand-400" />
             Tenant Health
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-sm">
               <thead>
-                <tr className="border-b border-slate-800 text-slate-400 font-semibold text-xs uppercase tracking-wider">
+                <tr className="border-b border-workspace-800 text-workspace-400 font-semibold text-xs uppercase tracking-wider">
                   <th className="pb-3 pl-2">Tenant</th>
                   <th className="pb-3">Plan</th>
                   <th className="pb-3">Days Active</th>
@@ -295,24 +295,24 @@ export default function SuperAdminDashboard() {
                   <th className="pb-3 pr-2 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-900 text-slate-300">
+              <tbody className="divide-y divide-workspace-900 text-workspace-300">
                 {metrics.tenant_health && metrics.tenant_health.length > 0 ? (
                   metrics.tenant_health.map((tenant) => {
-                    const healthColor = tenant.activity_status === "healthy" ? "bg-emerald-500 text-emerald-400 border-emerald-500/20" 
+                    const healthColor = tenant.activity_status === "healthy" ? "bg-emerald-500 text-emerald-400 border-emerald-500/20"
                       : tenant.activity_status === "low_activity" ? "bg-amber-500 text-amber-400 border-amber-500/20"
                       : "bg-rose-500 text-rose-400 border-rose-500/20";
-                    const healthLabel = tenant.activity_status === "healthy" ? "Healthy" 
+                    const healthLabel = tenant.activity_status === "healthy" ? "Healthy"
                       : tenant.activity_status === "low_activity" ? "Low Activity" : "At Risk";
                     return (
-                      <tr key={tenant.id} className="hover:bg-slate-900/40 transition-colors">
-                        <td className="py-3 pl-2 font-medium text-white">{tenant.name}</td>
+                      <tr key={tenant.id} className="hover:bg-workspace-900/40 transition-colors">
+                        <td className="py-3 pl-2 font-medium text-foreground">{tenant.name}</td>
                         <td className="py-3">
-                          <span className="text-slate-400 text-xs bg-slate-900 border border-slate-800 px-2 py-0.5 rounded-full capitalize">
+                          <span className="text-workspace-400 text-xs bg-workspace-900 border border-workspace-800 px-2 py-0.5 rounded-full capitalize">
                             {tenant.plan} ({tenant.status})
                           </span>
                         </td>
                         <td className="py-3 text-xs">{tenant.days_since_signup} days</td>
-                        <td className="py-3 text-xs text-slate-400">{tenant.last_active}</td>
+                        <td className="py-3 text-xs text-workspace-400">{tenant.last_active}</td>
                         <td className="py-3">
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${healthColor}`}>
                             <span className={cn("h-1.5 w-1.5 rounded-full", tenant.activity_status === "healthy" ? "bg-emerald-500" : tenant.activity_status === "low_activity" ? "bg-amber-500" : "bg-rose-500")} />
@@ -320,7 +320,7 @@ export default function SuperAdminDashboard() {
                           </span>
                         </td>
                         <td className="py-3 pr-2 text-right">
-                          <Link href={`/admin/tenants?id=${tenant.id}`} className="inline-flex items-center gap-1.5 text-xs text-purple-400 hover:text-purple-300 font-semibold">
+                          <Link href={`/admin/tenants?id=${tenant.id}`} className="inline-flex items-center gap-1.5 text-xs text-brand-400 hover:text-brand-300 font-semibold">
                             Manage <ArrowRight className="h-3 w-3" />
                           </Link>
                         </td>
@@ -328,7 +328,7 @@ export default function SuperAdminDashboard() {
                     );
                   })
                 ) : (
-                  <tr><td colSpan={6} className="py-8 text-center text-slate-500 text-xs">No tenants onboarded yet.</td></tr>
+                  <tr><td colSpan={6} className="py-8 text-center text-workspace-500 text-xs">No tenants onboarded yet.</td></tr>
                 )}
               </tbody>
             </table>
@@ -336,28 +336,28 @@ export default function SuperAdminDashboard() {
         </div>
 
         {/* Recent Events */}
-        <div className="bg-slate-900/30 backdrop-blur-md border border-slate-800/50 p-6 rounded-2xl shadow-xl flex flex-col h-[380px]">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
-            <Activity className="h-5 w-5 text-purple-400" />
+        <div className="bg-workspace-900/30 backdrop-blur-md border border-workspace-800/50 p-6 rounded-2xl shadow-xl flex flex-col h-[380px]">
+          <h2 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-4">
+            <Activity className="h-5 w-5 text-brand-400" />
             Activity Feed
           </h2>
           <div className="flex-1 overflow-y-auto space-y-4 pr-1">
             {metrics.recent_events && metrics.recent_events.length > 0 ? (
               metrics.recent_events.map((event) => {
-                const iconBg = event.type === "signup" ? "bg-cyan-500/10 text-cyan-400" 
+                const iconBg = event.type === "signup" ? "bg-brand-500/10 text-brand-400"
                   : event.type === "payment" ? "bg-emerald-500/10 text-emerald-400"
-                  : "bg-purple-500/10 text-purple-400";
+                  : "bg-brand-500/10 text-brand-400";
                 const date = new Date(event.timestamp);
                 return (
-                  <div key={event.id} className="flex gap-3 items-start text-xs border-b border-slate-900 pb-3 last:border-0 last:pb-0">
+                  <div key={event.id} className="flex gap-3 items-start text-xs border-b border-workspace-900 pb-3 last:border-0 last:pb-0">
                     <div className={cn("p-1.5 rounded-lg flex-shrink-0", iconBg)}>
-                      {event.type === "signup" ? <Plus className="h-3.5 w-3.5" /> 
+                      {event.type === "signup" ? <Plus className="h-3.5 w-3.5" />
                         : event.type === "impersonation" ? <UserCheck className="h-3.5 w-3.5" />
                         : <DollarSign className="h-3.5 w-3.5" />}
                     </div>
                     <div className="space-y-0.5">
-                      <p className="text-slate-200 font-medium">{event.message}</p>
-                      <span className="text-[10px] text-slate-500 block font-medium">
+                      <p className="text-workspace-200 font-medium">{event.message}</p>
+                      <span className="text-[10px] text-workspace-500 block font-medium">
                         {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} &bull; {date.toLocaleDateString()}
                       </span>
                     </div>
@@ -365,7 +365,7 @@ export default function SuperAdminDashboard() {
                 );
               })
             ) : (
-              <div className="text-slate-500 text-xs text-center py-12">No recent platform activity.</div>
+              <div className="text-workspace-500 text-xs text-center py-12">No recent platform activity.</div>
             )}
           </div>
         </div>

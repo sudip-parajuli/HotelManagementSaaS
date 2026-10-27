@@ -117,9 +117,9 @@ export default function FrontDeskPage() {
 
   if (loading && !data) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center space-y-4">
-        <Loader2 className="h-10 w-10 animate-spin text-cyan-400" />
-        <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider">
+      <div className="min-h-screen bg-workspace-950 text-foreground flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="h-10 w-10 animate-spin text-brand-400" />
+        <p className="text-workspace-400 text-xs font-semibold uppercase tracking-wider">
           {locale === "ne" ? "सञ्चालन ड्यासबोर्ड लोड हुँदैछ..." : "Loading operations dashboard..."}
         </p>
       </div>
@@ -136,22 +136,22 @@ export default function FrontDeskPage() {
   return (
     <div className="p-6 space-y-6">
       {/* Title Header */}
-      <div className="flex items-center justify-between border-b border-slate-900 pb-4">
+      <div className="flex items-center justify-between border-b border-workspace-900 pb-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">{t("title")}</h1>
-          <p className="text-slate-400 text-sm">{t("subtitle")}</p>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">{t("title")}</h1>
+          <p className="text-workspace-400 text-sm">{t("subtitle")}</p>
         </div>
         <div className="flex items-center gap-3">
           <Button
             onClick={loadData}
             variant="ghost"
-            className="border border-slate-800 text-slate-400 hover:text-white rounded-lg h-10 w-10 p-0"
+            className="border border-workspace-800 text-workspace-400 hover:text-white rounded-lg h-10 w-10 p-0"
           >
             <RefreshCw className="h-4 w-4" />
           </Button>
           <Button
             onClick={() => setWalkInOpen(true)}
-            className="bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold rounded-lg h-10 px-4 gap-2 shadow-lg shadow-cyan-500/20 animate-pulse-subtle"
+            className="bg-gradient-to-tr from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-semibold rounded-lg h-10 px-4 gap-2 shadow-lg shadow-brand-500/20 animate-pulse-subtle"
           >
             <UserPlus className="h-4 w-4" />
             {locale === "ne" ? "द्रुत वाक-इन चेक-इन" : "Quick Walk-In Check In"}
@@ -166,29 +166,29 @@ export default function FrontDeskPage() {
           totalRooms={totalRoomsCount}
           occupiedRooms={occupiedRoomsCount}
         />
-        
+
         {/* Arrivals stat widget */}
-        <div className="bg-slate-900/40 border border-slate-800 p-5 rounded-xl flex items-center justify-between shadow-md">
+        <div className="bg-workspace-900/40 border border-workspace-800 p-5 rounded-xl flex items-center justify-between shadow-md">
           <div className="space-y-1">
-            <span className="text-slate-500 uppercase tracking-wider text-[10px] block">
+            <span className="text-workspace-500 uppercase tracking-wider text-[10px] block">
               {locale === "ne" ? "अपेक्षित आगमनहरू" : "Expected Arrivals"}
             </span>
-            <span className="text-2xl font-black text-white">{data?.arrivals.length}</span>
-            <span className="text-slate-400 block text-[10px]">
+            <span className="text-2xl font-black text-foreground">{data?.arrivals.length}</span>
+            <span className="text-workspace-400 block text-[10px]">
               {locale === "ne" ? "आज चेक-इन गर्नुपर्ने" : "Due check-ins today"}
             </span>
           </div>
-          <LogIn className="h-9 w-9 text-cyan-500 bg-cyan-500/5 p-2 rounded-xl border border-cyan-500/10" />
+          <LogIn className="h-9 w-9 text-brand-500 bg-brand-500/5 p-2 rounded-xl border border-brand-500/10" />
         </div>
 
         {/* In house guests widget */}
-        <div className="bg-slate-900/40 border border-slate-800 p-5 rounded-xl flex items-center justify-between shadow-md">
+        <div className="bg-workspace-900/40 border border-workspace-800 p-5 rounded-xl flex items-center justify-between shadow-md">
           <div className="space-y-1">
-            <span className="text-slate-500 uppercase tracking-wider text-[10px] block">
+            <span className="text-workspace-500 uppercase tracking-wider text-[10px] block">
               {locale === "ne" ? "हाल होटल भित्र" : "Currently In-House"}
             </span>
-            <span className="text-2xl font-black text-white">{data?.in_house.length}</span>
-            <span className="text-slate-400 block text-[10px]">
+            <span className="text-2xl font-black text-foreground">{data?.in_house.length}</span>
+            <span className="text-workspace-400 block text-[10px]">
               {locale === "ne" ? "सक्रिय भरिएका कोठाहरू" : "Active occupied rooms"}
             </span>
           </div>
@@ -196,13 +196,13 @@ export default function FrontDeskPage() {
         </div>
 
         {/* Departures widget */}
-        <div className="bg-slate-900/40 border border-slate-800 p-5 rounded-xl flex items-center justify-between shadow-md">
+        <div className="bg-workspace-900/40 border border-workspace-800 p-5 rounded-xl flex items-center justify-between shadow-md">
           <div className="space-y-1">
-            <span className="text-slate-500 uppercase tracking-wider text-[10px] block">
+            <span className="text-workspace-500 uppercase tracking-wider text-[10px] block">
               {locale === "ne" ? "चेक-आउट गर्नुपर्ने" : "Due Departures"}
             </span>
-            <span className="text-2xl font-black text-white">{data?.departures.length}</span>
-            <span className="text-slate-400 block text-[10px]">
+            <span className="text-2xl font-black text-foreground">{data?.departures.length}</span>
+            <span className="text-workspace-400 block text-[10px]">
               {locale === "ne" ? "आज बाँकी रहेका चेक-आउट" : "Pending checkouts today"}
             </span>
           </div>
@@ -216,17 +216,17 @@ export default function FrontDeskPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={locale === "ne" ? "नाम, फोन वा कोठा नम्बरद्वारा आजको सूची फिल्टर गर्नुहोस्..." : "Filter today's roster by guest name, phone, or room..."}
-          className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg pl-10 h-10 w-full"
+          className="bg-workspace-900 border-workspace-800 text-workspace-100 rounded-lg pl-10 h-10 w-full"
         />
-        <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-500" />
+        <Search className="absolute left-3.5 top-3 h-4 w-4 text-workspace-500" />
       </div>
 
       {/* Three Column operations roster */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Columns 1: Arrivals */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-900 pb-2">
-            <h3 className="font-bold text-sm text-cyan-400 uppercase tracking-wider">
+          <div className="flex items-center justify-between border-b border-workspace-900 pb-2">
+            <h3 className="font-bold text-sm text-brand-400 uppercase tracking-wider">
               {locale === "ne" ? "आगमन सूची" : "Arrivals roster"} ({arrivalsFiltered.length})
             </h3>
           </div>
@@ -243,7 +243,7 @@ export default function FrontDeskPage() {
                 />
               ))
             ) : (
-              <p className="text-slate-600 text-xs py-4 font-medium text-center border border-dashed border-slate-900/60 rounded-xl">
+              <p className="text-workspace-600 text-xs py-4 font-medium text-center border border-dashed border-workspace-900/60 rounded-xl">
                 {locale === "ne" ? "कुनै आगमन निर्धारित छैन।" : "No arrivals scheduled."}
               </p>
             )}
@@ -252,7 +252,7 @@ export default function FrontDeskPage() {
 
         {/* Columns 2: In House */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-900 pb-2">
+          <div className="flex items-center justify-between border-b border-workspace-900 pb-2">
             <h3 className="font-bold text-sm text-indigo-400 uppercase tracking-wider">
               {locale === "ne" ? "सक्रिय पाहुना सूची" : "Active In-House"} ({inHouseFiltered.length})
             </h3>
@@ -270,7 +270,7 @@ export default function FrontDeskPage() {
                 />
               ))
             ) : (
-              <p className="text-slate-600 text-xs py-4 font-medium text-center border border-dashed border-slate-900/60 rounded-xl">
+              <p className="text-workspace-600 text-xs py-4 font-medium text-center border border-dashed border-workspace-900/60 rounded-xl">
                 {locale === "ne" ? "कुनै सक्रिय पाहुना कोठा छैन।" : "No active guest rooms."}
               </p>
             )}
@@ -279,7 +279,7 @@ export default function FrontDeskPage() {
 
         {/* Columns 3: Departures */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-900 pb-2">
+          <div className="flex items-center justify-between border-b border-workspace-900 pb-2">
             <h3 className="font-bold text-sm text-emerald-400 uppercase tracking-wider">
               {locale === "ne" ? "प्रस्थान सूची" : "Departures roster"} ({departuresFiltered.length})
             </h3>
@@ -297,7 +297,7 @@ export default function FrontDeskPage() {
                 />
               ))
             ) : (
-              <p className="text-slate-600 text-xs py-4 font-medium text-center border border-dashed border-slate-900/60 rounded-xl">
+              <p className="text-workspace-600 text-xs py-4 font-medium text-center border border-dashed border-workspace-900/60 rounded-xl">
                 {locale === "ne" ? "कुनै प्रस्थान निर्धारित छैन।" : "No departures scheduled."}
               </p>
             )}

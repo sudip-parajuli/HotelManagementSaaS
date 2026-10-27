@@ -117,7 +117,7 @@ export default function PaymentModal({ isOpen, onClose, invoice, onPaymentSucces
   }, [method, invoice.balance_due, invoice.net_payable_amount]);
   const [reference, setReference] = useState("");
   const [notes, setNotes] = useState("");
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fonepayQr, setFonepayQr] = useState<string | null>(null);
   const [txId, setTxId] = useState<number | null>(null);
@@ -232,13 +232,13 @@ export default function PaymentModal({ isOpen, onClose, invoice, onPaymentSucces
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-slate-950 border-slate-900 text-white max-w-lg overflow-hidden">
+      <DialogContent className="bg-workspace-950 border-workspace-900 text-foreground max-w-lg overflow-hidden">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-cyan-400" />
+          <DialogTitle className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+            <DollarSign className="h-5 w-5 text-brand-400" />
             {tr.title} {invoice.invoice_number}
           </DialogTitle>
-          <DialogDescription className="text-slate-400 text-xs">
+          <DialogDescription className="text-workspace-400 text-xs">
             {tr.desc}
           </DialogDescription>
         </DialogHeader>
@@ -248,10 +248,10 @@ export default function PaymentModal({ isOpen, onClose, invoice, onPaymentSucces
           {[
             { id: "cash", label: tr.cash, icon: DollarSign, color: "hover:border-emerald-500 hover:text-emerald-400" },
             { id: "esewa", label: tr.esewa, icon: Wallet, color: "hover:border-green-500 hover:text-green-400" },
-            { id: "khalti", label: tr.khalti, icon: Wallet, color: "hover:border-purple-500 hover:text-purple-400" },
+            { id: "khalti", label: tr.khalti, icon: Wallet, color: "hover:border-brand-500 hover:text-brand-400" },
             { id: "fonepay", label: tr.fonepay, icon: QrCode, color: "hover:border-rose-500 hover:text-rose-400" },
             { id: "card", label: tr.card, icon: Landmark, color: "hover:border-sky-500 hover:text-sky-400" },
-            { id: "bank_transfer", label: tr.bank_wire, icon: Landmark, color: "hover:border-cyan-500 hover:text-cyan-400" },
+            { id: "bank_transfer", label: tr.bank_wire, icon: Landmark, color: "hover:border-brand-500 hover:text-brand-400" },
             { id: "credit", label: tr.on_credit, icon: Landmark, color: "hover:border-amber-500 hover:text-amber-400" }
           ].map((m) => {
             const Icon = m.icon;
@@ -267,8 +267,8 @@ export default function PaymentModal({ isOpen, onClose, invoice, onPaymentSucces
                 }}
                 className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center transition-all relative ${
                   active
-                    ? "bg-slate-900 border-cyan-500 text-cyan-400 shadow-md shadow-cyan-500/10"
-                    : "bg-slate-950 border-slate-900 text-slate-400 " + m.color
+                    ? "bg-workspace-900 border-brand-500 text-brand-400 shadow-md shadow-brand-500/10"
+                    : "bg-workspace-950 border-workspace-900 text-workspace-400 " + m.color
                 }`}
               >
                 <Icon className="h-5 w-5 mb-1.5" />
@@ -284,7 +284,7 @@ export default function PaymentModal({ isOpen, onClose, invoice, onPaymentSucces
             <div className="flex items-center gap-1.5 text-teal-400 font-semibold">
               <span className="text-sm">✦</span> {tr.digital_rebate_banner}
             </div>
-            <div className="flex justify-between text-slate-400">
+            <div className="flex justify-between text-workspace-400">
               <span>{tr.gross_total}</span>
               <span className="font-mono text-white">NPR {Number(invoice.total_amount).toFixed(2)}</span>
             </div>
@@ -300,89 +300,89 @@ export default function PaymentModal({ isOpen, onClose, invoice, onPaymentSucces
         )}
 
         {/* Context-Based Settlement Forms */}
-        <div className="bg-slate-900/40 border border-slate-900 rounded-xl p-4 min-h-[200px] flex flex-col justify-between">
+        <div className="bg-workspace-900/40 border border-workspace-900 rounded-xl p-4 min-h-[200px] flex flex-col justify-between">
           {method === "cash" || method === "bank_transfer" || method === "credit" ? (
             <form onSubmit={handleManualPaymentSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <Label className="text-xs text-slate-400">{tr.settlement_amount}</Label>
+                  <Label className="text-xs text-workspace-400">{tr.settlement_amount}</Label>
                   <Input
                     type="number"
                     step="0.01"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="bg-slate-950 border-slate-800 text-white rounded-lg"
+                    className="bg-workspace-950 border-workspace-800 text-white rounded-lg"
                     required
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs text-slate-400">{tr.ref_num}</Label>
+                  <Label className="text-xs text-workspace-400">{tr.ref_num}</Label>
                   <Input
                     type="text"
                     placeholder="TX-XXXX"
                     value={reference}
                     onChange={(e) => setReference(e.target.value)}
-                    className="bg-slate-950 border-slate-800 text-white rounded-lg"
+                    className="bg-workspace-950 border-workspace-800 text-white rounded-lg"
                   />
                 </div>
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-slate-400">{tr.notes}</Label>
+                <Label className="text-xs text-workspace-400">{tr.notes}</Label>
                 <Textarea
                   placeholder={tr.notes_placeholder}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="bg-slate-950 border-slate-800 text-white rounded-lg h-16 resize-none"
+                  className="bg-workspace-950 border-workspace-800 text-white rounded-lg h-16 resize-none"
                 />
               </div>
-              <Button type="submit" className="w-full bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold" disabled={isSubmitting}>
+              <Button type="submit" className="w-full bg-brand-500 hover:bg-brand-600 text-workspace-950 font-semibold" disabled={isSubmitting}>
                 {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : tr.save_payment}
               </Button>
             </form>
           ) : method === "esewa" ? (
             <div className="flex flex-col items-center justify-between h-full gap-4 text-center py-2">
               <div className="space-y-1.5">
-                <h3 className="text-sm font-semibold text-white">{tr.esewa_redirect}</h3>
-                <p className="text-xs text-slate-400 max-w-sm">
+                <h3 className="text-sm font-semibold text-foreground">{tr.esewa_redirect}</h3>
+                <p className="text-xs text-workspace-400 max-w-sm">
                   {tr.esewa_desc}
                 </p>
               </div>
-<div className="w-full flex items-center justify-between bg-slate-950 p-3 rounded-lg border border-slate-900 text-xs font-mono text-slate-400">
+<div className="w-full flex items-center justify-between bg-workspace-950 p-3 rounded-lg border border-workspace-900 text-xs font-mono text-workspace-400">
                 <span>{locale === "ne" ? "रकम: रु. " : "Amount: NPR "}{invoice.net_payable_amount ?? invoice.balance_due}</span>
                 <span>{locale === "ne" ? "मर्चेन्ट: EPAYTEST" : "Merchant: EPAYTEST"}</span>
               </div>
-              <Button onClick={handleEsewaCheckout} className="w-full bg-green-500 hover:bg-green-600 text-slate-950 font-semibold" disabled={isSubmitting}>
+              <Button onClick={handleEsewaCheckout} className="w-full bg-green-500 hover:bg-green-600 text-workspace-950 font-semibold" disabled={isSubmitting}>
                 {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : tr.redirect_esewa}
               </Button>
             </div>
           ) : method === "khalti" ? (
             <div className="flex flex-col items-center justify-between h-full gap-4 text-center py-2">
               <div className="space-y-1.5">
-                <h3 className="text-sm font-semibold text-white">{tr.khalti_redirect}</h3>
-                <p className="text-xs text-slate-400 max-w-sm">
+                <h3 className="text-sm font-semibold text-foreground">{tr.khalti_redirect}</h3>
+                <p className="text-xs text-workspace-400 max-w-sm">
                   {tr.khalti_desc}
                 </p>
               </div>
-<div className="w-full flex items-center justify-between bg-slate-950 p-3 rounded-lg border border-slate-900 text-xs font-mono text-slate-400">
+<div className="w-full flex items-center justify-between bg-workspace-950 p-3 rounded-lg border border-workspace-900 text-xs font-mono text-workspace-400">
                 <span>{locale === "ne" ? "रकम: रु. " : "Amount: NPR "}{invoice.net_payable_amount ?? invoice.balance_due}</span>
                 <span>{locale === "ne" ? "बीजक (Invoice): " : "Invoice: "}{invoice.invoice_number}</span>
               </div>
-              <Button onClick={handleKhaltiCheckout} className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold" disabled={isSubmitting}>
+              <Button onClick={handleKhaltiCheckout} className="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold" disabled={isSubmitting}>
                 {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : tr.redirect_khalti}
               </Button>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-between h-full gap-4 text-center py-1">
               <div className="space-y-1.5">
-                <h3 className="text-sm font-semibold text-white">{tr.fonepay_checkout}</h3>
-                <p className="text-xs text-slate-400 max-w-xs">
+                <h3 className="text-sm font-semibold text-foreground">{tr.fonepay_checkout}</h3>
+                <p className="text-xs text-workspace-400 max-w-xs">
                   {tr.fonepay_desc}
                 </p>
               </div>
-              
+
               {fonepayQr ? (
                 <div className="flex flex-col items-center gap-3">
-                  <div className="bg-white p-2.5 rounded-lg border border-slate-100">
+                  <div className="bg-white p-2.5 rounded-lg border border-workspace-100">
                     <img src={fonepayQr} alt="Fonepay QR Code" className="h-32 w-32" />
                   </div>
                   <Button onClick={handleVerifyFonepayPolling} className="bg-rose-500 hover:bg-rose-600 text-white font-semibold text-xs px-6 py-1.5" disabled={isSubmitting}>

@@ -81,24 +81,24 @@ export default function SupportPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-6 rounded-2xl">
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+      <div className="bg-workspace-900/40 backdrop-blur-md border border-workspace-800/60 p-6 rounded-2xl">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
           <Headset className="h-5 w-5 text-amber-400" />
           Support & Audit
         </h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-workspace-400 text-sm mt-1">
           Manage support tickets, impersonation sessions, and module addon requests.
         </p>
       </div>
 
-      <div className="flex gap-1 border-b border-slate-800">
+      <div className="flex gap-1 border-b border-workspace-800">
         {tabs.map((tab) => (
           <button key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all border-b-2 ${
               activeTab === tab.id
                 ? "border-amber-400 text-amber-300"
-                : "border-transparent text-slate-500 hover:text-slate-300"
+                : "border-transparent text-workspace-500 hover:text-workspace-300"
             }`}>
             <tab.icon size={15} />
             {tab.label}
@@ -107,18 +107,18 @@ export default function SupportPage() {
       </div>
 
       {activeTab === "tickets" && (
-        <div className="bg-slate-900/30 backdrop-blur-md border border-slate-800/50 rounded-2xl p-8 text-center">
-          <Ticket className="h-12 w-12 text-slate-700 mx-auto mb-3" />
-          <p className="text-slate-400 text-sm">Support ticket system coming soon.</p>
-          <p className="text-slate-600 text-xs mt-1">
+        <div className="bg-workspace-900/30 backdrop-blur-md border border-workspace-800/50 rounded-2xl p-8 text-center">
+          <Ticket className="h-12 w-12 text-workspace-700 mx-auto mb-3" />
+          <p className="text-workspace-400 text-sm">Support ticket system coming soon.</p>
+          <p className="text-workspace-600 text-xs mt-1">
             Tenants will be able to submit tickets directly from their dashboard.
           </p>
         </div>
       )}
 
       {activeTab === "impersonation" && (
-        <div className="bg-slate-900/30 backdrop-blur-md border border-slate-800/50 rounded-2xl p-8 text-center">
-          <p className="text-slate-400 text-sm mb-4">
+        <div className="bg-workspace-900/30 backdrop-blur-md border border-workspace-800/50 rounded-2xl p-8 text-center">
+          <p className="text-workspace-400 text-sm mb-4">
             View detailed impersonation audit logs with timestamps, admin email, hotel, and reasons.
           </p>
           <a href="/admin/audit-log"
@@ -133,20 +133,20 @@ export default function SupportPage() {
         <div className="space-y-4">
           {reqLoading ? (
             <div className="flex items-center justify-center min-h-[30vh]">
-              <Loader2 className="h-8 w-8 animate-spin text-cyan-500" />
+              <Loader2 className="h-8 w-8 animate-spin text-brand-500" />
             </div>
           ) : requests.length === 0 ? (
-            <div className="bg-slate-900/30 backdrop-blur-md border border-slate-800/50 rounded-2xl p-8 text-center">
-              <ThumbsUp className="h-10 w-10 text-slate-700 mx-auto mb-3" />
-              <p className="text-slate-400 text-sm">No module requests found.</p>
-              <p className="text-slate-600 text-xs mt-1">Pending tenant requests for addon modules will appear here.</p>
+            <div className="bg-workspace-900/30 backdrop-blur-md border border-workspace-800/50 rounded-2xl p-8 text-center">
+              <ThumbsUp className="h-10 w-10 text-workspace-700 mx-auto mb-3" />
+              <p className="text-workspace-400 text-sm">No module requests found.</p>
+              <p className="text-workspace-600 text-xs mt-1">Pending tenant requests for addon modules will appear here.</p>
             </div>
           ) : (
-            <div className="bg-slate-900/30 backdrop-blur-md border border-slate-800/50 rounded-2xl overflow-hidden shadow-xl">
+            <div className="bg-workspace-900/30 backdrop-blur-md border border-workspace-800/50 rounded-2xl overflow-hidden shadow-xl">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-800/80 bg-slate-900/50 text-slate-400 text-xs font-semibold uppercase tracking-wider">
+                    <tr className="border-b border-workspace-800/80 bg-workspace-900/50 text-workspace-400 text-xs font-semibold uppercase tracking-wider">
                       <th className="px-6 py-4">Tenant</th>
                       <th className="px-6 py-4">Module</th>
                       <th className="px-6 py-4">Requested By</th>
@@ -155,25 +155,25 @@ export default function SupportPage() {
                       <th className="px-6 py-4">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-850/60 text-sm text-slate-300">
+                  <tbody className="divide-y divide-slate-850/60 text-sm text-workspace-300">
                     {requests.map((req) => (
-                      <tr key={req.id} className="hover:bg-slate-800/20 transition-all">
+                      <tr key={req.id} className="hover:bg-workspace-800/20 transition-all">
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
-                            <Building2 className="h-4 w-4 text-cyan-400" />
-                            <span className="font-semibold text-slate-200">{req.tenant_name}</span>
+                            <Building2 className="h-4 w-4 text-brand-400" />
+                            <span className="font-semibold text-workspace-200">{req.tenant_name}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 font-medium text-white">{req.addon_name}</td>
+                        <td className="px-6 py-4 font-medium text-foreground">{req.addon_name}</td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
-                            <User className="h-3.5 w-3.5 text-slate-500" />
+                            <User className="h-3.5 w-3.5 text-workspace-500" />
                             <span>{req.requested_by_name || "System"}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-xs text-slate-400">
+                        <td className="px-6 py-4 text-xs text-workspace-400">
                           <div className="flex items-center gap-1.5">
-                            <Calendar className="h-3 w-3 text-slate-500" />
+                            <Calendar className="h-3 w-3 text-workspace-500" />
                             {new Date(req.requested_at).toLocaleDateString()}
                           </div>
                         </td>
@@ -181,7 +181,7 @@ export default function SupportPage() {
                           <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
                             req.status === "approved" ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20" :
                             req.status === "rejected" ? "bg-red-500/15 text-red-400 border border-red-500/20" :
-                            req.status === "active" ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/20" :
+                            req.status === "active" ? "bg-brand-500/15 text-brand-400 border border-brand-500/20" :
                             "bg-amber-500/15 text-amber-400 border border-amber-500/20"
                           }`}>
                             {req.status === "active" && <CheckCircle2 className="h-2.5 w-2.5" />}
@@ -203,11 +203,11 @@ export default function SupportPage() {
                               </button>
                             </div>
                           ) : req.status === "rejected" && req.rejection_reason ? (
-                            <span className="text-[10px] text-slate-500 italic" title={req.rejection_reason}>
+                            <span className="text-[10px] text-workspace-500 italic" title={req.rejection_reason}>
                               {req.rejection_reason.length > 30 ? req.rejection_reason.slice(0, 30) + "…" : req.rejection_reason}
                             </span>
                           ) : (
-                            <span className="text-[10px] text-slate-600">—</span>
+                            <span className="text-[10px] text-workspace-600">—</span>
                           )}
                         </td>
                       </tr>
@@ -221,20 +221,20 @@ export default function SupportPage() {
       )}
 
       {rejectModal !== null && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 bg-workspace-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-workspace-900 border border-workspace-800 w-full max-w-md rounded-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
             <div className="px-6 py-4 border-b border-slate-850">
-              <h3 className="text-md font-bold text-white">Reject Module Request</h3>
+              <h3 className="text-md font-bold text-foreground">Reject Module Request</h3>
             </div>
             <div className="p-6 space-y-4">
-              <p className="text-xs text-slate-400">Provide a reason for rejecting this module request.</p>
+              <p className="text-xs text-workspace-400">Provide a reason for rejecting this module request.</p>
               <textarea value={rejectReason} rows={3} placeholder="Reason for rejection…"
                 onChange={(e) => setRejectReason(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 focus:border-red-500/50 rounded-xl p-3 text-sm text-white outline-none resize-none" />
+                className="w-full bg-workspace-950 border border-workspace-800 focus:border-red-500/50 rounded-xl p-3 text-sm text-white outline-none resize-none" />
             </div>
-            <div className="px-6 py-4 bg-slate-950/50 border-t border-slate-850 flex justify-end gap-3">
+            <div className="px-6 py-4 bg-workspace-950/50 border-t border-slate-850 flex justify-end gap-3">
               <button onClick={() => { setRejectModal(null); setRejectReason(""); }}
-                className="px-4 py-2 rounded-xl text-slate-400 hover:text-white text-xs font-medium transition-all">Cancel</button>
+                className="px-4 py-2 rounded-xl text-workspace-400 hover:text-white text-xs font-medium transition-all">Cancel</button>
               <button onClick={() => handleReject(rejectModal)} disabled={!rejectReason.trim() || actionLoading === rejectModal}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-medium transition-all disabled:opacity-50">
                 {actionLoading === rejectModal && <Loader2 className="h-3 w-3 animate-spin" />}

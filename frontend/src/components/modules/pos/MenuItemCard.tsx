@@ -18,11 +18,11 @@ export function MenuItemCard({ item, onAdd }: MenuItemCardProps) {
   const locale = useLocale();
 
   return (
-    <Card className="group overflow-hidden bg-slate-900/60 border-slate-800 backdrop-blur-md hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/5 transition-all duration-300 flex flex-col h-full">
+    <Card className="group overflow-hidden bg-workspace-900/60 border-workspace-800 backdrop-blur-md hover:border-brand-500/50 hover:shadow-lg hover:shadow-brand-500/5 transition-all duration-300 flex flex-col h-full">
       <CardContent className="p-4 flex-1 flex flex-col">
         {/* Title & Badge indicators */}
         <div className="flex justify-between items-start gap-2 mb-1.5">
-          <h3 className="font-semibold text-slate-100 group-hover:text-cyan-400 transition-colors line-clamp-1">
+          <h3 className="font-semibold text-workspace-100 group-hover:text-brand-400 transition-colors line-clamp-1">
             {tData(item.name)}
           </h3>
           <div className="flex gap-1 flex-shrink-0 mt-0.5">
@@ -41,14 +41,14 @@ export function MenuItemCard({ item, onAdd }: MenuItemCardProps) {
         </div>
 
         {/* Description */}
-        <p className="text-xs text-slate-400 line-clamp-2 mb-3 flex-1">
+        <p className="text-xs text-workspace-400 line-clamp-2 mb-3 flex-1">
           {item.description ? tData(item.description) : (locale === "ne" ? "कुनै विवरण उपलब्ध छैन।" : "No description provided.")}
         </p>
 
         {/* Prep time & Allergens */}
         <div className="space-y-2 mb-1">
-          <div className="flex items-center text-xs text-slate-400 gap-1.5">
-            <Clock className="h-3.5 w-3.5 text-cyan-500" />
+          <div className="flex items-center text-xs text-workspace-400 gap-1.5">
+            <Clock className="h-3.5 w-3.5 text-brand-500" />
             <span>
               {locale === "ne"
                 ? `तयारी समय: ${item.prep_time_minutes} मिनेट`
@@ -74,10 +74,10 @@ export function MenuItemCard({ item, onAdd }: MenuItemCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0 border-t border-slate-900 bg-slate-950/40 flex items-center justify-between gap-4">
+      <CardFooter className="p-4 pt-0 border-t border-workspace-900 bg-workspace-950/40 flex items-center justify-between gap-4">
         <div>
-          <span className="text-xs text-slate-500 block">{locale === "ne" ? "दर" : "Price"}</span>
-          <span className="font-bold text-slate-100">
+          <span className="text-xs text-workspace-500 block">{locale === "ne" ? "दर" : "Price"}</span>
+          <span className="font-bold text-workspace-100">
             Rs. {parseFloat(item.price).toFixed(2)}
           </span>
         </div>
@@ -86,7 +86,7 @@ export function MenuItemCard({ item, onAdd }: MenuItemCardProps) {
           onClick={() => onAdd(item)}
           disabled={!item.is_available}
           size="sm"
-          className="bg-cyan-600 text-white hover:bg-cyan-500 transition-all shadow-md shadow-cyan-600/20"
+          className="bg-brand-600 text-white hover:bg-brand-500 transition-all shadow-md shadow-brand-600/20"
         >
           {item.is_available
             ? (locale === "ne" ? "थप्नुहोस्" : "Add")

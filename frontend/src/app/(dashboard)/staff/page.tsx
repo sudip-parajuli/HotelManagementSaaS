@@ -1,17 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  Users, 
-  Search, 
-  Plus, 
-  Phone, 
-  Mail, 
-  Briefcase, 
-  Building2, 
-  Edit3, 
-  FileText, 
-  Lock, 
+import {
+  Users,
+  Search,
+  Plus,
+  Phone,
+  Mail,
+  Briefcase,
+  Building2,
+  Edit3,
+  FileText,
+  Lock,
   CreditCard,
   AlertCircle,
   Trash2
@@ -46,7 +46,7 @@ export default function StaffDirectoryPage() {
   // Sheet: Create/Edit Member
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<StaffMember | null>(null);
-  
+
   // Form State
   const [formData, setFormData] = useState({
     email: "",
@@ -282,7 +282,7 @@ export default function StaffDirectoryPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-workspace-200 to-workspace-400 bg-clip-text text-transparent">
             {t("directory")}
           </h1>
           <p className="text-muted-foreground text-sm">
@@ -290,7 +290,7 @@ export default function StaffDirectoryPage() {
           </p>
         </div>
         <div>
-          <Button onClick={handleCreateOpen} className="bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white flex items-center gap-2">
+          <Button onClick={handleCreateOpen} className="bg-gradient-to-r from-brand-600 to-indigo-500 hover:from-brand-500 hover:to-indigo-400 text-white flex items-center gap-2">
             <Plus className="h-4 w-4" />
             {t("add_staff")}
           </Button>
@@ -298,21 +298,21 @@ export default function StaffDirectoryPage() {
       </div>
 
       {/* Filters Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-slate-900/30 p-4 rounded-xl border border-slate-850/80 backdrop-blur-md">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-workspace-900/30 p-4 rounded-xl border border-slate-850/80 backdrop-blur-md">
         <div className="md:col-span-5 relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
-          <Input 
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-workspace-500" />
+          <Input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder={t("search_placeholder")}
-            className="pl-9 bg-slate-950/50 border-slate-800 text-white"
+            className="pl-9 bg-workspace-950/50 border-workspace-800 text-white"
           />
         </div>
         <div className="md:col-span-3">
           <select
             value={selectedDept}
             onChange={(e) => setSelectedDept(e.target.value === "all" ? "all" : parseInt(e.target.value))}
-            className="w-full h-10 px-3 rounded-md bg-slate-950/50 border border-slate-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full h-10 px-3 rounded-md bg-workspace-950/50 border border-workspace-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
           >
             <option value="all">{locale === "ne" ? "सबै विभागहरू" : "All Departments"}</option>
             {departments.map((d) => (
@@ -324,7 +324,7 @@ export default function StaffDirectoryPage() {
           <select
             value={selectedEmpType}
             onChange={(e) => setSelectedEmpType(e.target.value)}
-            className="w-full h-10 px-3 rounded-md bg-slate-950/50 border border-slate-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full h-10 px-3 rounded-md bg-workspace-950/50 border border-workspace-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
           >
             <option value="all">{locale === "ne" ? "सबै सम्झौता प्रकारहरू" : "All Contract Types"}</option>
             <option value="full_time">{locale === "ne" ? "पूर्णकालीन (Full Time)" : "Full Time"}</option>
@@ -340,19 +340,19 @@ export default function StaffDirectoryPage() {
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
         </div>
       ) : filteredMembers.length === 0 ? (
-        <div className="text-center py-16 bg-slate-900/10 border border-slate-850/50 rounded-xl space-y-3">
-          <Users className="h-12 w-12 text-slate-600 mx-auto" />
-          <p className="text-slate-400 font-medium">{locale === "ne" ? "खोज फिल्टरसँग मेल खाने कुनै कर्मचारी भेटिएन।" : "No team members match the search filters"}</p>
+        <div className="text-center py-16 bg-workspace-900/10 border border-slate-850/50 rounded-xl space-y-3">
+          <Users className="h-12 w-12 text-workspace-600 mx-auto" />
+          <p className="text-workspace-400 font-medium">{locale === "ne" ? "खोज फिल्टरसँग मेल खाने कुनै कर्मचारी भेटिएन।" : "No team members match the search filters"}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredMembers.map((member) => (
-            <Card key={member.id} className="bg-slate-900/20 border-slate-800/80 hover:border-slate-700/60 shadow-xl overflow-hidden hover:shadow-indigo-950/10 transition-all flex flex-col justify-between">
+            <Card key={member.id} className="bg-workspace-900/20 border-workspace-800/80 hover:border-workspace-700/60 shadow-xl overflow-hidden hover:shadow-indigo-950/10 transition-all flex flex-col justify-between">
               <CardContent className="p-5 space-y-4">
                 {/* Header Card details */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-slate-850 flex items-center justify-center font-bold text-lg text-indigo-400 border border-slate-800 overflow-hidden">
+                    <div className="w-12 h-12 rounded-full bg-slate-850 flex items-center justify-center font-bold text-lg text-indigo-400 border border-workspace-800 overflow-hidden">
                       {member.profile_photo_url ? (
                         <img src={member.profile_photo_url} alt={member.full_name} className="w-full h-full object-cover" />
                       ) : (
@@ -360,64 +360,64 @@ export default function StaffDirectoryPage() {
                       )}
                     </div>
                     <div>
-                      <h3 className="font-bold text-white text-base leading-tight">{member.full_name}</h3>
-                      <p className="text-slate-500 text-xs flex items-center gap-1 mt-0.5">
+                      <h3 className="font-bold text-foreground text-base leading-tight">{member.full_name}</h3>
+                      <p className="text-workspace-500 text-xs flex items-center gap-1 mt-0.5">
                         <Briefcase className="h-3 w-3" />
                         {tData(member.designation)}
                       </p>
                     </div>
                   </div>
-                  <Badge variant={member.is_active ? "outline" : "secondary"} className={member.is_active ? "border-emerald-500/20 text-emerald-500 bg-emerald-500/5" : "border-slate-800 text-slate-500"}>
+                  <Badge variant={member.is_active ? "outline" : "secondary"} className={member.is_active ? "border-emerald-500/20 text-emerald-500 bg-emerald-500/5" : "border-workspace-800 text-workspace-500"}>
                     {member.is_active ? (locale === "ne" ? "सक्रिय" : "Active") : (locale === "ne" ? "निष्क्रिय" : "Inactive")}
                   </Badge>
                 </div>
 
                 {/* Details list */}
-                <div className="space-y-2 text-xs text-slate-400 pt-2 border-t border-slate-900/60">
+                <div className="space-y-2 text-xs text-workspace-400 pt-2 border-t border-workspace-900/60">
                   <div className="flex items-center gap-2">
-                    <Building2 className="h-3.5 w-3.5 text-slate-500" />
-                    <span>{locale === "ne" ? "विभाग: " : "Department: "}<span className="text-white font-medium">{tData(member.department_name)}</span></span>
+                    <Building2 className="h-3.5 w-3.5 text-workspace-500" />
+                    <span>{locale === "ne" ? "विभाग: " : "Department: "}<span className="text-foreground font-medium">{tData(member.department_name)}</span></span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Mail className="h-3.5 w-3.5 text-slate-500" />
+                    <Mail className="h-3.5 w-3.5 text-workspace-500" />
                     <span className="truncate">{member.email}</span>
                   </div>
                   {member.user.phone && (
                     <div className="flex items-center gap-2">
-                      <Phone className="h-3.5 w-3.5 text-slate-500" />
+                      <Phone className="h-3.5 w-3.5 text-workspace-500" />
                       <span>{member.user.phone}</span>
                     </div>
                   )}
                   <div className="flex items-center gap-2">
-                    <Lock className="h-3.5 w-3.5 text-slate-500" />
-                    <span>{locale === "ne" ? "उपस्थिति PIN: " : "Attendance PIN: "}<span className="font-mono text-white font-bold">{member.attendance_pin}</span></span>
+                    <Lock className="h-3.5 w-3.5 text-workspace-500" />
+                    <span>{locale === "ne" ? "उपस्थिति PIN: " : "Attendance PIN: "}<span className="font-mono text-foreground font-bold">{member.attendance_pin}</span></span>
                   </div>
                 </div>
 
                 {/* Info block for Salary / Emergency */}
-                <div className="bg-slate-950/40 p-3 rounded-lg border border-slate-850/60 text-[11px] space-y-1.5">
+                <div className="bg-workspace-950/40 p-3 rounded-lg border border-slate-850/60 text-[11px] space-y-1.5">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">{locale === "ne" ? "सम्झौता प्रकार:" : "Contract type:"}</span>
-                    <span className="text-slate-300 font-bold capitalize">{tData(member.employment_type)}</span>
+                    <span className="text-workspace-500">{locale === "ne" ? "सम्झौता प्रकार:" : "Contract type:"}</span>
+                    <span className="text-workspace-300 font-bold capitalize">{tData(member.employment_type)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">{locale === "ne" ? "आधारभूत तलब:" : "Basic salary:"}</span>
+                    <span className="text-workspace-500">{locale === "ne" ? "आधारभूत तलब:" : "Basic salary:"}</span>
                     <span className="text-emerald-400 font-bold">{locale === "ne" ? "रु. " : "Rs. "}{parseFloat(member.base_salary).toLocaleString()} / {tData(member.salary_type)}</span>
                   </div>
                   {member.emergency_contact_name && (
-                    <div className="flex justify-between pt-1 border-t border-slate-900/60">
-                      <span className="text-slate-500">{locale === "ne" ? "आकस्मिक सम्पर्क:" : "Emergency:"}</span>
-                      <span className="text-slate-300 font-semibold">{member.emergency_contact_name} ({member.emergency_contact_phone})</span>
+                    <div className="flex justify-between pt-1 border-t border-workspace-900/60">
+                      <span className="text-workspace-500">{locale === "ne" ? "आकस्मिक सम्पर्क:" : "Emergency:"}</span>
+                      <span className="text-workspace-300 font-semibold">{member.emergency_contact_name} ({member.emergency_contact_phone})</span>
                     </div>
                   )}
                 </div>
               </CardContent>
-              <div className="bg-slate-950/30 p-3 border-t border-slate-900 flex justify-between gap-3">
-                <Button onClick={() => handleOpenDocs(member)} variant="ghost" size="sm" className="h-8 text-slate-400 hover:text-white flex items-center gap-1.5 text-xs">
+              <div className="bg-workspace-950/30 p-3 border-t border-workspace-900 flex justify-between gap-3">
+                <Button onClick={() => handleOpenDocs(member)} variant="ghost" size="sm" className="h-8 text-workspace-400 hover:text-white flex items-center gap-1.5 text-xs">
                   <FileText className="h-3.5 w-3.5 text-indigo-400" />
                   {locale === "ne" ? "कागजातहरू" : "Documents"}
                 </Button>
-                <Button onClick={() => handleEditOpen(member)} variant="ghost" size="sm" className="h-8 text-indigo-400 hover:bg-slate-800/80 hover:text-white flex items-center gap-1.5 text-xs">
+                <Button onClick={() => handleEditOpen(member)} variant="ghost" size="sm" className="h-8 text-indigo-400 hover:bg-workspace-800/80 hover:text-white flex items-center gap-1.5 text-xs">
                   <Edit3 className="h-3.5 w-3.5" />
                   {locale === "ne" ? "प्रोफाइल सम्पादन" : "Edit Profile"}
                 </Button>
@@ -429,33 +429,33 @@ export default function StaffDirectoryPage() {
 
       {/* Sheet: Add / Edit Staff */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="bg-slate-900 border-slate-800 text-white overflow-y-auto w-full sm:max-w-xl">
+        <SheetContent className="bg-workspace-900 border-workspace-800 text-foreground overflow-y-auto w-full sm:max-w-xl">
           <SheetHeader className="pb-6">
-            <SheetTitle className="text-xl font-bold text-white">
+            <SheetTitle className="text-xl font-bold text-foreground">
               {editingMember ? (locale === "ne" ? "कर्मचारी प्रोफाइल सम्पादन" : "Edit Staff Member") : (locale === "ne" ? "नयाँ कर्मचारी दर्ता" : "New Staff Registration")}
             </SheetTitle>
           </SheetHeader>
-          <form onSubmit={handleFormSubmit} className="space-y-4 text-slate-300 pb-8">
-            <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-850/80 space-y-4">
+          <form onSubmit={handleFormSubmit} className="space-y-4 text-workspace-300 pb-8">
+            <div className="bg-workspace-950/50 p-4 rounded-xl border border-slate-850/80 space-y-4">
               <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-wider">{locale === "ne" ? "खाता विवरण" : "Account Credentials"}</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="fname">{locale === "ne" ? "पहिलो नाम *" : "First Name *"}</Label>
-                  <Input 
+                  <Input
                     id="fname"
                     value={formData.first_name}
                     onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white" 
+                    className="bg-workspace-950 border-workspace-800 text-white"
                     required
                   />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="lname">{locale === "ne" ? "अन्तिम नाम *" : "Last Name *"}</Label>
-                  <Input 
+                  <Input
                     id="lname"
                     value={formData.last_name}
                     onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white" 
+                    className="bg-workspace-950 border-workspace-800 text-white"
                     required
                   />
                 </div>
@@ -463,33 +463,33 @@ export default function StaffDirectoryPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="email">{locale === "ne" ? "इमेल ठेगाना *" : "Email Address *"}</Label>
-                  <Input 
+                  <Input
                     id="email"
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white" 
+                    className="bg-workspace-950 border-workspace-800 text-white"
                     required
                   />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="phone">{locale === "ne" ? "फोन नम्बर" : "Phone Number"}</Label>
-                  <Input 
+                  <Input
                     id="phone"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white" 
+                    className="bg-workspace-950 border-workspace-800 text-white"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="role">{locale === "ne" ? "भूमिका अनुमति *" : "Role Permission *"}</Label>
-                  <select 
+                  <select
                     id="role"
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value as UserRole })}
-                    className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:ring-1"
+                    className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm focus:outline-none focus:ring-1"
                     required
                   >
                     <option value="PROPERTY_MANAGER">{locale === "ne" ? "सम्पत्ति प्रबन्धक (Property Manager)" : "Property Manager"}</option>
@@ -503,12 +503,12 @@ export default function StaffDirectoryPage() {
                 {!editingMember && (
                   <div className="space-y-1">
                     <Label htmlFor="password">{locale === "ne" ? "लगइन पासवर्ड *" : "Login Password *"}</Label>
-                    <Input 
+                    <Input
                       id="password"
                       type="password"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      className="bg-slate-950 border-slate-800 text-white" 
+                      className="bg-workspace-950 border-workspace-800 text-white"
                       required
                     />
                   </div>
@@ -516,16 +516,16 @@ export default function StaffDirectoryPage() {
               </div>
             </div>
 
-            <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-850/80 space-y-4">
+            <div className="bg-workspace-950/50 p-4 rounded-xl border border-slate-850/80 space-y-4">
               <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-wider">{locale === "ne" ? "रोजगारी विवरण" : "Employment Details"}</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="dept">{locale === "ne" ? "विभाग *" : "Department *"}</Label>
-                  <select 
+                  <select
                     id="dept"
                     value={formData.department}
                     onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:ring-1"
+                    className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm focus:outline-none focus:ring-1"
                     required
                   >
                     {departments.map((d) => (
@@ -535,11 +535,11 @@ export default function StaffDirectoryPage() {
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="desig">{locale === "ne" ? "पद शीर्षक *" : "Designation Title *"}</Label>
-                  <Input 
+                  <Input
                     id="desig"
                     value={formData.designation}
                     onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white"
+                    className="bg-workspace-950 border-workspace-800 text-white"
                     placeholder="e.g. Executive Chef, General Clerk"
                     required
                   />
@@ -548,21 +548,21 @@ export default function StaffDirectoryPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="hire_date">{locale === "ne" ? "नियुक्ति मिति" : "Date of Hire"}</Label>
-                  <Input 
+                  <Input
                     id="hire_date"
                     type="date"
                     value={formData.hire_date}
                     onChange={(e) => setFormData({ ...formData, hire_date: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white" 
+                    className="bg-workspace-950 border-workspace-800 text-white"
                   />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="emptype">{locale === "ne" ? "सम्झौता प्रकार" : "Contract Type"}</Label>
-                  <select 
+                  <select
                     id="emptype"
                     value={formData.employment_type}
                     onChange={(e) => setFormData({ ...formData, employment_type: e.target.value as EmploymentType })}
-                    className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none"
+                    className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm focus:outline-none"
                   >
                     <option value="full_time">{locale === "ne" ? "पूर्णकालीन (Full Time)" : "Full Time"}</option>
                     <option value="part_time">{locale === "ne" ? "अंशकालीन (Part Time)" : "Part Time"}</option>
@@ -573,23 +573,23 @@ export default function StaffDirectoryPage() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="space-y-1 sm:col-span-2">
                   <Label htmlFor="salary">{locale === "ne" ? "आधारभूत तलब (NPR) *" : "Base Salary (NPR) *"}</Label>
-                  <Input 
+                  <Input
                     id="salary"
                     type="number"
                     step="0.01"
                     value={formData.base_salary}
                     onChange={(e) => setFormData({ ...formData, base_salary: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white" 
+                    className="bg-workspace-950 border-workspace-800 text-white"
                     required
                   />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="salary_t">{locale === "ne" ? "तलब हिसाब" : "Calculation"}</Label>
-                  <select 
+                  <select
                     id="salary_t"
                     value={formData.salary_type}
                     onChange={(e) => setFormData({ ...formData, salary_type: e.target.value as SalaryType })}
-                    className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none"
+                    className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm focus:outline-none"
                   >
                     <option value="monthly">{locale === "ne" ? "मासिक" : "Monthly"}</option>
                     <option value="hourly">{locale === "ne" ? "प्रति घण्टा" : "Hourly"}</option>
@@ -598,16 +598,16 @@ export default function StaffDirectoryPage() {
               </div>
             </div>
 
-            <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-850/80 space-y-4">
+            <div className="bg-workspace-950/50 p-4 rounded-xl border border-slate-850/80 space-y-4">
               <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-wider">{locale === "ne" ? "के.वाई.सी., बैंक र पिन सेटिङहरू" : "KYC, Bank & PIN settings"}</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="tax_status">{locale === "ne" ? "कर करदाता स्थिति" : "Tax Filing status"}</Label>
-                  <select 
+                  <select
                     id="tax_status"
                     value={formData.tax_filing_status}
                     onChange={(e) => setFormData({ ...formData, tax_filing_status: e.target.value as TaxFilingStatus })}
-                    className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none"
+                    className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm focus:outline-none"
                   >
                     <option value="single">{locale === "ne" ? "एकल (५ लाख सम्म कर छुट)" : "Single (NPR 500k base slab)"}</option>
                     <option value="married">{locale === "ne" ? "विवाहित (६ लाख सम्म कर छुट)" : "Married (NPR 600k base slab)"}</option>
@@ -615,12 +615,12 @@ export default function StaffDirectoryPage() {
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="pin">{locale === "ne" ? "उपस्थिति क्लक-इन पिन *" : "Attendance Clock-in PIN *"}</Label>
-                  <Input 
+                  <Input
                     id="pin"
                     maxLength={4}
                     value={formData.attendance_pin}
                     onChange={(e) => setFormData({ ...formData, attendance_pin: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white font-mono font-bold" 
+                    className="bg-workspace-950 border-workspace-800 text-white font-mono font-bold"
                     placeholder="e.g. 1234"
                     required
                   />
@@ -629,56 +629,56 @@ export default function StaffDirectoryPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="bname">{locale === "ne" ? "बैंकको नाम" : "Bank Name"}</Label>
-                  <Input 
+                  <Input
                     id="bname"
                     value={formData.bank_name}
                     onChange={(e) => setFormData({ ...formData, bank_name: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white" 
+                    className="bg-workspace-950 border-workspace-800 text-white"
                   />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="baccount">{locale === "ne" ? "बैंक खाता नम्बर" : "Bank Account Number"}</Label>
-                  <Input 
+                  <Input
                     id="baccount"
                     value={formData.bank_account_number}
                     onChange={(e) => setFormData({ ...formData, bank_account_number: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white" 
+                    className="bg-workspace-950 border-workspace-800 text-white"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="emname">{locale === "ne" ? "आकस्मिक सम्पर्क नाम" : "Emergency Contact Name"}</Label>
-                  <Input 
+                  <Input
                     id="emname"
                     value={formData.emergency_contact_name}
                     onChange={(e) => setFormData({ ...formData, emergency_contact_name: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white" 
+                    className="bg-workspace-950 border-workspace-800 text-white"
                   />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="emphone">{locale === "ne" ? "आकस्मिक सम्पर्क फोन" : "Emergency Contact Phone"}</Label>
-                  <Input 
+                  <Input
                     id="emphone"
                     value={formData.emergency_contact_phone}
                     onChange={(e) => setFormData({ ...formData, emergency_contact_phone: e.target.value })}
-                    className="bg-slate-950 border-slate-800 text-white" 
+                    className="bg-workspace-950 border-workspace-800 text-white"
                   />
                 </div>
               </div>
               <div className="flex items-center gap-2 pt-2">
-                <input 
+                <input
                   type="checkbox"
                   id="is_active_input"
                   checked={formData.is_active}
                   onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                  className="w-4 h-4 accent-indigo-500 rounded border-slate-800 bg-slate-950"
+                  className="w-4 h-4 accent-indigo-500 rounded border-workspace-800 bg-workspace-950"
                 />
                 <Label htmlFor="is_active_input" className="cursor-pointer select-none">{locale === "ne" ? "सक्रिय रोजगारी स्थिति" : "Active Employment Status"}</Label>
               </div>
             </div>
 
-            <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white mt-6">
+            <Button type="submit" className="w-full bg-gradient-to-r from-brand-600 to-indigo-500 hover:from-brand-500 hover:to-indigo-400 text-white mt-6">
               {editingMember ? (locale === "ne" ? "विवरण बचत गर्नुहोस्" : "Save Profile Changes") : (locale === "ne" ? "कर्मचारी दर्ता गर्नुहोस्" : "Register Team Member")}
             </Button>
           </form>
@@ -687,9 +687,9 @@ export default function StaffDirectoryPage() {
 
       {/* Dialog: Document Management */}
       <Dialog open={activeMemberForDocs !== null} onOpenChange={() => setActiveMemberForDocs(null)}>
-        <DialogContent className="bg-slate-900 border-slate-800 text-white w-full sm:max-w-2xl overflow-y-auto max-h-[90vh]">
+        <DialogContent className="bg-workspace-900 border-workspace-800 text-foreground w-full sm:max-w-2xl overflow-y-auto max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-white flex items-center gap-2 pb-2 border-b border-slate-800">
+            <DialogTitle className="text-lg font-bold text-foreground flex items-center gap-2 pb-2 border-b border-workspace-800">
               <FileText className="h-5 w-5 text-indigo-400" />
               {locale === "ne" ? "KYC र कागजात रेकर्डहरू" : "KYC & Document Records"} — {activeMemberForDocs?.full_name}
             </DialogTitle>
@@ -701,10 +701,10 @@ export default function StaffDirectoryPage() {
               <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-wider">{locale === "ne" ? "सत्यापन कागजात अपलोड गर्नुहोस्" : "Upload Verification Document"}</h4>
               <div className="space-y-1">
                 <Label>{locale === "ne" ? "कागजात प्रकार *" : "Document Type *"}</Label>
-                <select 
+                <select
                   value={docType}
                   onChange={(e) => setDocType(e.target.value)}
-                  className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none"
+                  className="w-full h-10 px-3 rounded-md bg-workspace-950 border border-workspace-800 text-white text-sm focus:outline-none"
                   required
                 >
                   <option value="citizenship">{locale === "ne" ? "नागरिकता प्रमाणपत्र (नेपाल)" : "Citizenship Card (Nepal)"}</option>
@@ -716,32 +716,32 @@ export default function StaffDirectoryPage() {
               </div>
               <div className="space-y-1">
                 <Label>{locale === "ne" ? "कागजात फाइल *" : "Document File *"}</Label>
-                <Input 
+                <Input
                   type="file"
                   onChange={(e) => setDocFile(e.target.files ? e.target.files[0] : null)}
-                  className="bg-slate-950 border-slate-800 text-white cursor-pointer text-xs" 
+                  className="bg-workspace-950 border-workspace-800 text-white cursor-pointer text-xs"
                   required
                 />
               </div>
               <div className="space-y-1">
                 <Label>{locale === "ne" ? "समाप्ति मिति (लागू हुने भए)" : "Expiration Date (if applicable)"}</Label>
-                <Input 
+                <Input
                   type="date"
                   value={docExpiry}
                   onChange={(e) => setDocExpiry(e.target.value)}
-                  className="bg-slate-950 border-slate-800 text-white" 
+                  className="bg-workspace-950 border-workspace-800 text-white"
                 />
               </div>
               <div className="space-y-1">
                 <Label>{locale === "ne" ? "कैफियत/नोट" : "Notes"}</Label>
-                <Input 
+                <Input
                   value={docNotes}
                   onChange={(e) => setDocNotes(e.target.value)}
                   placeholder={locale === "ne" ? "उदा: पहिलो पृष्ठ, स्क्यान प्रतिलिपि" : "e.g. Front page, scan copy"}
-                  className="bg-slate-950 border-slate-800 text-white text-xs" 
+                  className="bg-workspace-950 border-workspace-800 text-white text-xs"
                 />
               </div>
-              <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white h-9">
+              <Button type="submit" className="w-full bg-gradient-to-r from-brand-600 to-indigo-500 hover:from-brand-500 hover:to-indigo-400 text-white h-9">
                 {locale === "ne" ? "फाइल अपलोड गर्नुहोस्" : "Upload File"}
               </Button>
             </form>
@@ -754,16 +754,16 @@ export default function StaffDirectoryPage() {
                   <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-primary"></div>
                 </div>
               ) : documents.length === 0 ? (
-                <div className="text-center py-12 bg-slate-950/40 rounded-lg border border-slate-850/60 text-slate-500 text-xs">
+                <div className="text-center py-12 bg-workspace-950/40 rounded-lg border border-slate-850/60 text-workspace-500 text-xs">
                   {locale === "ne" ? "कुनै कागजात अपलोड गरिएको छैन।" : "No verified files uploaded."}
                 </div>
               ) : (
                 <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
                   {documents.map((doc) => (
-                    <div key={doc.id} className="bg-slate-950 border border-slate-850 p-3 rounded-lg flex items-center justify-between gap-3">
+                    <div key={doc.id} className="bg-workspace-950 border border-slate-850 p-3 rounded-lg flex items-center justify-between gap-3">
                       <div className="space-y-0.5 min-w-0">
-                        <div className="font-bold text-white text-xs capitalize">{tData(doc.document_type)}</div>
-                        {doc.notes && <div className="text-[10px] text-slate-500 truncate">{doc.notes}</div>}
+                        <div className="font-bold text-foreground text-xs capitalize">{tData(doc.document_type)}</div>
+                        {doc.notes && <div className="text-[10px] text-workspace-500 truncate">{doc.notes}</div>}
                         {doc.expiry_date && (
                           <div className="text-[10px] text-amber-500 flex items-center gap-1">
                             <AlertCircle className="h-3 w-3" />
@@ -777,7 +777,7 @@ export default function StaffDirectoryPage() {
                             {locale === "ne" ? "हेर्नुहोस्" : "View"}
                           </a>
                         )}
-                        <Button onClick={() => handleDocDelete(doc.id)} size="icon" variant="ghost" className="h-7 w-7 text-red-400 hover:bg-slate-800">
+                        <Button onClick={() => handleDocDelete(doc.id)} size="icon" variant="ghost" className="h-7 w-7 text-red-400 hover:bg-workspace-800">
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>

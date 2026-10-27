@@ -6,9 +6,16 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
+        emerald: { 300: "var(--status-success)", 400: "var(--status-success)" },
+        amber: { 300: "var(--status-warning)", 400: "var(--status-warning)" },
+        rose: { 300: "var(--status-danger)", 400: "var(--status-danger)" },
+        orange: { 300: "var(--status-warning)", 400: "var(--status-warning)" },
+        workspace: Object.fromEntries([50,100,200,300,400,500,600,700,800,850,900,950].map(n => [n, `rgb(var(--workspace-${n}) / <alpha-value>)`])),
+        brand: Object.fromEntries([50,100,200,300,400,500,600,700,800,850,900,950].map(n => [n, `rgb(var(--brand-${n}) / <alpha-value>)`])),
         background: "var(--background)",
         foreground: "var(--foreground)",
         card: {

@@ -97,16 +97,16 @@ export default function RoomsPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-white tracking-tight">{t("title")}</h1>
-          <p className="text-slate-400 text-sm">
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">{t("title")}</h1>
+          <p className="text-workspace-400 text-sm">
             {t("subtitle")}
           </p>
         </div>
 
         <div className="flex gap-2">
           <Link href="/rooms/types">
-            <Button variant="outline" className="border-slate-800 text-slate-300 hover:text-white bg-slate-900/40 hover:bg-slate-900 gap-2 font-medium">
-              <Settings className="h-4 w-4 text-cyan-400" />
+            <Button variant="outline" className="border-workspace-800 text-workspace-300 hover:text-white bg-workspace-900/40 hover:bg-workspace-900 gap-2 font-medium">
+              <Settings className="h-4 w-4 text-brand-400" />
               {t("room_classes")}
             </Button>
           </Link>
@@ -115,15 +115,15 @@ export default function RoomsPage() {
 
       {/* KPI Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card className="bg-slate-900/40 border-slate-800 shadow-md">
+        <Card className="bg-workspace-900/40 border-workspace-800 shadow-md">
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{t("total_rooms")}</CardTitle>
+            <CardTitle className="text-xs font-semibold text-workspace-500 uppercase tracking-wider">{t("total_rooms")}</CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <div className="text-3xl font-extrabold text-white">{stats.total}</div>
+            <div className="text-3xl font-extrabold text-foreground">{stats.total}</div>
           </CardContent>
         </Card>
-        <Card className="bg-slate-900/40 border-slate-800 shadow-md">
+        <Card className="bg-workspace-900/40 border-workspace-800 shadow-md">
           <CardHeader className="p-4 pb-2">
             <CardTitle className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">{t("available")}</CardTitle>
           </CardHeader>
@@ -131,7 +131,7 @@ export default function RoomsPage() {
             <div className="text-3xl font-extrabold text-emerald-400">{stats.available}</div>
           </CardContent>
         </Card>
-        <Card className="bg-slate-900/40 border-slate-800 shadow-md">
+        <Card className="bg-workspace-900/40 border-workspace-800 shadow-md">
           <CardHeader className="p-4 pb-2">
             <CardTitle className="text-xs font-semibold text-rose-400 uppercase tracking-wider">{t("occupied")}</CardTitle>
           </CardHeader>
@@ -139,7 +139,7 @@ export default function RoomsPage() {
             <div className="text-3xl font-extrabold text-rose-400">{stats.occupied}</div>
           </CardContent>
         </Card>
-        <Card className="bg-slate-900/40 border-slate-800 shadow-md">
+        <Card className="bg-workspace-900/40 border-workspace-800 shadow-md">
           <CardHeader className="p-4 pb-2">
             <CardTitle className="text-xs font-semibold text-amber-400 uppercase tracking-wider">{t("dirty")}</CardTitle>
           </CardHeader>
@@ -147,18 +147,18 @@ export default function RoomsPage() {
             <div className="text-3xl font-extrabold text-amber-400">{stats.dirty}</div>
           </CardContent>
         </Card>
-        <Card className="bg-slate-900/40 border-slate-800 shadow-md col-span-2 md:col-span-1">
+        <Card className="bg-workspace-900/40 border-workspace-800 shadow-md col-span-2 md:col-span-1">
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t("maintenance")}</CardTitle>
+            <CardTitle className="text-xs font-semibold text-workspace-400 uppercase tracking-wider">{t("maintenance")}</CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <div className="text-3xl font-extrabold text-slate-300">{stats.maintenance}</div>
+            <div className="text-3xl font-extrabold text-workspace-300">{stats.maintenance}</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Interactive filter control bar */}
-      <div className="rounded-xl border border-slate-900 bg-slate-900/30 p-4 flex flex-col md:flex-row gap-4 items-center">
+      <div className="rounded-xl border border-workspace-900 bg-workspace-900/30 p-4 flex flex-col md:flex-row gap-4 items-center">
         <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
           {/* Room Number Input */}
           <div className="relative">
@@ -166,7 +166,7 @@ export default function RoomsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t("search_placeholder")}
-              className="bg-slate-950 border-slate-800 text-slate-100 placeholder:text-slate-600 rounded-lg text-sm pl-3 h-10 w-full"
+              className="bg-workspace-950 border-workspace-800 text-workspace-100 placeholder:text-workspace-600 rounded-lg text-sm pl-3 h-10 w-full"
             />
           </div>
 
@@ -174,7 +174,7 @@ export default function RoomsPage() {
           <select
             value={floor}
             onChange={(e) => setFloor(e.target.value)}
-            className="rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-cyan-500"
+            className="rounded-lg bg-workspace-950 border border-workspace-800 text-workspace-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-brand-500"
           >
             <option value="all">{t("all_floors")}</option>
             {uniqueFloors.map((f) => (
@@ -188,7 +188,7 @@ export default function RoomsPage() {
           <select
             value={roomType}
             onChange={(e) => setRoomType(e.target.value)}
-            className="rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-cyan-500"
+            className="rounded-lg bg-workspace-950 border border-workspace-800 text-workspace-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-brand-500"
           >
             <option value="all">{t("all_types")}</option>
             {roomTypes.map((rt) => (
@@ -202,7 +202,7 @@ export default function RoomsPage() {
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-cyan-500"
+            className="rounded-lg bg-workspace-950 border border-workspace-800 text-workspace-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-brand-500"
           >
             <option value="all">{t("all_statuses")}</option>
             <option value="available">{tData("available")}</option>
@@ -217,8 +217,8 @@ export default function RoomsPage() {
       {/* Room Grid Display */}
       {isLoading ? (
         <div className="py-20 flex flex-col items-center justify-center space-y-4">
-          <div className="h-10 w-10 border-4 border-t-cyan-500 border-r-cyan-500 border-slate-800 rounded-full animate-spin" />
-          <p className="text-sm text-slate-400 font-medium">{t("sync_states")}</p>
+          <div className="h-10 w-10 border-4 border-t-cyan-500 border-r-cyan-500 border-workspace-800 rounded-full animate-spin" />
+          <p className="text-sm text-workspace-400 font-medium">{t("sync_states")}</p>
         </div>
       ) : (
         <RoomStatusGrid rooms={filteredRooms} onRoomClick={handleRoomClick} />

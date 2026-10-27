@@ -108,7 +108,7 @@ export default function NewBookingPage() {
 
       const rooms: Room[] = res.data.available_rooms || [];
       setAvailableRooms(rooms);
-      
+
       const estimates = res.data.pricing_estimates || {};
       setPricingEstimate(estimates[selectedRoomTypeId] || null);
 
@@ -224,9 +224,9 @@ export default function NewBookingPage() {
 
   if (isLoadingMetadata) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center space-y-4">
-        <Loader2 className="h-10 w-10 animate-spin text-cyan-400" />
-        <p className="text-slate-400 text-xs font-medium">{locale === "ne" ? "बसाई सेटिङ लोड हुँदैछ..." : "Loading stay configuration..."}</p>
+      <div className="min-h-screen bg-workspace-950 text-foreground flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="h-10 w-10 animate-spin text-brand-400" />
+        <p className="text-workspace-400 text-xs font-medium">{locale === "ne" ? "बसाई सेटिङ लोड हुँदैछ..." : "Loading stay configuration..."}</p>
       </div>
     );
   }
@@ -234,88 +234,88 @@ export default function NewBookingPage() {
   return (
     <div className="p-6 space-y-6 max-w-4xl mx-auto">
       {/* Header */}
-      <div className="flex items-center gap-3 text-slate-400">
+      <div className="flex items-center gap-3 text-workspace-400">
         <Link href="/bookings/calendar">
-          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-slate-400 hover:text-white px-2">
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-workspace-400 hover:text-white px-2">
             <ArrowLeft className="h-4 w-4" />
             {locale === "ne" ? "पात्रोमा फर्कनुहोस्" : "Back to calendar"}
           </Button>
         </Link>
       </div>
 
-      <div className="border-b border-slate-900 pb-4">
-        <h1 className="text-2xl font-bold text-white tracking-tight">{t("new_booking_title")}</h1>
-        <p className="text-slate-400 text-sm">{t("new_booking_subtitle")}</p>
+      <div className="border-b border-workspace-900 pb-4">
+        <h1 className="text-2xl font-bold text-foreground tracking-tight">{t("new_booking_title")}</h1>
+        <p className="text-workspace-400 text-sm">{t("new_booking_subtitle")}</p>
       </div>
 
       {/* Progress Wizard Steps */}
       <div className="flex items-center justify-between max-w-lg mx-auto py-2 text-xs">
         <div className="flex items-center gap-2">
           <span className={`h-6 w-6 rounded-full flex items-center justify-center font-bold ${
-            step >= 1 ? "bg-cyan-500 text-white" : "bg-slate-900 text-slate-600"
+            step >= 1 ? "bg-brand-500 text-white" : "bg-workspace-900 text-workspace-600"
           }`}>
             1
           </span>
-          <span className={step >= 1 ? "text-slate-200 font-semibold" : "text-slate-600"}>{locale === "ne" ? "मिति र कोठा" : "Dates & Room"}</span>
+          <span className={step >= 1 ? "text-workspace-200 font-semibold" : "text-workspace-600"}>{locale === "ne" ? "मिति र कोठा" : "Dates & Room"}</span>
         </div>
-        <div className="w-12 h-px bg-slate-900" />
+        <div className="w-12 h-px bg-workspace-900" />
         <div className="flex items-center gap-2">
           <span className={`h-6 w-6 rounded-full flex items-center justify-center font-bold ${
-            step >= 2 ? "bg-cyan-500 text-white" : "bg-slate-900 text-slate-600"
+            step >= 2 ? "bg-brand-500 text-white" : "bg-workspace-900 text-workspace-600"
           }`}>
             2
           </span>
-          <span className={step >= 2 ? "text-slate-200 font-semibold" : "text-slate-600"}>{t("guest_details")}</span>
+          <span className={step >= 2 ? "text-workspace-200 font-semibold" : "text-workspace-600"}>{t("guest_details")}</span>
         </div>
-        <div className="w-12 h-px bg-slate-900" />
+        <div className="w-12 h-px bg-workspace-900" />
         <div className="flex items-center gap-2">
           <span className={`h-6 w-6 rounded-full flex items-center justify-center font-bold ${
-            step >= 3 ? "bg-cyan-500 text-white" : "bg-slate-900 text-slate-600"
+            step >= 3 ? "bg-brand-500 text-white" : "bg-workspace-900 text-workspace-600"
           }`}>
             3
           </span>
-          <span className={step >= 3 ? "text-slate-200 font-semibold" : "text-slate-600"}>{tCommon("confirm")}</span>
+          <span className={step >= 3 ? "text-workspace-200 font-semibold" : "text-workspace-600"}>{tCommon("confirm")}</span>
         </div>
       </div>
 
       {/* STEP 1: Dates & Room */}
       {step === 1 && (
-        <Card className="bg-slate-900/40 border-slate-800 shadow-md">
+        <Card className="bg-workspace-900/40 border-workspace-800 shadow-md">
           <CardHeader>
-            <CardTitle className="text-base text-white">{locale === "ne" ? "चरण १ — कोठा र बसाई विवरण" : "Step 1 — Room & Stay Details"}</CardTitle>
-            <CardDescription className="text-slate-500 text-xs">{locale === "ne" ? "बसाईको अवधि मिलाउनुहोस् र उपलब्धता जाँच गर्नुहोस्।" : "Configure stay intervals and query availability."}</CardDescription>
+            <CardTitle className="text-base text-foreground">{locale === "ne" ? "चरण १ — कोठा र बसाई विवरण" : "Step 1 — Room & Stay Details"}</CardTitle>
+            <CardDescription className="text-workspace-500 text-xs">{locale === "ne" ? "बसाईको अवधि मिलाउनुहोस् र उपलब्धता जाँच गर्नुहोस्।" : "Configure stay intervals and query availability."}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
               <div className="space-y-2">
-                <Label htmlFor="check-in" className="text-slate-400 font-bold uppercase">{t("check_in_date")}</Label>
+                <Label htmlFor="check-in" className="text-workspace-400 font-bold uppercase">{t("check_in_date")}</Label>
                 <Input
                   type="date"
                   id="check-in"
                   value={checkIn}
                   onChange={(e) => setCheckIn(e.target.value)}
-                  className="bg-slate-950 border-slate-800 text-slate-100 h-10 rounded-lg w-full"
+                  className="bg-workspace-950 border-workspace-800 text-workspace-100 h-10 rounded-lg w-full"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="check-out" className="text-slate-400 font-bold uppercase">{t("check_out_date")}</Label>
+                <Label htmlFor="check-out" className="text-workspace-400 font-bold uppercase">{t("check_out_date")}</Label>
                 <Input
                   type="date"
                   id="check-out"
                   value={checkOut}
                   onChange={(e) => setCheckOut(e.target.value)}
-                  className="bg-slate-950 border-slate-800 text-slate-100 h-10 rounded-lg w-full"
+                  className="bg-workspace-950 border-workspace-800 text-workspace-100 h-10 rounded-lg w-full"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="room-type" className="text-slate-400 font-bold uppercase">{t("room_type")}</Label>
+                <Label htmlFor="room-type" className="text-workspace-400 font-bold uppercase">{t("room_type")}</Label>
                 <select
                   id="room-type"
                   value={selectedRoomTypeId}
                   onChange={(e) => setSelectedRoomTypeId(Number(e.target.value))}
-                  className="w-full rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2.5 h-10 outline-none cursor-pointer focus:border-cyan-500"
+                  className="w-full rounded-lg bg-workspace-950 border border-workspace-800 text-workspace-300 text-sm p-2.5 h-10 outline-none cursor-pointer focus:border-brand-500"
                 >
                   {roomTypes.map((t) => (
                     <option key={t.id} value={t.id}>
@@ -326,14 +326,14 @@ export default function NewBookingPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="adults" className="text-slate-400 font-bold uppercase">{locale === "ne" ? "पाहुना संख्या (वयस्क)" : "Adults count"}</Label>
+                <Label htmlFor="adults" className="text-workspace-400 font-bold uppercase">{locale === "ne" ? "पाहुना संख्या (वयस्क)" : "Adults count"}</Label>
                 <Input
                   type="number"
                   id="adults"
                   min={1}
                   value={adults}
                   onChange={(e) => setAdults(Number(e.target.value))}
-                  className="bg-slate-950 border-slate-800 text-slate-100 h-10 rounded-lg w-full"
+                  className="bg-workspace-950 border-workspace-800 text-workspace-100 h-10 rounded-lg w-full"
                 />
               </div>
             </div>
@@ -341,25 +341,25 @@ export default function NewBookingPage() {
             <Button
               onClick={handleCheckAvailability}
               disabled={checkingAvailability}
-              className="w-full bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-300 gap-2 font-semibold"
+              className="w-full bg-workspace-950 hover:bg-workspace-900 border border-workspace-800 text-workspace-300 gap-2 font-semibold"
             >
               {checkingAvailability ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
+                  <Loader2 className="h-4 w-4 animate-spin text-brand-400" />
                   {locale === "ne" ? "उपलब्धता जाँच हुँदैछ..." : "Checking ledger availability..."}
                 </>
               ) : (
                 <>
-                  <Sparkles className="h-4 w-4 text-cyan-400" />
+                  <Sparkles className="h-4 w-4 text-brand-400" />
                   {locale === "ne" ? "कोठा उपलब्धता जाँच गर्नुहोस्" : "Check Room Availability"}
                 </>
               )}
             </Button>
 
             {availableRooms.length > 0 && (
-              <div className="space-y-4 pt-4 border-t border-slate-900">
+              <div className="space-y-4 pt-4 border-t border-workspace-900">
                 <div className="space-y-2">
-                  <Label className="text-xs font-bold text-slate-400 uppercase">{t("room_select")}</Label>
+                  <Label className="text-xs font-bold text-workspace-400 uppercase">{t("room_select")}</Label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {availableRooms.map((room) => (
                       <div
@@ -367,8 +367,8 @@ export default function NewBookingPage() {
                         onClick={() => setSelectedRoomId(room.id)}
                         className={`p-3 rounded-lg border text-center cursor-pointer transition-all ${
                           selectedRoomId === room.id
-                            ? "bg-cyan-500/10 border-cyan-500 text-cyan-400 font-bold"
-                            : "bg-slate-950/40 border-slate-900 text-slate-400 hover:border-slate-800"
+                            ? "bg-brand-500/10 border-brand-500 text-brand-400 font-bold"
+                            : "bg-workspace-950/40 border-workspace-900 text-workspace-400 hover:border-workspace-800"
                         }`}
                       >
                         {tFrontDesk("room")} {room.room_number}
@@ -378,18 +378,18 @@ export default function NewBookingPage() {
                 </div>
 
                 {pricingEstimate && (
-                  <div className="rounded-xl border border-slate-900 bg-slate-900/10 p-4 space-y-2 text-xs">
-                    <h4 className="font-bold text-slate-400 uppercase tracking-wider">{locale === "ne" ? "अनुमानित दर विवरण" : "Estimated Rates Breakdown"}</h4>
+                  <div className="rounded-xl border border-workspace-900 bg-workspace-900/10 p-4 space-y-2 text-xs">
+                    <h4 className="font-bold text-workspace-400 uppercase tracking-wider">{locale === "ne" ? "अनुमानित दर विवरण" : "Estimated Rates Breakdown"}</h4>
                     <div className="space-y-1">
-                      <div className="flex justify-between text-slate-400">
+                      <div className="flex justify-between text-workspace-400">
                         <span>{locale === "ne" ? "कोठा शुल्क" : "Stay Nights Room Charge"}</span>
                         <span>Rs. {Number(pricingEstimate.base_price).toLocaleString()}</span>
                       </div>
-                      <div className="flex justify-between text-slate-400">
+                      <div className="flex justify-between text-workspace-400">
                         <span>{locale === "ne" ? "भ्याट (१३%)" : "VAT (13%)"}</span>
                         <span>Rs. {Number(pricingEstimate.tax_price).toLocaleString()}</span>
                       </div>
-                      <div className="flex justify-between text-sm font-extrabold text-cyan-400 pt-1 border-t border-slate-900">
+                      <div className="flex justify-between text-sm font-extrabold text-brand-400 pt-1 border-t border-workspace-900">
                         <span>{t("grand_total")}</span>
                         <span>Rs. {Number(pricingEstimate.total_price).toLocaleString()}</span>
                       </div>
@@ -400,7 +400,7 @@ export default function NewBookingPage() {
                 <div className="flex justify-end pt-2">
                   <Button
                     onClick={handleNextStep}
-                    className="bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold gap-2 shadow-lg shadow-cyan-500/20"
+                    className="bg-gradient-to-tr from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-semibold gap-2 shadow-lg shadow-brand-500/20"
                   >
                     {locale === "ne" ? "अर्को चरण: पाहुना विवरण" : "Next Step: Guest Details"}
                     <ArrowRight className="h-4 w-4" />
@@ -414,82 +414,82 @@ export default function NewBookingPage() {
 
       {/* STEP 2: Guest Details */}
       {step === 2 && (
-        <Card className="bg-slate-900/40 border-slate-800 shadow-md">
+        <Card className="bg-workspace-900/40 border-workspace-800 shadow-md">
           <CardHeader>
-            <CardTitle className="text-base text-white">{locale === "ne" ? "चरण २ — पाहुना दर्ता" : "Step 2 — Guest Ledger Registration"}</CardTitle>
-            <CardDescription className="text-slate-500 text-xs">{locale === "ne" ? "पाहुनाको रेकर्डसँग बसाई आबद्ध गर्नुहोस्।" : "Associate stay with guest records."}</CardDescription>
+            <CardTitle className="text-base text-foreground">{locale === "ne" ? "चरण २ — पाहुना दर्ता" : "Step 2 — Guest Ledger Registration"}</CardTitle>
+            <CardDescription className="text-workspace-500 text-xs">{locale === "ne" ? "पाहुनाको रेकर्डसँग बसाई आबद्ध गर्नुहोस्।" : "Associate stay with guest records."}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Search Combobox */}
             <div className="space-y-2">
-              <Label className="text-xs font-bold text-slate-500 uppercase">{t("guest_search")}</Label>
+              <Label className="text-xs font-bold text-workspace-500 uppercase">{t("guest_search")}</Label>
               <GuestSearchInput onSelect={handleSelectExistingGuest} onAddNew={handleAddNewGuest} />
             </div>
 
             {/* Profile fields */}
-            <div className="grid grid-cols-2 gap-4 text-xs pt-4 border-t border-slate-900">
+            <div className="grid grid-cols-2 gap-4 text-xs pt-4 border-t border-workspace-900">
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label htmlFor="first-name" className="text-slate-400 font-bold uppercase">{t("first_name")}</Label>
+                <Label htmlFor="first-name" className="text-workspace-400 font-bold uppercase">{t("first_name")}</Label>
                 <Input
                   id="first-name"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="Ramesh"
-                  className="bg-slate-950 border-slate-800 text-slate-100"
+                  className="bg-workspace-950 border-workspace-800 text-workspace-100"
                 />
               </div>
 
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label htmlFor="last-name" className="text-slate-400 font-bold uppercase">{t("last_name")}</Label>
+                <Label htmlFor="last-name" className="text-workspace-400 font-bold uppercase">{t("last_name")}</Label>
                 <Input
                   id="last-name"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Sharma"
-                  className="bg-slate-950 border-slate-800 text-slate-100"
+                  className="bg-workspace-950 border-workspace-800 text-workspace-100"
                 />
               </div>
 
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label htmlFor="phone" className="text-slate-400 font-bold uppercase">{t("phone")}</Label>
+                <Label htmlFor="phone" className="text-workspace-400 font-bold uppercase">{t("phone")}</Label>
                 <Input
                   id="phone"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="9841XXXXXX"
-                  className="bg-slate-950 border-slate-800 text-slate-100"
+                  className="bg-workspace-950 border-workspace-800 text-workspace-100"
                 />
               </div>
 
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label htmlFor="email" className="text-slate-400 font-bold uppercase">{t("email")}</Label>
+                <Label htmlFor="email" className="text-workspace-400 font-bold uppercase">{t("email")}</Label>
                 <Input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="ramesh@gmail.com"
-                  className="bg-slate-950 border-slate-800 text-slate-100"
+                  className="bg-workspace-950 border-workspace-800 text-workspace-100"
                 />
               </div>
 
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label htmlFor="nationality" className="text-slate-400 font-bold uppercase">{t("nationality")}</Label>
+                <Label htmlFor="nationality" className="text-workspace-400 font-bold uppercase">{t("nationality")}</Label>
                 <Input
                   id="nationality"
                   value={nationality}
                   onChange={(e) => setNationality(e.target.value)}
-                  className="bg-slate-950 border-slate-800 text-slate-100"
+                  className="bg-workspace-950 border-workspace-800 text-workspace-100"
                 />
               </div>
 
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label htmlFor="id-type" className="text-slate-400 font-bold uppercase">{locale === "ne" ? "परिचयपत्र प्रकार" : "ID Document Type"}</Label>
+                <Label htmlFor="id-type" className="text-workspace-400 font-bold uppercase">{locale === "ne" ? "परिचयपत्र प्रकार" : "ID Document Type"}</Label>
                 <select
                   id="id-type"
                   value={idType}
                   onChange={(e) => setIdType(e.target.value)}
-                  className="w-full rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2.5 h-10 outline-none cursor-pointer focus:border-cyan-500"
+                  className="w-full rounded-lg bg-workspace-950 border border-workspace-800 text-workspace-300 text-sm p-2.5 h-10 outline-none cursor-pointer focus:border-brand-500"
                 >
                   <option value="citizenship">{tData("citizenship")}</option>
                   <option value="passport">{tData("passport")}</option>
@@ -499,19 +499,19 @@ export default function NewBookingPage() {
               </div>
 
               <div className="space-y-2 col-span-2">
-                <Label htmlFor="id-number" className="text-slate-400 font-bold uppercase">{locale === "ne" ? "परिचयपत्र नम्बर" : "ID Document Number"}</Label>
+                <Label htmlFor="id-number" className="text-workspace-400 font-bold uppercase">{locale === "ne" ? "परिचयपत्र नम्बर" : "ID Document Number"}</Label>
                 <Input
                   id="id-number"
                   value={idNumber}
                   onChange={(e) => setIdNumber(e.target.value)}
                   placeholder="ID Card Number"
-                  className="bg-slate-950 border-slate-800 text-slate-100"
+                  className="bg-workspace-950 border-workspace-800 text-workspace-100"
                 />
               </div>
             </div>
 
-            <div className="flex justify-between pt-4 border-t border-slate-900">
-              <Button onClick={() => setStep(1)} variant="ghost" className="border border-slate-800 text-slate-400 hover:text-white h-10 px-4 gap-1">
+            <div className="flex justify-between pt-4 border-t border-workspace-900">
+              <Button onClick={() => setStep(1)} variant="ghost" className="border border-workspace-800 text-workspace-400 hover:text-white h-10 px-4 gap-1">
                 <ArrowLeft className="h-4 w-4" />
                 {locale === "ne" ? "अघिल्लो चरण" : "Previous Step"}
               </Button>
@@ -519,11 +519,11 @@ export default function NewBookingPage() {
               <Button
                 onClick={handleNextStep}
                 disabled={isCreatingGuest}
-                className="bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold gap-2 shadow-lg shadow-cyan-500/20"
+                className="bg-gradient-to-tr from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-semibold gap-2 shadow-lg shadow-brand-500/20"
               >
                 {isCreatingGuest ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
+                    <Loader2 className="h-4 w-4 animate-spin text-brand-400" />
                     {locale === "ne" ? "प्रोफाइल सिर्जना हुँदैछ..." : "Creating Profile..."}
                   </>
                 ) : (
@@ -540,66 +540,66 @@ export default function NewBookingPage() {
 
       {/* STEP 3: Specials & Confirm */}
       {step === 3 && (
-        <Card className="bg-slate-900/40 border-slate-800 shadow-md">
+        <Card className="bg-workspace-900/40 border-workspace-800 shadow-md">
           <CardHeader>
-            <CardTitle className="text-base text-white">{locale === "ne" ? "चरण ३ — विशेष अनुरोध र बुकिङ" : "Step 3 — Specials & Complete Booking"}</CardTitle>
-            <CardDescription className="text-slate-500 text-xs">{locale === "ne" ? "बिलिङ विवरण प्रमाणित गर्नुहोस् र विशेष अनुरोधहरू लेख्नुहोस्।" : "Verify billing values and write special requests."}</CardDescription>
+            <CardTitle className="text-base text-foreground">{locale === "ne" ? "चरण ३ — विशेष अनुरोध र बुकिङ" : "Step 3 — Specials & Complete Booking"}</CardTitle>
+            <CardDescription className="text-workspace-500 text-xs">{locale === "ne" ? "बिलिङ विवरण प्रमाणित गर्नुहोस् र विशेष अनुरोधहरू लेख्नुहोस्।" : "Verify billing values and write special requests."}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6 text-xs">
             {/* Stay Summary review */}
-            <div className="rounded-xl border border-slate-900 bg-slate-900/20 p-4 grid grid-cols-2 gap-4">
+            <div className="rounded-xl border border-workspace-900 bg-workspace-900/20 p-4 grid grid-cols-2 gap-4">
               <div>
-                <span className="text-slate-500 block">{t("guest_details")}</span>
-                <span className="font-semibold text-slate-200">{firstName} {lastName}</span>
+                <span className="text-workspace-500 block">{t("guest_details")}</span>
+                <span className="font-semibold text-workspace-200">{firstName} {lastName}</span>
               </div>
               <div>
-                <span className="text-slate-500 block">{locale === "ne" ? "पाहुना फोन" : "Guest Phone"}</span>
-                <span className="font-semibold text-slate-200">{phone}</span>
+                <span className="text-workspace-500 block">{locale === "ne" ? "पाहुना फोन" : "Guest Phone"}</span>
+                <span className="font-semibold text-workspace-200">{phone}</span>
               </div>
               <div>
-                <span className="text-slate-500 block">{t("check_in_date")}</span>
-                <span className="font-semibold text-slate-200">{checkIn}</span>
+                <span className="text-workspace-500 block">{t("check_in_date")}</span>
+                <span className="font-semibold text-workspace-200">{checkIn}</span>
               </div>
               <div>
-                <span className="text-slate-500 block">{t("check_out_date")}</span>
-                <span className="font-semibold text-slate-200">{checkOut}</span>
+                <span className="text-workspace-500 block">{t("check_out_date")}</span>
+                <span className="font-semibold text-workspace-200">{checkOut}</span>
               </div>
               <div>
-                <span className="text-slate-500 block">{t("assigned_room")}</span>
-                <span className="font-semibold text-slate-200">{tFrontDesk("room")} {availableRooms.find((r) => r.id === selectedRoomId)?.room_number}</span>
+                <span className="text-workspace-500 block">{t("assigned_room")}</span>
+                <span className="font-semibold text-workspace-200">{tFrontDesk("room")} {availableRooms.find((r) => r.id === selectedRoomId)?.room_number}</span>
               </div>
               <div>
-                <span className="text-slate-500 block">{t("nights_count").split(" ")[0]}</span>
-                <span className="font-semibold text-slate-200">{t("nights_count", { count: pricingEstimate?.nights })}</span>
+                <span className="text-workspace-500 block">{t("nights_count").split(" ")[0]}</span>
+                <span className="font-semibold text-workspace-200">{t("nights_count", { count: pricingEstimate?.nights })}</span>
               </div>
             </div>
 
             {/* Special Request Inputs */}
             <div className="space-y-2">
-              <Label htmlFor="special-requests" className="text-slate-400 font-bold uppercase">{t("notes")}</Label>
+              <Label htmlFor="special-requests" className="text-workspace-400 font-bold uppercase">{t("notes")}</Label>
               <Input
                 id="special-requests"
                 value={specialRequests}
                 onChange={(e) => setSpecialRequests(e.target.value)}
                 placeholder="e.g. Vegetarian breakfast, double bed configuration, early check-in requested..."
-                className="bg-slate-950 border-slate-800 text-slate-100 p-3 h-14"
+                className="bg-workspace-950 border-workspace-800 text-workspace-100 p-3 h-14"
               />
             </div>
 
             {/* Pricing Estimates */}
             {pricingEstimate && (
-              <div className="rounded-xl border border-slate-900 bg-cyan-950/10 p-4 space-y-2">
-                <h4 className="font-bold text-cyan-400 uppercase tracking-wider">{locale === "ne" ? "जम्मा शुल्क समीक्षा" : "Final Charges Review"}</h4>
+              <div className="rounded-xl border border-workspace-900 bg-brand-950/10 p-4 space-y-2">
+                <h4 className="font-bold text-brand-400 uppercase tracking-wider">{locale === "ne" ? "जम्मा शुल्क समीक्षा" : "Final Charges Review"}</h4>
                 <div className="space-y-1">
-                  <div className="flex justify-between text-slate-400">
+                  <div className="flex justify-between text-workspace-400">
                     <span>{t("base_price")}</span>
                     <span>Rs. {Number(pricingEstimate.base_price).toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between text-slate-400">
+                  <div className="flex justify-between text-workspace-400">
                     <span>{locale === "ne" ? "भ्याट (१३%)" : "VAT (13%)"}</span>
                     <span>Rs. {Number(pricingEstimate.tax_price).toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between text-sm font-extrabold text-white pt-1.5 border-t border-slate-900">
+                  <div className="flex justify-between text-sm font-extrabold text-foreground pt-1.5 border-t border-workspace-900">
                     <span>{t("grand_total")}</span>
                     <span>Rs. {Number(pricingEstimate.total_price).toLocaleString()}</span>
                   </div>
@@ -607,8 +607,8 @@ export default function NewBookingPage() {
               </div>
             )}
 
-            <div className="flex justify-between pt-4 border-t border-slate-900">
-              <Button onClick={() => setStep(2)} variant="ghost" className="border border-slate-800 text-slate-400 hover:text-white h-10 px-4 gap-1">
+            <div className="flex justify-between pt-4 border-t border-workspace-900">
+              <Button onClick={() => setStep(2)} variant="ghost" className="border border-workspace-800 text-workspace-400 hover:text-white h-10 px-4 gap-1">
                 <ArrowLeft className="h-4 w-4" />
                 {locale === "ne" ? "अघिल्लो चरण" : "Previous Step"}
               </Button>
@@ -616,11 +616,11 @@ export default function NewBookingPage() {
               <Button
                 onClick={handleConfirmBooking}
                 disabled={isSubmitting}
-                className="bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold gap-2 shadow-lg shadow-cyan-500/20 h-10 px-6"
+                className="bg-gradient-to-tr from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-semibold gap-2 shadow-lg shadow-brand-500/20 h-10 px-6"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
+                    <Loader2 className="h-4 w-4 animate-spin text-brand-400" />
                     {t("creating")}
                   </>
                 ) : (
