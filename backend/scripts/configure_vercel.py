@@ -19,7 +19,7 @@ cli = shutil.which("vercel.cmd") or shutil.which("vercel")
 if not cli:
     raise SystemExit("Vercel CLI not found. Authenticate it before running this command.")
 if args.target == "api":
-    keys = ["DJANGO_SECRET_KEY", "STAYWIRED_PROXY_SECRET", "POSTGRES_HOST", "POSTGRES_PORT", "POSTGRES_DB", "POSTGRES_USER", "POSTGRES_SSLMODE", "POSTGRES_PASSWORD", "ALLOWED_HOSTS", "STAYWIRED_FRONTEND_HOSTS"]
+    keys = ["DJANGO_SECRET_KEY", "STAYWIRED_PROXY_SECRET", "STAYWIRED_CRON_SECRET", "BLOB_READ_WRITE_TOKEN", "POSTGRES_HOST", "POSTGRES_PORT", "POSTGRES_DB", "POSTGRES_USER", "POSTGRES_SSLMODE", "POSTGRES_PASSWORD", "ALLOWED_HOSTS", "STAYWIRED_FRONTEND_HOSTS"]
     env = {key: values[key] for key in keys if values.get(key)}
     if not env.get("POSTGRES_PASSWORD") and not args.allow_missing_password:
         raise SystemExit("POSTGRES_PASSWORD is blank; no variables were uploaded.")

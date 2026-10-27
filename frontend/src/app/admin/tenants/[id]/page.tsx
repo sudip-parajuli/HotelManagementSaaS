@@ -52,7 +52,7 @@ const STATUS_BADGE: Record<string, string> = {
   active:    "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
   trial:     "bg-brand-500/15 text-brand-400 border border-brand-500/30",
   past_due:  "bg-amber-500/15 text-amber-400 border border-amber-500/30",
-  cancelled: "bg-zinc-500/15 text-zinc-400 border border-zinc-500/30",
+  cancelled: "bg-workspace-500/15 text-workspace-400 border border-workspace-500/30",
   suspended: "bg-red-500/15 text-red-400 border border-red-500/30",
 };
 
@@ -72,14 +72,14 @@ function UsageBar({ used, limit }: { used: number; limit: number | null }) {
   const color = pct > 85 ? "bg-red-500" : pct > 60 ? "bg-amber-500" : "bg-emerald-500";
   return (
     <div className="space-y-1">
-      <div className="flex justify-between text-xs text-zinc-400">
+      <div className="flex justify-between text-xs text-workspace-400">
         <span>{used} used</span>
         <span>{limit ?? "∞"} limit</span>
       </div>
-      <div className="h-2 rounded-full bg-zinc-700 overflow-hidden">
+      <div className="h-2 rounded-full bg-workspace-700 overflow-hidden">
         <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${limit ? pct : 0}%` }} />
       </div>
-      <p className="text-right text-xs text-zinc-500">{limit ? `${pct}%` : "Unlimited"}</p>
+      <p className="text-right text-xs text-workspace-500">{limit ? `${pct}%` : "Unlimited"}</p>
     </div>
   );
 }
@@ -261,7 +261,7 @@ export default function TenantDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <AlertTriangle className="text-red-400" size={40} />
-        <p className="text-zinc-400">{error ?? "Tenant not found."}</p>
+        <p className="text-workspace-400">{error ?? "Tenant not found."}</p>
         <Link href="/admin/tenants" className="text-indigo-400 hover:underline text-sm">← Back to Tenants</Link>
       </div>
     );
@@ -270,12 +270,12 @@ export default function TenantDetailPage() {
   const subStatus = subscription?.status ?? "unknown";
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 pb-16">
+    <div className="min-h-screen bg-workspace-950 text-workspace-100 pb-16">
 
       {/* ── Header ── */}
-      <div className="border-b border-zinc-800 bg-zinc-900/60 px-6 py-5">
+      <div className="border-b border-workspace-800 bg-workspace-900/60 px-6 py-5">
         <div className="max-w-6xl mx-auto">
-          <Link href="/admin/tenants" className="inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-300 mb-4 transition-colors">
+          <Link href="/admin/tenants" className="inline-flex items-center gap-1.5 text-sm text-workspace-500 hover:text-workspace-300 mb-4 transition-colors">
             <ArrowLeft size={14} /> Back to Tenants
           </Link>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -285,9 +285,9 @@ export default function TenantDetailPage() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-foreground">{tenant.name}</h1>
-                <p className="text-sm text-zinc-500 font-mono">{tenant.schema_name}</p>
+                <p className="text-sm text-workspace-500 font-mono">{tenant.schema_name}</p>
               </div>
-              <span className={`ml-2 px-2.5 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE[subStatus] ?? "bg-zinc-700 text-zinc-400"}`}>
+              <span className={`ml-2 px-2.5 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE[subStatus] ?? "bg-workspace-700 text-workspace-400"}`}>
                 {subStatus}
               </span>
               {!tenant.is_active && (
@@ -317,7 +317,7 @@ export default function TenantDetailPage() {
                 {actionLoading === "toggle" ? <Loader2 size={13} className="animate-spin" /> : tenant.is_active ? <Ban size={13} /> : <BadgeCheck size={13} />}
                 {tenant.is_active ? "Suspend" : "Activate"}
               </button>
-              <button onClick={loadAll} className="p-1.5 rounded-lg border border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-600 transition-all">
+              <button onClick={loadAll} className="p-1.5 rounded-lg border border-workspace-700 text-workspace-400 hover:text-workspace-200 hover:border-workspace-600 transition-all">
                 <RefreshCw size={14} />
               </button>
             </div>
@@ -326,7 +326,7 @@ export default function TenantDetailPage() {
       </div>
 
       {/* ── Tabs ── */}
-      <div className="border-b border-zinc-800 bg-zinc-900/40 px-6">
+      <div className="border-b border-workspace-800 bg-workspace-900/40 px-6">
         <div className="max-w-6xl mx-auto flex gap-1">
           {TABS.map((tab) => (
             <button
@@ -335,7 +335,7 @@ export default function TenantDetailPage() {
               className={`flex items-center gap-1.5 px-4 py-3 text-sm font-medium border-b-2 transition-all ${
                 activeTab === tab.id
                   ? "border-indigo-500 text-indigo-400"
-                  : "border-transparent text-zinc-500 hover:text-zinc-300"
+                  : "border-transparent text-workspace-500 hover:text-workspace-300"
               }`}
             >
               {tab.icon} {tab.label}
@@ -352,8 +352,8 @@ export default function TenantDetailPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Tenant Info */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-                <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-4">Tenant Details</h2>
+              <div className="rounded-xl border border-workspace-800 bg-workspace-900/50 p-6">
+                <h2 className="text-sm font-semibold text-workspace-400 uppercase tracking-wider mb-4">Tenant Details</h2>
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
                     { icon: <Mail size={14} />, label: "Email", value: tenant.contact_email },
@@ -364,18 +364,18 @@ export default function TenantDetailPage() {
                     { icon: <BadgeCheck size={14} />, label: "Status", value: tenant.is_active ? "Active" : "Suspended" },
                   ].map((row) => (
                     <div key={row.label} className="flex items-start gap-2.5">
-                      <span className="mt-0.5 text-zinc-500">{row.icon}</span>
+                      <span className="mt-0.5 text-workspace-500">{row.icon}</span>
                       <div>
-                        <dt className="text-xs text-zinc-500 mb-0.5">{row.label}</dt>
-                        <dd className="text-sm text-zinc-200 font-medium">{row.value}</dd>
+                        <dt className="text-xs text-workspace-500 mb-0.5">{row.label}</dt>
+                        <dd className="text-sm text-workspace-200 font-medium">{row.value}</dd>
                       </div>
                     </div>
                   ))}
                 </dl>
                 {tenant.notes && (
-                  <div className="mt-4 pt-4 border-t border-zinc-800">
-                    <p className="text-xs text-zinc-500 mb-1">Internal Notes</p>
-                    <p className="text-sm text-zinc-300">{tenant.notes}</p>
+                  <div className="mt-4 pt-4 border-t border-workspace-800">
+                    <p className="text-xs text-workspace-500 mb-1">Internal Notes</p>
+                    <p className="text-sm text-workspace-300">{tenant.notes}</p>
                   </div>
                 )}
               </div>
@@ -383,21 +383,21 @@ export default function TenantDetailPage() {
 
             {/* Subscription Summary */}
             <div className="space-y-4">
-              <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
-                <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-4">Subscription</h2>
+              <div className="rounded-xl border border-workspace-800 bg-workspace-900/50 p-5">
+                <h2 className="text-sm font-semibold text-workspace-400 uppercase tracking-wider mb-4">Subscription</h2>
                 {subscription ? (
                   <div className="space-y-3">
                     <div>
-                      <p className="text-xs text-zinc-500">Plan</p>
+                      <p className="text-xs text-workspace-500">Plan</p>
                       <p className="text-lg font-bold text-foreground mt-0.5">{subscription.plan_details.name}</p>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="rounded-lg bg-zinc-800/60 p-3">
-                        <p className="text-xs text-zinc-500">Period Start</p>
+                      <div className="rounded-lg bg-workspace-800/60 p-3">
+                        <p className="text-xs text-workspace-500">Period Start</p>
                         <p className="text-sm font-medium mt-0.5">{fmt(subscription.current_period_start)}</p>
                       </div>
-                      <div className="rounded-lg bg-zinc-800/60 p-3">
-                        <p className="text-xs text-zinc-500">Next Billing</p>
+                      <div className="rounded-lg bg-workspace-800/60 p-3">
+                        <p className="text-xs text-workspace-500">Next Billing</p>
                         <p className="text-sm font-medium mt-0.5">{fmt(subscription.next_billing_date)}</p>
                       </div>
                     </div>
@@ -407,39 +407,39 @@ export default function TenantDetailPage() {
                       </div>
                     )}
                     <div className="pt-2">
-                      <p className="text-xs text-zinc-500 mb-1">Monthly Price</p>
+                      <p className="text-xs text-workspace-500 mb-1">Monthly Price</p>
                       <p className="text-2xl font-bold text-indigo-400">
                         Rs. {Number(subscription.plan_details.price_monthly).toLocaleString()}
-                        <span className="text-sm font-normal text-zinc-500">/mo</span>
+                        <span className="text-sm font-normal text-workspace-500">/mo</span>
                       </p>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-zinc-500 text-sm">No subscription found.</p>
+                  <p className="text-workspace-500 text-sm">No subscription found.</p>
                 )}
               </div>
 
-              <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
-                <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-3">Quick Stats</h2>
+              <div className="rounded-xl border border-workspace-800 bg-workspace-900/50 p-5">
+                <h2 className="text-sm font-semibold text-workspace-400 uppercase tracking-wider mb-3">Quick Stats</h2>
                 <div className="space-y-2">
                   {usage && (
                     <>
                       <div className="flex justify-between text-sm">
-                        <span className="text-zinc-400 flex items-center gap-1.5"><BedDouble size={13}/> Rooms</span>
+                        <span className="text-workspace-400 flex items-center gap-1.5"><BedDouble size={13}/> Rooms</span>
                         <span className="font-medium">{usage.rooms_used} / {usage.rooms_limit ?? "∞"}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-zinc-400 flex items-center gap-1.5"><Users size={13}/> Staff</span>
+                        <span className="text-workspace-400 flex items-center gap-1.5"><Users size={13}/> Staff</span>
                         <span className="font-medium">{usage.staff_used} / {usage.staff_limit ?? "∞"}</span>
                       </div>
                     </>
                   )}
                   <div className="flex justify-between text-sm">
-                    <span className="text-zinc-400 flex items-center gap-1.5"><ReceiptText size={13}/> Invoices</span>
+                    <span className="text-workspace-400 flex items-center gap-1.5"><ReceiptText size={13}/> Invoices</span>
                     <span className="font-medium">{invoices.length}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-zinc-400 flex items-center gap-1.5"><Zap size={13}/> Features</span>
+                    <span className="text-workspace-400 flex items-center gap-1.5"><Zap size={13}/> Features</span>
                     <span className="font-medium">{features?.features.filter((f) => f.in_plan || f.manually_granted).length ?? "—"}</span>
                   </div>
                 </div>
@@ -451,8 +451,8 @@ export default function TenantDetailPage() {
         {/* USAGE */}
         {activeTab === "usage" && (
           <div className="max-w-2xl space-y-6">
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-              <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-6">Resource Usage vs. Plan Limits</h2>
+            <div className="rounded-xl border border-workspace-800 bg-workspace-900/50 p-6">
+              <h2 className="text-sm font-semibold text-workspace-400 uppercase tracking-wider mb-6">Resource Usage vs. Plan Limits</h2>
               {usage ? (
                 <div className="space-y-6">
                   <div>
@@ -469,13 +469,13 @@ export default function TenantDetailPage() {
                     </div>
                     <UsageBar used={usage.staff_used} limit={usage.staff_limit} />
                   </div>
-                  <div className="pt-4 border-t border-zinc-800">
-                    <p className="text-xs text-zinc-500">Plan: <span className="text-zinc-300 font-medium">{usage.plan ?? "—"}</span></p>
-                    <p className="text-xs text-zinc-500 mt-1">Subscription Status: <span className={`font-medium ${usage.status === "active" ? "text-emerald-400" : "text-amber-400"}`}>{usage.status ?? "—"}</span></p>
+                  <div className="pt-4 border-t border-workspace-800">
+                    <p className="text-xs text-workspace-500">Plan: <span className="text-workspace-300 font-medium">{usage.plan ?? "—"}</span></p>
+                    <p className="text-xs text-workspace-500 mt-1">Subscription Status: <span className={`font-medium ${usage.status === "active" ? "text-emerald-400" : "text-amber-400"}`}>{usage.status ?? "—"}</span></p>
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-8 text-zinc-500">
+                <div className="text-center py-8 text-workspace-500">
                   <Activity size={32} className="mx-auto mb-2 opacity-40" />
                   <p>Usage data unavailable</p>
                 </div>
@@ -493,10 +493,10 @@ export default function TenantDetailPage() {
                 <h2 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <Puzzle size={16} className="text-indigo-400" />
                   Module Marketplace
-                  <span className="text-xs font-normal text-zinc-500">— Toggle modules on/off for this tenant</span>
+                  <span className="text-xs font-normal text-workspace-500">— Toggle modules on/off for this tenant</span>
                 </h2>
-                <p className="text-xs text-zinc-500 mb-4">
-                  Plan: <span className="text-zinc-300 font-medium">{features?.plan ?? "—"}</span>
+                <p className="text-xs text-workspace-500 mb-4">
+                  Plan: <span className="text-workspace-300 font-medium">{features?.plan ?? "—"}</span>
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {addonCatalog.filter((m) => m.is_active).map((addon) => {
@@ -510,19 +510,19 @@ export default function TenantDetailPage() {
                         className={`rounded-xl border p-4 transition-all ${
                           isGranted
                             ? "bg-emerald-900/10 border-emerald-700/30"
-                            : "bg-zinc-900/30 border-zinc-800 hover:border-zinc-700"
+                            : "bg-workspace-900/30 border-workspace-800 hover:border-workspace-700"
                         }`}
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-zinc-200 truncate">{addon.name}</p>
-                            <p className="text-[10px] font-mono text-zinc-500 mt-0.5">{addon.key}</p>
+                            <p className="text-sm font-semibold text-workspace-200 truncate">{addon.name}</p>
+                            <p className="text-[10px] font-mono text-workspace-500 mt-0.5">{addon.key}</p>
                           </div>
                           <button
                             onClick={() => handleToggleModule(addon, isGranted)}
                             disabled={isToggling}
                             className={`relative inline-flex h-5 w-9 items-center rounded-full transition-all flex-shrink-0 ${
-                              isGranted ? "bg-emerald-500" : "bg-zinc-700"
+                              isGranted ? "bg-emerald-500" : "bg-workspace-700"
                             }`}
                           >
                             {isToggling ? (
@@ -536,7 +536,7 @@ export default function TenantDetailPage() {
                             )}
                           </button>
                         </div>
-                        <p className="text-xs text-zinc-500 line-clamp-2 mb-2">{addon.description}</p>
+                        <p className="text-xs text-workspace-500 line-clamp-2 mb-2">{addon.description}</p>
                         {featItem?.in_plan && (
                           <span className="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
                             <CheckCircle2 size={8} /> In Plan
@@ -557,7 +557,7 @@ export default function TenantDetailPage() {
             {/* Advanced Feature Table */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-zinc-400">All Feature Keys</h3>
+                <h3 className="text-sm font-semibold text-workspace-400">All Feature Keys</h3>
                 <button
                   onClick={() => setShowGrantModal(true)}
                   className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 hover:bg-indigo-600/30 transition-all"
@@ -567,34 +567,34 @@ export default function TenantDetailPage() {
               </div>
 
               {features?.features && features.features.length > 0 ? (
-                <div className="rounded-xl border border-zinc-800 overflow-hidden">
+                <div className="rounded-xl border border-workspace-800 overflow-hidden">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-zinc-800 bg-zinc-900/80">
-                        <th className="text-left px-4 py-3 text-xs text-zinc-500 font-semibold uppercase tracking-wider">Feature Key</th>
-                        <th className="text-center px-4 py-3 text-xs text-zinc-500 font-semibold uppercase tracking-wider">In Plan</th>
-                        <th className="text-center px-4 py-3 text-xs text-zinc-500 font-semibold uppercase tracking-wider">Manual Grant</th>
-                        <th className="text-left px-4 py-3 text-xs text-zinc-500 font-semibold uppercase tracking-wider">Expires</th>
-                        <th className="text-left px-4 py-3 text-xs text-zinc-500 font-semibold uppercase tracking-wider">Reason</th>
+                      <tr className="border-b border-workspace-800 bg-workspace-900/80">
+                        <th className="text-left px-4 py-3 text-xs text-workspace-500 font-semibold uppercase tracking-wider">Feature Key</th>
+                        <th className="text-center px-4 py-3 text-xs text-workspace-500 font-semibold uppercase tracking-wider">In Plan</th>
+                        <th className="text-center px-4 py-3 text-xs text-workspace-500 font-semibold uppercase tracking-wider">Manual Grant</th>
+                        <th className="text-left px-4 py-3 text-xs text-workspace-500 font-semibold uppercase tracking-wider">Expires</th>
+                        <th className="text-left px-4 py-3 text-xs text-workspace-500 font-semibold uppercase tracking-wider">Reason</th>
                         <th className="px-4 py-3"></th>
                       </tr>
                     </thead>
                     <tbody>
                       {features.features.map((f) => (
-                        <tr key={f.key} className="border-b border-zinc-800/50 hover:bg-zinc-800/30 transition-colors">
+                        <tr key={f.key} className="border-b border-workspace-800/50 hover:bg-workspace-800/30 transition-colors">
                           <td className="px-4 py-3 font-mono text-indigo-300 font-medium">{f.key}</td>
                           <td className="px-4 py-3 text-center">
                             {f.in_plan
                               ? <CheckCircle2 size={16} className="text-emerald-400 mx-auto" />
-                              : <XCircle size={16} className="text-zinc-600 mx-auto" />}
+                              : <XCircle size={16} className="text-workspace-600 mx-auto" />}
                           </td>
                           <td className="px-4 py-3 text-center">
                             {f.manually_granted
                               ? <Unlock size={15} className="text-amber-400 mx-auto" />
-                              : <Lock size={15} className="text-zinc-700 mx-auto" />}
+                              : <Lock size={15} className="text-workspace-700 mx-auto" />}
                           </td>
-                          <td className="px-4 py-3 text-zinc-400 text-xs">{fmt(f.grant_expires_at)}</td>
-                          <td className="px-4 py-3 text-zinc-400 text-xs max-w-[180px] truncate">{f.grant_reason || "—"}</td>
+                          <td className="px-4 py-3 text-workspace-400 text-xs">{fmt(f.grant_expires_at)}</td>
+                          <td className="px-4 py-3 text-workspace-400 text-xs max-w-[180px] truncate">{f.grant_reason || "—"}</td>
                           <td className="px-4 py-3">
                             {f.manually_granted && (
                               <button
@@ -612,7 +612,7 @@ export default function TenantDetailPage() {
                   </table>
                 </div>
               ) : (
-                <div className="text-center py-12 text-zinc-600 rounded-xl border border-zinc-800">
+                <div className="text-center py-12 text-workspace-600 rounded-xl border border-workspace-800">
                   <Zap size={32} className="mx-auto mb-2 opacity-40" />
                   <p>No features defined yet.</p>
                 </div>
@@ -622,42 +622,42 @@ export default function TenantDetailPage() {
             {/* Grant Feature Modal */}
             {showGrantModal && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-                <div className="w-full max-w-md bg-zinc-900 border border-zinc-700 rounded-2xl p-6 shadow-2xl">
+                <div className="w-full max-w-md bg-workspace-900 border border-workspace-700 rounded-2xl p-6 shadow-2xl">
                   <h3 className="text-lg font-bold text-foreground mb-4">Grant Feature Access</h3>
                   <div className="space-y-4">
                     <div>
-                      <label className="text-xs text-zinc-400 block mb-1">Feature Key *</label>
+                      <label className="text-xs text-workspace-400 block mb-1">Feature Key *</label>
                       <input
                         value={grantKey}
                         onChange={(e) => setGrantKey(e.target.value)}
                         placeholder="e.g. payroll, crm, analytics"
-                        className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500"
+                        className="w-full bg-workspace-800 border border-workspace-700 rounded-lg px-3 py-2 text-sm text-white placeholder-workspace-600 focus:outline-none focus:border-indigo-500"
                       />
                     </div>
                     <div>
-                      <label className="text-xs text-zinc-400 block mb-1">Reason</label>
+                      <label className="text-xs text-workspace-400 block mb-1">Reason</label>
                       <textarea
                         value={grantReason}
                         onChange={(e) => setGrantReason(e.target.value)}
                         placeholder="Why is this feature being granted?"
                         rows={2}
-                        className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500 resize-none"
+                        className="w-full bg-workspace-800 border border-workspace-700 rounded-lg px-3 py-2 text-sm text-white placeholder-workspace-600 focus:outline-none focus:border-indigo-500 resize-none"
                       />
                     </div>
                     <div>
-                      <label className="text-xs text-zinc-400 block mb-1">Expires At (optional)</label>
+                      <label className="text-xs text-workspace-400 block mb-1">Expires At (optional)</label>
                       <input
                         type="date"
                         value={grantExpiry}
                         onChange={(e) => setGrantExpiry(e.target.value)}
-                        className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                        className="w-full bg-workspace-800 border border-workspace-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
                       />
                     </div>
                   </div>
                   <div className="flex gap-3 mt-6">
                     <button
                       onClick={() => setShowGrantModal(false)}
-                      className="flex-1 py-2 rounded-lg border border-zinc-700 text-zinc-400 hover:text-zinc-200 transition-all text-sm"
+                      className="flex-1 py-2 rounded-lg border border-workspace-700 text-workspace-400 hover:text-workspace-200 transition-all text-sm"
                     >
                       Cancel
                     </button>
@@ -681,31 +681,31 @@ export default function TenantDetailPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between mb-2">
               <h2 className="font-semibold text-foreground">Invoice History</h2>
-              <span className="text-sm text-zinc-500">{invoices.length} invoice{invoices.length !== 1 ? "s" : ""}</span>
+              <span className="text-sm text-workspace-500">{invoices.length} invoice{invoices.length !== 1 ? "s" : ""}</span>
             </div>
 
             {invoices.length > 0 ? (
-              <div className="rounded-xl border border-zinc-800 overflow-hidden">
+              <div className="rounded-xl border border-workspace-800 overflow-hidden">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-zinc-800 bg-zinc-900/80">
-                      <th className="text-left px-4 py-3 text-xs text-zinc-500 font-semibold uppercase tracking-wider">Invoice</th>
-                      <th className="text-left px-4 py-3 text-xs text-zinc-500 font-semibold uppercase tracking-wider">Plan</th>
-                      <th className="text-left px-4 py-3 text-xs text-zinc-500 font-semibold uppercase tracking-wider">Period</th>
-                      <th className="text-right px-4 py-3 text-xs text-zinc-500 font-semibold uppercase tracking-wider">Amount</th>
-                      <th className="text-center px-4 py-3 text-xs text-zinc-500 font-semibold uppercase tracking-wider">Status</th>
+                    <tr className="border-b border-workspace-800 bg-workspace-900/80">
+                      <th className="text-left px-4 py-3 text-xs text-workspace-500 font-semibold uppercase tracking-wider">Invoice</th>
+                      <th className="text-left px-4 py-3 text-xs text-workspace-500 font-semibold uppercase tracking-wider">Plan</th>
+                      <th className="text-left px-4 py-3 text-xs text-workspace-500 font-semibold uppercase tracking-wider">Period</th>
+                      <th className="text-right px-4 py-3 text-xs text-workspace-500 font-semibold uppercase tracking-wider">Amount</th>
+                      <th className="text-center px-4 py-3 text-xs text-workspace-500 font-semibold uppercase tracking-wider">Status</th>
                       <th className="px-4 py-3"></th>
                     </tr>
                   </thead>
                   <tbody>
                     {invoices.map((inv) => (
-                      <tr key={inv.id} className="border-b border-zinc-800/50 hover:bg-zinc-800/30 transition-colors">
-                        <td className="px-4 py-3 text-zinc-400 font-mono text-xs">#{inv.id.toString().padStart(5, "0")}</td>
-                        <td className="px-4 py-3 text-zinc-300">{inv.plan_name}</td>
-                        <td className="px-4 py-3 text-zinc-400 text-xs">{fmt(inv.period_start)} – {fmt(inv.period_end)}</td>
+                      <tr key={inv.id} className="border-b border-workspace-800/50 hover:bg-workspace-800/30 transition-colors">
+                        <td className="px-4 py-3 text-workspace-400 font-mono text-xs">#{inv.id.toString().padStart(5, "0")}</td>
+                        <td className="px-4 py-3 text-workspace-300">{inv.plan_name}</td>
+                        <td className="px-4 py-3 text-workspace-400 text-xs">{fmt(inv.period_start)} – {fmt(inv.period_end)}</td>
                         <td className="px-4 py-3 text-right font-semibold text-foreground">Rs. {Number(inv.amount).toLocaleString()}</td>
                         <td className="px-4 py-3 text-center">
-                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${INVOICE_BADGE[inv.status] ?? "bg-zinc-700"}`}>
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${INVOICE_BADGE[inv.status] ?? "bg-workspace-700"}`}>
                             {inv.status}
                           </span>
                         </td>
@@ -726,7 +726,7 @@ export default function TenantDetailPage() {
                 </table>
               </div>
             ) : (
-              <div className="text-center py-12 text-zinc-600 rounded-xl border border-zinc-800">
+              <div className="text-center py-12 text-workspace-600 rounded-xl border border-workspace-800">
                 <ReceiptText size={32} className="mx-auto mb-2 opacity-40" />
                 <p>No invoices found for this tenant.</p>
               </div>
@@ -742,7 +742,7 @@ export default function TenantDetailPage() {
                 <Layers size={16} className="text-indigo-400" />
                 Module Subscriptions
               </h2>
-              <span className="text-sm text-zinc-500">{moduleSubs.length} active</span>
+              <span className="text-sm text-workspace-500">{moduleSubs.length} active</span>
             </div>
 
             {moduleSubs.length > 0 ? (
@@ -759,13 +759,13 @@ export default function TenantDetailPage() {
                       className={`rounded-xl border p-5 transition-all ${
                         isActive
                           ? "bg-emerald-900/10 border-emerald-700/30"
-                          : "bg-zinc-900/30 border-zinc-800"
+                          : "bg-workspace-900/30 border-workspace-800"
                       }`}
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <p className="font-semibold text-foreground">{addon?.name || sub.module_name}</p>
-                          <p className="text-[10px] font-mono text-zinc-500 mt-0.5">{sub.module_key}</p>
+                          <p className="text-[10px] font-mono text-workspace-500 mt-0.5">{sub.module_key}</p>
                         </div>
                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                           isActive
@@ -776,23 +776,23 @@ export default function TenantDetailPage() {
                         </span>
                       </div>
 
-                      <div className="space-y-1.5 mb-4 text-xs text-zinc-500">
+                      <div className="space-y-1.5 mb-4 text-xs text-workspace-500">
                         <div className="flex justify-between">
                           <span>Billing</span>
-                          <span className="text-zinc-300 capitalize">{sub.billing_cycle}</span>
+                          <span className="text-workspace-300 capitalize">{sub.billing_cycle}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Price at activation</span>
-                          <span className="text-zinc-300">Rs. {Number(sub.price_at_activation).toLocaleString()}</span>
+                          <span className="text-workspace-300">Rs. {Number(sub.price_at_activation).toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Activated</span>
-                          <span className="text-zinc-300">{fmt(sub.activated_at)}</span>
+                          <span className="text-workspace-300">{fmt(sub.activated_at)}</span>
                         </div>
                         {sub.next_billing_date && (
                           <div className="flex justify-between">
                             <span>Next billing</span>
-                            <span className="text-zinc-300">{fmt(sub.next_billing_date)}</span>
+                            <span className="text-workspace-300">{fmt(sub.next_billing_date)}</span>
                           </div>
                         )}
                         {sub.cancelled_at && (
@@ -830,7 +830,7 @@ export default function TenantDetailPage() {
                 })}
               </div>
             ) : (
-              <div className="text-center py-12 text-zinc-600 rounded-xl border border-zinc-800">
+              <div className="text-center py-12 text-workspace-600 rounded-xl border border-workspace-800">
                 <Layers size={32} className="mx-auto mb-2 opacity-40" />
                 <p>No module subscriptions yet.</p>
                 <p className="text-xs mt-1">Activate modules via the Features tab or the tenant's own settings.</p>
@@ -839,8 +839,8 @@ export default function TenantDetailPage() {
 
             {/* Catalog quick reference */}
             {addonCatalog.length > 0 && (
-              <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-5">
-                <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Available Modules (Catalog)</h3>
+              <div className="rounded-xl border border-workspace-800 bg-workspace-900/30 p-5">
+                <h3 className="text-xs font-semibold text-workspace-500 uppercase tracking-wider mb-3">Available Modules (Catalog)</h3>
                 <div className="flex flex-wrap gap-2">
                   {addonCatalog.filter((m) => m.is_active).map((mod) => {
                     const isActive = moduleSubs.some((s) => s.module_key === mod.key && s.status === "active");
@@ -850,7 +850,7 @@ export default function TenantDetailPage() {
                         className={`text-xs px-2 py-0.5 rounded-full border ${
                           isActive
                             ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-                            : "border-zinc-700 text-zinc-500"
+                            : "border-workspace-700 text-workspace-500"
                         }`}
                       >
                         {mod.name}
@@ -866,8 +866,8 @@ export default function TenantDetailPage() {
         {/* SUPPORT */}
         {activeTab === "support" && (
           <div className="max-w-2xl space-y-6">
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 space-y-4">
-              <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider">Support Actions</h2>
+            <div className="rounded-xl border border-workspace-800 bg-workspace-900/50 p-6 space-y-4">
+              <h2 className="text-sm font-semibold text-workspace-400 uppercase tracking-wider">Support Actions</h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
@@ -878,7 +878,7 @@ export default function TenantDetailPage() {
                   <ExternalLink className="text-violet-400 group-hover:scale-110 transition-transform" size={18} />
                   <div>
                     <p className="text-sm font-medium text-violet-300">Impersonate Tenant</p>
-                    <p className="text-xs text-zinc-500 mt-0.5">Log in as this hotel's account</p>
+                    <p className="text-xs text-workspace-500 mt-0.5">Log in as this hotel's account</p>
                   </div>
                 </button>
 
@@ -898,15 +898,15 @@ export default function TenantDetailPage() {
                     <p className={`text-sm font-medium ${tenant.is_active ? "text-red-300" : "text-emerald-300"}`}>
                       {tenant.is_active ? "Suspend Account" : "Reactivate Account"}
                     </p>
-                    <p className="text-xs text-zinc-500 mt-0.5">
+                    <p className="text-xs text-workspace-500 mt-0.5">
                       {tenant.is_active ? "Block all access to this tenant" : "Restore access for this tenant"}
                     </p>
                   </div>
                 </button>
               </div>
 
-              <div className="border-t border-zinc-800 pt-4">
-                <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Account Timeline</h3>
+              <div className="border-t border-workspace-800 pt-4">
+                <h3 className="text-xs font-semibold text-workspace-500 uppercase tracking-wider mb-3">Account Timeline</h3>
                 <div className="space-y-2">
                   {[
                     { label: "Account Created", value: fmt(tenant.created_on) },
@@ -916,8 +916,8 @@ export default function TenantDetailPage() {
                     ...(subscription?.cancelled_at ? [{ label: "Cancelled At", value: fmt(subscription.cancelled_at) }] : []),
                   ].map(({ label, value }) => (
                     <div key={label} className="flex justify-between text-sm">
-                      <span className="text-zinc-500">{label}</span>
-                      <span className="text-zinc-300 font-medium">{value}</span>
+                      <span className="text-workspace-500">{label}</span>
+                      <span className="text-workspace-300 font-medium">{value}</span>
                     </div>
                   ))}
                 </div>
@@ -929,7 +929,7 @@ export default function TenantDetailPage() {
                 <AlertTriangle className="text-amber-400 flex-shrink-0 mt-0.5" size={16} />
                 <div className="text-sm">
                   <p className="font-medium text-amber-300">Impersonation Warning</p>
-                  <p className="text-zinc-400 mt-1 text-xs">
+                  <p className="text-workspace-400 mt-1 text-xs">
                     All impersonation sessions are logged with timestamps and recorded in the audit trail.
                     Use responsibly and only when required for support.
                   </p>

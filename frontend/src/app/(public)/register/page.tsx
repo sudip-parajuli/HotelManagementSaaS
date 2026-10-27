@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeToggle } from "@/components/theme/ThemeProvider";
 import React, { useEffect, useMemo, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { 
@@ -233,21 +234,21 @@ function RegisterForm() {
   // ─── Progress screen ───
   if (submitting) {
     return (
-      <div className="bg-slate-900/40 backdrop-blur-md border border-cyan-500/25 p-8 rounded-2xl shadow-2xl text-center space-y-6 max-w-md mx-auto animate-in zoom-in duration-300">
+      <div className="bg-workspace-900/40 backdrop-blur-md border border-brand-500/25 p-8 rounded-2xl shadow-2xl text-center space-y-6 max-w-md mx-auto animate-in zoom-in duration-300">
         <div className="flex justify-center">
           <div className="relative flex items-center justify-center">
-            <div className="h-16 w-16 border-4 border-t-cyan-500 border-r-cyan-500 border-slate-900 rounded-full animate-spin" />
-            <Database className="h-6 w-6 text-cyan-400 absolute" />
+            <div className="h-16 w-16 border-4 border-t-cyan-500 border-r-cyan-500 border-workspace-900 rounded-full animate-spin" />
+            <Database className="h-6 w-6 text-brand-400 absolute" />
           </div>
         </div>
         <div className="space-y-2">
-          <h3 className="text-lg font-bold text-white tracking-tight">Compiling Your Workspace...</h3>
-          <p className="text-slate-400 text-xs leading-relaxed min-h-[32px] transition-all duration-300">{progressSteps[currentProgress]}</p>
+          <h3 className="text-lg font-bold text-foreground tracking-tight">Compiling Your Workspace...</h3>
+          <p className="text-workspace-400 text-xs leading-relaxed min-h-[32px] transition-all duration-300">{progressSteps[currentProgress]}</p>
         </div>
-        <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-          <div className="bg-gradient-to-r from-cyan-500 to-blue-500 h-1.5 rounded-full transition-all duration-500" style={{ width: `${((currentProgress + 1) / progressSteps.length) * 100}%` }} />
+        <div className="w-full bg-workspace-950 rounded-full h-1.5 overflow-hidden">
+          <div className="bg-gradient-to-r from-brand-500 to-brand-500 h-1.5 rounded-full transition-all duration-500" style={{ width: `${((currentProgress + 1) / progressSteps.length) * 100}%` }} />
         </div>
-        <p className="text-[10px] text-slate-500">Setting up your isolated environment...</p>
+        <p className="text-[10px] text-workspace-500">Setting up your isolated environment...</p>
       </div>
     );
   }
@@ -256,12 +257,12 @@ function RegisterForm() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <Link href="/" className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-200 transition-all">
+      <Link href="/" className="inline-flex items-center gap-2 text-xs font-semibold text-workspace-500 hover:text-workspace-200 transition-all">
         <ArrowLeft className="h-4 w-4" /> Back to Landing Page
       </Link>
 
-      <div className="bg-slate-900/30 backdrop-blur-md border border-slate-900 p-8 rounded-2xl shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 h-40 w-40 bg-gradient-to-br from-cyan-500/5 to-transparent blur-3xl rounded-full" />
+      <div className="bg-workspace-900/30 backdrop-blur-md border border-workspace-900 p-8 rounded-2xl shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 h-40 w-40 bg-gradient-to-br from-brand-500/5 to-transparent blur-3xl rounded-full" />
 
         {/* Steps indicator */}
         <div className="flex items-center justify-center gap-2 mb-6">
@@ -269,11 +270,11 @@ function RegisterForm() {
             <React.Fragment key={s}>
               <div className={cn(
                 "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold transition-colors",
-                step === s ? "bg-cyan-500/20 text-cyan-400" : ["account", "modules", "confirm"].indexOf(step) > i ? "bg-emerald-500/20 text-emerald-400" : "text-slate-600"
+                step === s ? "bg-brand-500/20 text-brand-400" : ["account", "modules", "confirm"].indexOf(step) > i ? "bg-emerald-500/20 text-emerald-400" : "text-workspace-600"
               )}>
                 <div className={cn(
                   "h-4 w-4 rounded-full flex items-center justify-center text-[8px] font-bold",
-                  step === s ? "bg-cyan-500 text-white" : ["account", "modules", "confirm"].indexOf(step) > i ? "bg-emerald-500 text-white" : "bg-slate-800 text-slate-500"
+                  step === s ? "bg-brand-500 text-white" : ["account", "modules", "confirm"].indexOf(step) > i ? "bg-emerald-500 text-white" : "bg-workspace-800 text-workspace-500"
                 )}>
                   {["account", "modules", "confirm"].indexOf(step) > i ? <Check className="h-2.5 w-2.5" /> : i + 1}
                 </div>
@@ -281,7 +282,7 @@ function RegisterForm() {
                   {s === "account" ? "Account" : s === "modules" ? "Modules" : "Confirm"}
                 </span>
               </div>
-              {i < 2 && <div className="h-px w-6 bg-slate-800" />}
+              {i < 2 && <div className="h-px w-6 bg-workspace-800" />}
             </React.Fragment>
           ))}
         </div>
@@ -293,76 +294,76 @@ function RegisterForm() {
         {/* ──────── Step 1: Account Info ──────── */}
         {step === "account" && (
           <div>
-            <div className="border-b border-slate-900 pb-5 mb-6">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-cyan-400" /> {biz.title}
+            <div className="border-b border-workspace-900 pb-5 mb-6">
+              <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-brand-400" /> {biz.title}
               </h2>
-              <p className="text-slate-400 text-xs mt-1">First, tell us about your business.</p>
+              <p className="text-workspace-400 text-xs mt-1">First, tell us about your business.</p>
             </div>
 
-            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-cyan-500/5 border border-cyan-500/10 text-cyan-400 text-xs font-semibold mb-5">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-500/5 border border-brand-500/10 text-brand-400 text-xs font-semibold mb-5">
               {biz.icon} {biz.name}
             </div>
 
             <div className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">{biz.nameLabel} *</label>
+                <label className="text-xs font-bold text-workspace-400 uppercase tracking-wider">{biz.nameLabel} *</label>
                 <input type="text" required placeholder={biz.namePlaceholder} value={name} onChange={(e) => handleNameChange(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/50 rounded-xl px-4 py-2.5 text-sm text-white outline-none placeholder-slate-600 transition-all" />
+                  className="w-full bg-workspace-950 border border-workspace-800 focus:border-brand-500/50 rounded-xl px-4 py-2.5 text-sm text-white outline-none placeholder-workspace-600 transition-all" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <Database className="h-3.5 w-3.5 text-cyan-400" /> Schema Name
+                  <label className="text-xs font-bold text-workspace-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <Database className="h-3.5 w-3.5 text-brand-400" /> Schema Name
                   </label>
                   <input type="text" required pattern="^[a-z][a-z0-9_]{2,62}$" title="Lowercase letters, numbers, underscores (3-63 chars)"
                     placeholder="e.g. my_business" value={schemaName}
                     onChange={(e) => setSchemaName(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/50 rounded-xl px-4 py-2.5 text-sm font-mono text-cyan-400 outline-none placeholder-slate-700 transition-all" />
+                    className="w-full bg-workspace-950 border border-workspace-800 focus:border-brand-500/50 rounded-xl px-4 py-2.5 text-sm font-mono text-brand-400 outline-none placeholder-workspace-700 transition-all" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <Globe className="h-3.5 w-3.5 text-cyan-400" /> Subdomain Prefix
+                  <label className="text-xs font-bold text-workspace-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <Globe className="h-3.5 w-3.5 text-brand-400" /> Subdomain Prefix
                   </label>
                   <div className="relative flex items-center">
                     <input type="text" required placeholder="e.g. mybusiness" value={subdomain}
                       onChange={(e) => setSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ""))}
-                      className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/50 rounded-xl pl-4 pr-24 py-2.5 text-sm font-mono outline-none placeholder-slate-700 transition-all text-slate-200" />
-                    <span className="absolute right-3 text-[10px] font-mono text-slate-500">.localhost</span>
+                      className="w-full bg-workspace-950 border border-workspace-800 focus:border-brand-500/50 rounded-xl pl-4 pr-24 py-2.5 text-sm font-mono outline-none placeholder-workspace-700 transition-all text-workspace-200" />
+                    <span className="absolute right-3 text-[10px] font-mono text-workspace-500">.localhost</span>
                   </div>
                 </div>
               </div>
 
-              <div className="border-t border-slate-900 pt-4 space-y-4">
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-cyan-400" /> Administrator Credentials
+              <div className="border-t border-workspace-900 pt-4 space-y-4">
+                <h3 className="text-xs font-bold text-workspace-400 uppercase tracking-wider flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-brand-400" /> Administrator Credentials
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5"><User className="h-3.5 w-3.5" /> Admin Email *</label>
+                    <label className="text-xs font-bold text-workspace-400 uppercase tracking-wider flex items-center gap-1.5"><User className="h-3.5 w-3.5" /> Admin Email *</label>
                     <input type="email" required placeholder="e.g. manager@business.com" value={adminEmail}
                       onChange={(e) => setAdminEmail(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/50 rounded-xl px-4 py-2.5 text-sm text-white outline-none placeholder-slate-600 transition-all" />
+                      className="w-full bg-workspace-950 border border-workspace-800 focus:border-brand-500/50 rounded-xl px-4 py-2.5 text-sm text-white outline-none placeholder-workspace-600 transition-all" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Password *</label>
+                    <label className="text-xs font-bold text-workspace-400 uppercase tracking-wider">Password *</label>
                     <input type="password" required placeholder="SecurePassword123!" value={adminPassword}
                       onChange={(e) => setAdminPassword(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/50 rounded-xl px-4 py-2.5 text-sm text-white outline-none placeholder-slate-600 transition-all" />
+                      className="w-full bg-workspace-950 border border-workspace-800 focus:border-brand-500/50 rounded-xl px-4 py-2.5 text-sm text-white outline-none placeholder-workspace-600 transition-all" />
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5"><Smartphone className="h-3.5 w-3.5" /> Contact Phone</label>
+                  <label className="text-xs font-bold text-workspace-400 uppercase tracking-wider flex items-center gap-1.5"><Smartphone className="h-3.5 w-3.5" /> Contact Phone</label>
                   <input type="text" placeholder="+977-9800000000" value={contactPhone}
                     onChange={(e) => setContactPhone(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/50 rounded-xl px-4 py-2.5 text-sm text-white outline-none placeholder-slate-600 transition-all" />
+                    className="w-full bg-workspace-950 border border-workspace-800 focus:border-brand-500/50 rounded-xl px-4 py-2.5 text-sm text-white outline-none placeholder-workspace-600 transition-all" />
                 </div>
               </div>
             </div>
 
             <button onClick={() => setStep("modules")}
-              className="w-full mt-6 flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-sm py-3 rounded-xl transition-all shadow-lg shadow-cyan-500/20">
+              className="w-full mt-6 flex items-center justify-center gap-2 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-sm py-3 rounded-xl transition-all shadow-lg shadow-brand-500/20">
               Next: Select Modules <ChevronRight className="h-4 w-4" />
             </button>
           </div>
@@ -371,28 +372,28 @@ function RegisterForm() {
         {/* ──────── Step 2: Module Selection ──────── */}
         {step === "modules" && (
           <div>
-            <button onClick={() => setStep("account")} className="flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-4 transition-colors">
+            <button onClick={() => setStep("account")} className="flex items-center gap-1 text-sm text-workspace-400 hover:text-white mb-4 transition-colors">
               <ArrowLeft className="h-3.5 w-3.5" /> Back
             </button>
-            <div className="border-b border-slate-900 pb-4 mb-5">
-              <h2 className="text-lg font-bold text-white">Choose Your Modules</h2>
-              <p className="text-slate-400 text-xs mt-1">Recommended modules for {biz.name} are pre-selected. Toggle any you want.</p>
+            <div className="border-b border-workspace-900 pb-4 mb-5">
+              <h2 className="text-lg font-bold text-foreground">Choose Your Modules</h2>
+              <p className="text-workspace-400 text-xs mt-1">Recommended modules for {biz.name} are pre-selected. Toggle any you want.</p>
             </div>
 
             {/* Core modules (always on) */}
             <div className="mb-5">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Always Included (Core)</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-workspace-500 mb-2">Always Included (Core)</h3>
               <div className="space-y-2">
                 {MODULES.filter((m) => m.core).map((mod) => (
-                  <div key={mod.key} className="bg-slate-900/60 border border-slate-800 rounded-xl px-4 py-3 flex items-center gap-3 opacity-70">
+                  <div key={mod.key} className="bg-workspace-900/60 border border-workspace-800 rounded-xl px-4 py-3 flex items-center gap-3 opacity-70">
                     <div className="h-7 w-7 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
                       <Check className="h-3.5 w-3.5 text-emerald-400" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-white">{mod.name}</div>
-                      <div className="text-[11px] text-slate-500 truncate">{mod.desc}</div>
+                      <div className="text-sm font-medium text-foreground">{mod.name}</div>
+                      <div className="text-[11px] text-workspace-500 truncate">{mod.desc}</div>
                     </div>
-                    <span className="text-xs text-slate-500 font-medium whitespace-nowrap">NPR {mod.price}/mo</span>
+                    <span className="text-xs text-workspace-500 font-medium whitespace-nowrap">NPR {mod.price}/mo</span>
                   </div>
                 ))}
               </div>
@@ -401,7 +402,7 @@ function RegisterForm() {
             {/* Recommended modules */}
             {recommended.size > 0 && (
               <div className="mb-5">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Recommended for {biz.name}</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-workspace-500 mb-2">Recommended for {biz.name}</h3>
                 <div className="space-y-2">
                   {MODULES.filter((m) => !m.core && recommended.has(m.key)).map((mod) => (
                     <ModuleToggle key={mod.key} mod={mod} selected={selectedModules.has(mod.key)} onToggle={() => toggleModule(mod.key)} />
@@ -412,7 +413,7 @@ function RegisterForm() {
 
             {/* Other modules */}
             <div className="mb-5">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Additional Modules</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-workspace-500 mb-2">Additional Modules</h3>
               <div className="space-y-2">
                 {MODULES.filter((m) => !m.core && !recommended.has(m.key)).map((mod) => (
                   <ModuleToggle key={mod.key} mod={mod} selected={selectedModules.has(mod.key)} onToggle={() => toggleModule(mod.key)} />
@@ -421,16 +422,16 @@ function RegisterForm() {
             </div>
 
             {/* Pricing summary + continue */}
-            <div className="mt-6 p-4 rounded-xl bg-slate-900 border border-slate-800">
+            <div className="mt-6 p-4 rounded-xl bg-workspace-900 border border-workspace-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-xs text-slate-400">{selectedModules.size} module{selectedModules.size !== 1 ? "s" : ""} selected</div>
+                  <div className="text-xs text-workspace-400">{selectedModules.size} module{selectedModules.size !== 1 ? "s" : ""} selected</div>
                   <div className="text-xl font-bold text-white">
-                    NPR {totalMonthly.toLocaleString("en-IN", { maximumFractionDigits: 0 })}<span className="text-xs text-slate-500 font-normal">/mo</span>
+                    NPR {totalMonthly.toLocaleString("en-IN", { maximumFractionDigits: 0 })}<span className="text-xs text-workspace-500 font-normal">/mo</span>
                   </div>
                 </div>
                 <button onClick={() => setStep("confirm")}
-                  className="flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all">
+                  className="flex items-center gap-1.5 bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all">
                   Review <ChevronRight className="h-3.5 w-3.5" />
                 </button>
               </div>
@@ -441,61 +442,61 @@ function RegisterForm() {
         {/* ──────── Step 3: Confirm ──────── */}
         {step === "confirm" && (
           <div>
-            <button onClick={() => setStep("modules")} className="flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-4 transition-colors">
+            <button onClick={() => setStep("modules")} className="flex items-center gap-1 text-sm text-workspace-400 hover:text-white mb-4 transition-colors">
               <ArrowLeft className="h-3.5 w-3.5" /> Back
             </button>
-            <div className="border-b border-slate-900 pb-4 mb-5">
-              <h2 className="text-lg font-bold text-white">Review & Confirm</h2>
-              <p className="text-slate-400 text-xs mt-1">Choose your billing cycle and confirm.</p>
+            <div className="border-b border-workspace-900 pb-4 mb-5">
+              <h2 className="text-lg font-bold text-foreground">Review & Confirm</h2>
+              <p className="text-workspace-400 text-xs mt-1">Choose your billing cycle and confirm.</p>
             </div>
 
             {/* Billing cycle */}
             <div className="flex gap-3 mb-5">
               <button onClick={() => setBillingCycle("monthly")} className={cn(
                 "flex-1 p-4 rounded-xl border text-center transition-all",
-                billingCycle === "monthly" ? "border-cyan-500 bg-cyan-500/10" : "border-slate-800 bg-slate-900 hover:border-slate-700"
+                billingCycle === "monthly" ? "border-brand-500 bg-brand-500/10" : "border-workspace-800 bg-workspace-900 hover:border-workspace-700"
               )}>
-                <CreditCard className="h-5 w-5 mx-auto mb-1 text-cyan-400" />
+                <CreditCard className="h-5 w-5 mx-auto mb-1 text-brand-400" />
                 <div className="font-semibold text-sm">Monthly</div>
-                <div className="text-xs text-slate-400">NPR {totalMonthly.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo</div>
+                <div className="text-xs text-workspace-400">NPR {totalMonthly.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo</div>
               </button>
               <button onClick={() => setBillingCycle("yearly")} className={cn(
                 "flex-1 p-4 rounded-xl border text-center transition-all relative",
-                billingCycle === "yearly" ? "border-cyan-500 bg-cyan-500/10" : "border-slate-800 bg-slate-900 hover:border-slate-700"
+                billingCycle === "yearly" ? "border-brand-500 bg-brand-500/10" : "border-workspace-800 bg-workspace-900 hover:border-workspace-700"
               )}>
                 {yearlySavings > 0 && (
                   <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-emerald-500 text-[10px] text-white font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
                     Save NPR {(yearlySavings / 1000).toFixed(0)}K
                   </div>
                 )}
-                <ShoppingCart className="h-5 w-5 mx-auto mb-1 text-cyan-400" />
+                <ShoppingCart className="h-5 w-5 mx-auto mb-1 text-brand-400" />
                 <div className="font-semibold text-sm">Yearly</div>
-                <div className="text-xs text-slate-400">NPR {totalYearly.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/yr</div>
+                <div className="text-xs text-workspace-400">NPR {totalYearly.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/yr</div>
                 <div className="text-[10px] text-emerald-400">({Math.round((1 - totalYearly / (totalMonthly * 12)) * 100)}% off)</div>
               </button>
             </div>
 
             {/* Selected modules summary */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 mb-5">
-              <h3 className="font-semibold text-sm mb-3 text-white">{selectedModules.size} module{selectedModules.size !== 1 ? "s" : ""}</h3>
+            <div className="bg-workspace-900 border border-workspace-800 rounded-xl p-4 mb-5">
+              <h3 className="font-semibold text-sm mb-3 text-foreground">{selectedModules.size} module{selectedModules.size !== 1 ? "s" : ""}</h3>
               <div className="space-y-2">
                 {MODULES.filter((m) => selectedModules.has(m.key)).map((mod) => {
                   const price = billingCycle === "yearly" ? mod.price * 10 / 12 : mod.price;
                   return (
                     <div key={mod.key} className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-2">
-                        <span className={cn("h-1.5 w-1.5 rounded-full", mod.core ? "bg-emerald-400" : "bg-cyan-400")} />
-                        <span className="text-slate-200">{mod.name}</span>
+                        <span className={cn("h-1.5 w-1.5 rounded-full", mod.core ? "bg-emerald-400" : "bg-brand-400")} />
+                        <span className="text-workspace-200">{mod.name}</span>
                         {mod.core && <span className="text-[10px] text-emerald-400 font-medium">Core</span>}
                       </div>
-                      <span className="text-slate-400">NPR {price.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo</span>
+                      <span className="text-workspace-400">NPR {price.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo</span>
                     </div>
                   );
                 })}
               </div>
-              <div className="border-t border-slate-800 mt-3 pt-3 flex items-center justify-between font-semibold">
-                <span className="text-white">Total</span>
-                <span className="text-white">
+              <div className="border-t border-workspace-800 mt-3 pt-3 flex items-center justify-between font-semibold">
+                <span className="text-foreground">Total</span>
+                <span className="text-foreground">
                   {billingCycle === "monthly"
                     ? `NPR ${totalMonthly.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo`
                     : `NPR ${(totalYearly / 12).toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo (billed yearly)`}
@@ -504,10 +505,10 @@ function RegisterForm() {
             </div>
 
             <button onClick={handleSubmit}
-              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-sm py-3 rounded-xl transition-all shadow-lg shadow-cyan-500/20">
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-sm py-3 rounded-xl transition-all shadow-lg shadow-brand-500/20">
               <Sparkles className="h-4 w-4" /> Create {biz.name} Workspace
             </button>
-            <p className="text-[10px] text-slate-500 text-center mt-2">14-day free trial. No payment required.</p>
+            <p className="text-[10px] text-workspace-500 text-center mt-2">14-day free trial. No payment required.</p>
           </div>
         )}
       </div>
@@ -519,33 +520,34 @@ function ModuleToggle({ mod, selected, onToggle }: { mod: typeof MODULES[0]; sel
   return (
     <div onClick={onToggle} className={cn(
       "flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all",
-      selected ? "border-cyan-500/40 bg-cyan-500/5" : "border-slate-800 bg-slate-900/40 hover:border-slate-700"
+      selected ? "border-brand-500/40 bg-brand-500/5" : "border-workspace-800 bg-workspace-900/40 hover:border-workspace-700"
     )}>
       <div className={cn(
         "h-5 w-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors",
-        selected ? "bg-cyan-500 border-cyan-500" : "border-slate-600"
+        selected ? "bg-brand-500 border-brand-500" : "border-workspace-600"
       )}>
         {selected && <Check className="h-3 w-3 text-white" />}
       </div>
-      <div className="h-7 w-7 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0">
-        {MODULE_ICONS[mod.key] ?? <Package className="h-4 w-4 text-slate-400" />}
+      <div className="h-7 w-7 rounded-lg bg-workspace-800 flex items-center justify-center flex-shrink-0">
+        {MODULE_ICONS[mod.key] ?? <Package className="h-4 w-4 text-workspace-400" />}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-medium text-white">{mod.name}</div>
-        <div className="text-[11px] text-slate-500 truncate">{mod.desc}</div>
+        <div className="text-sm font-medium text-foreground">{mod.name}</div>
+        <div className="text-[11px] text-workspace-500 truncate">{mod.desc}</div>
       </div>
-      <span className="text-xs text-slate-400 font-medium whitespace-nowrap">NPR {mod.price}/mo</span>
+      <span className="text-xs text-workspace-400 font-medium whitespace-nowrap">NPR {mod.price}/mo</span>
     </div>
   );
 }
 
 export default function RegisterTenant() {
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-100 py-12 px-6">
+    <div className="min-h-screen bg-background text-workspace-100 py-12 px-6">
+      <div className="fixed right-5 top-5 z-50"><ThemeToggle /></div>
       <Suspense fallback={
         <div className="min-h-[50vh] flex flex-col items-center justify-center space-y-4">
-          <Loader2 className="h-10 w-10 animate-spin text-cyan-400" />
-          <p className="text-slate-400 text-xs font-medium">Loading...</p>
+          <Loader2 className="h-10 w-10 animate-spin text-brand-400" />
+          <p className="text-workspace-400 text-xs font-medium">Loading...</p>
         </div>
       }>
         <RegisterForm />

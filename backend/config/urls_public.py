@@ -7,7 +7,12 @@ from django.contrib import admin
 from django.urls import path, include
 from apps.subscriptions.public_views import PublicTenantOnboardView
 
+from apps.tenants.storage import private_media
+from apps.tenants.operations import events
+
 urlpatterns = [
+    path("api/operations/events/", events, name="workspace-events"),
+    path("api/media/private/", private_media, name="private-media"),
     path("admin/", admin.site.urls),
     # Super admin API endpoints (SIA internal)
     path("api/admin/", include("apps.subscriptions.urls")),

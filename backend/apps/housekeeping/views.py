@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.db import transaction
 from django.utils import timezone
 from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
+from apps.tenants.realtime import get_channel_layer
 
 from apps.accounts.permissions import IsHousekeeping, IsPropertyManager, IsAnyStaff
 from apps.properties.models import Room, RoomStatus

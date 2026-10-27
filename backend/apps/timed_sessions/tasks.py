@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.db import transaction
 from celery import shared_task
 from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
+from apps.tenants.realtime import get_channel_layer
 
 from apps.timed_sessions.models import TimedSession, SessionStatus, SessionUnit, SessionUnitStatus
 from apps.timed_sessions.service import end_session
@@ -119,5 +119,6 @@ def auto_end_overdue_sessions():
                 )
         except Exception as e:
             logger.error(f"Failed to auto-end session {session.id}: {e}")
+            raise
 
     return ended_count

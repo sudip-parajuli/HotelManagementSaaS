@@ -50,12 +50,12 @@ const MODULE_ICONS: Record<string, React.ReactNode> = {
 };
 
 const MODULE_COLORS: Record<string, string> = {
-  universal: "#06b6d4",
-  hospitality: "#a855f7",
+  universal: "#4d8060",
+  hospitality: "#83a875",
   fnd: "#eab308",
   gaming: "#22c55e",
-  coworking: "#3b82f6",
-  wellness: "#ec4899",
+  coworking: "#73988b",
+  wellness: "#b39766",
 };
 
 export default function SuperAdminDashboard() {
@@ -186,18 +186,18 @@ export default function SuperAdminDashboard() {
               <AreaChart data={metrics.growth_data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#83a875" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#83a875" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" opacity={0.3} />
-                <XAxis dataKey="month" stroke="#64748b" fontSize={11} tickLine={false} />
-                <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.3} />
+                <XAxis dataKey="month" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} />
+                <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: "#0f172a", border: "1px solid #1e293b", borderRadius: "8px", color: "#f8fafc", fontSize: "12px" }}
+                  contentStyle={{ backgroundColor: "var(--popover)", border: "1px solid var(--border)", borderRadius: "8px", color: "var(--popover-foreground)", fontSize: "12px" }}
                   formatter={(value: any) => [`NPR ${Number(value).toLocaleString()}`, "Revenue"]}
                 />
-                <Area type="monotone" dataKey="revenue" stroke="#a855f7" strokeWidth={2} fillOpacity={1} fill="url(#colorRevenue)" />
+                <Area type="monotone" dataKey="revenue" stroke="#83a875" strokeWidth={2} fillOpacity={1} fill="url(#colorRevenue)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -212,14 +212,14 @@ export default function SuperAdminDashboard() {
           <div className="h-[260px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={topModules} layout="vertical" margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" opacity={0.3} horizontal={false} />
-                <XAxis type="number" stroke="#64748b" fontSize={10} tickLine={false} />
-                <YAxis type="category" dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} width={90} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.3} horizontal={false} />
+                <XAxis allowDecimals={false} type="number" stroke="var(--muted-foreground)" fontSize={10} tickLine={false} />
+                <YAxis type="category" dataKey="name" stroke="var(--muted-foreground)" fontSize={10} tickLine={false} width={90} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: "#0f172a", border: "1px solid #1e293b", borderRadius: "8px", color: "#f8fafc", fontSize: "11px" }}
+                  contentStyle={{ backgroundColor: "var(--popover)", border: "1px solid var(--border)", borderRadius: "8px", color: "var(--popover-foreground)", fontSize: "11px" }}
                   formatter={(value: any) => [`${value} tenants`, "Active"]}
                 />
-                <Bar dataKey="active_tenants" radius={[0, 4, 4, 0]} fill="#a855f7" />
+                <Bar dataKey="active_tenants" radius={[0, 4, 4, 0]} fill="#83a875" />
               </BarChart>
             </ResponsiveContainer>
           </div>

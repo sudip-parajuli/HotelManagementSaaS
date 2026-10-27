@@ -13,7 +13,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
+from apps.tenants.realtime import get_channel_layer
 
 from apps.subscriptions.permissions import HasFeaturePermission
 from apps.properties.models import Property

@@ -7,7 +7,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from apps.tenants.storage import private_media
+from apps.tenants.operations import events
+
 urlpatterns = [
+    path("api/operations/events/", events, name="workspace-events"),
+    path("api/media/private/", private_media, name="private-media"),
     path("admin/", admin.site.urls),
     # Auth
     path("api/auth/", include("apps.accounts.urls")),

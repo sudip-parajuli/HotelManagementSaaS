@@ -35,8 +35,10 @@ CELERY_RESULT_BACKEND = "cache+memory://"
 # only when its credentials are provided; otherwise reject writes explicitly.
 USE_MINIO = False
 STORAGES = {
-    "default": {"BACKEND": "apps.tenants.storage.UnconfiguredMediaStorage"},
+    "default": {"BACKEND": "apps.tenants.storage.PrivateBlobStorage" if config("BLOB_READ_WRITE_TOKEN", default="") else "apps.tenants.storage.UnconfiguredMediaStorage"},
     "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
 }
 MEDIA_ROOT = "/tmp/staywired-media"
 STAYWIRED_RUNTIME = "vercel"
+
+STAYWIRED_CRON_SECRET = config("STAYWIRED_CRON_SECRET", default="")

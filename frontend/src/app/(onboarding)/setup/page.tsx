@@ -159,22 +159,22 @@ export default function SetupPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
-        <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+      <div className="min-h-screen flex items-center justify-center bg-workspace-950 text-white">
+        <Loader2 className="h-8 w-8 animate-spin text-brand-400" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-workspace-950 text-workspace-100">
       <div className="max-w-4xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex h-12 w-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 items-center justify-center mb-4 shadow-lg shadow-cyan-500/20">
+          <div className="inline-flex h-12 w-12 rounded-xl bg-gradient-to-tr from-brand-500 to-brand-600 items-center justify-center mb-4 shadow-lg shadow-brand-500/20">
             <Hotel className="h-6 w-6 text-white" />
           </div>
           <h1 className="text-2xl font-bold">Welcome to Staywired</h1>
-          <p className="text-slate-400 mt-1">Let us set up your workspace in a few steps</p>
+          <p className="text-workspace-400 mt-1">Let us set up your workspace in a few steps</p>
         </div>
 
         {/* Steps indicator */}
@@ -184,16 +184,16 @@ export default function SetupPage() {
               <div className={cn(
                 "flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors",
                 step === s
-                  ? "bg-cyan-500/20 text-cyan-400"
+                  ? "bg-brand-500/20 text-brand-400"
                   : ["business-type", "modules", "billing"].indexOf(step) > i
                   ? "bg-emerald-500/20 text-emerald-400"
-                  : "text-slate-600"
+                  : "text-workspace-600"
               )}>
                 <div className={cn(
                   "h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold",
-                  step === s ? "bg-cyan-500 text-white" :
+                  step === s ? "bg-brand-500 text-white" :
                   ["business-type", "modules", "billing"].indexOf(step) > i ? "bg-emerald-500 text-white" :
-                  "bg-slate-800 text-slate-500"
+                  "bg-workspace-800 text-workspace-500"
                 )}>
                   {["business-type", "modules", "billing"].indexOf(step) > i ? <Check className="h-3 w-3" /> : i + 1}
                 </div>
@@ -203,7 +203,7 @@ export default function SetupPage() {
                   {s === "business-type" ? "Business Type" : s === "modules" ? "Modules" : "Billing"}
                 </span>
               </div>
-              {i < 2 && <div className="h-px w-8 bg-slate-800" />}
+              {i < 2 && <div className="h-px w-8 bg-workspace-800" />}
             </React.Fragment>
           ))}
         </div>
@@ -212,7 +212,7 @@ export default function SetupPage() {
         {step === "business-type" && (
           <div>
             <h2 className="text-xl font-semibold mb-2">What kind of business do you run?</h2>
-            <p className="text-slate-400 mb-6">Select your business type to get recommended modules.</p>
+            <p className="text-workspace-400 mb-6">Select your business type to get recommended modules.</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {bizTypes.map((bt) => {
                 const Icon = BUSINESS_ICONS[bt.key] || Store;
@@ -223,8 +223,8 @@ export default function SetupPage() {
                     className={cn(
                       "flex flex-col items-center gap-2 p-5 rounded-xl border transition-all text-center",
                       selectedBiz === bt.key
-                        ? "border-cyan-500 bg-cyan-500/10 text-cyan-400"
-                        : "border-slate-800 bg-slate-900 hover:border-slate-700 text-slate-300 hover:text-white"
+                        ? "border-brand-500 bg-brand-500/10 text-brand-400"
+                        : "border-workspace-800 bg-workspace-900 hover:border-workspace-700 text-workspace-300 hover:text-white"
                     )}
                   >
                     <Icon className="h-8 w-8" />
@@ -241,12 +241,12 @@ export default function SetupPage() {
           <div>
             <button
               onClick={() => setStep("business-type")}
-              className="flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-4 transition-colors"
+              className="flex items-center gap-1 text-sm text-workspace-400 hover:text-white mb-4 transition-colors"
             >
               <ArrowLeft className="h-3.5 w-3.5" /> Back
             </button>
             <h2 className="text-xl font-semibold mb-2">Choose your modules</h2>
-            <p className="text-slate-400 mb-6">
+            <p className="text-workspace-400 mb-6">
               {selectedBiz
                 ? `Recommended modules for ${businessTypes.find((b) => b.key === selectedBiz)?.name} are pre-selected.`
                 : "Select the modules you need."}
@@ -255,16 +255,16 @@ export default function SetupPage() {
             {/* Core modules (always on) */}
             {coreModules.length > 0 && (
               <div className="mb-6">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Included (always active)</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-workspace-500 mb-3">Included (always active)</h3>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {coreModules.map((mod) => (
-                    <Card key={mod.key} className="bg-slate-900 border-slate-800 p-4 flex items-center gap-3 opacity-75">
+                    <Card key={mod.key} className="bg-workspace-900 border-workspace-800 p-4 flex items-center gap-3 opacity-75">
                       <div className="h-9 w-9 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
                         <Check className="h-4 w-4 text-emerald-400" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-medium text-sm text-white">{mod.name}</div>
-                        <div className="text-xs text-slate-500 truncate">{mod.description}</div>
+                        <div className="text-xs text-workspace-500 truncate">{mod.description}</div>
                       </div>
                       <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 text-[10px] whitespace-nowrap">
                         Included
@@ -278,7 +278,7 @@ export default function SetupPage() {
             {/* Recommended modules */}
             {recommendedForSelected.size > 0 && (
               <div className="mb-6">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-workspace-500 mb-3">
                   Recommended for {businessTypes.find((b) => b.key === selectedBiz)?.name}
                 </h3>
                 <div className="grid sm:grid-cols-2 gap-3">
@@ -299,7 +299,7 @@ export default function SetupPage() {
 
             {/* More modules */}
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">More modules</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-workspace-500 mb-3">More modules</h3>
               <div className="grid sm:grid-cols-2 gap-3">
                 {nonCoreModules
                   .filter((m) => !recommendedForSelected.has(m.key))
@@ -316,11 +316,11 @@ export default function SetupPage() {
             </div>
 
             {/* Pricing summary */}
-            <div className="mt-8 p-4 rounded-xl bg-slate-900 border border-slate-800">
+            <div className="mt-8 p-4 rounded-xl bg-workspace-900 border border-workspace-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm text-slate-400">
-                    Your plan: <span className="text-white font-semibold">{activeSelectedModules.length} modules</span>
+                  <div className="text-sm text-workspace-400">
+                    Your plan: <span className="text-foreground font-semibold">{activeSelectedModules.length} modules</span>
                   </div>
                   <div className="text-lg font-bold text-white">
                     NPR {totalMonthly.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/month
@@ -346,12 +346,12 @@ export default function SetupPage() {
           <div>
             <button
               onClick={() => setStep("modules")}
-              className="flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-4 transition-colors"
+              className="flex items-center gap-1 text-sm text-workspace-400 hover:text-white mb-4 transition-colors"
             >
               <ArrowLeft className="h-3.5 w-3.5" /> Back
             </button>
             <h2 className="text-xl font-semibold mb-2">Billing &amp; confirmation</h2>
-            <p className="text-slate-400 mb-6">Choose your billing cycle and confirm your module selection.</p>
+            <p className="text-workspace-400 mb-6">Choose your billing cycle and confirm your module selection.</p>
 
             {/* Billing cycle toggle */}
             <div className="flex gap-3 mb-6">
@@ -360,13 +360,13 @@ export default function SetupPage() {
                 className={cn(
                   "flex-1 p-4 rounded-xl border text-center transition-all",
                   billingCycle === "monthly"
-                    ? "border-cyan-500 bg-cyan-500/10"
-                    : "border-slate-800 bg-slate-900 hover:border-slate-700"
+                    ? "border-brand-500 bg-brand-500/10"
+                    : "border-workspace-800 bg-workspace-900 hover:border-workspace-700"
                 )}
               >
                 <CreditCard className="h-5 w-5 mx-auto mb-1" />
                 <div className="font-semibold">Monthly</div>
-                <div className="text-sm text-slate-400">
+                <div className="text-sm text-workspace-400">
                   NPR {totalMonthly.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo
                 </div>
               </button>
@@ -375,8 +375,8 @@ export default function SetupPage() {
                 className={cn(
                   "flex-1 p-4 rounded-xl border text-center transition-all relative",
                   billingCycle === "yearly"
-                    ? "border-cyan-500 bg-cyan-500/10"
-                    : "border-slate-800 bg-slate-900 hover:border-slate-700"
+                    ? "border-brand-500 bg-brand-500/10"
+                    : "border-workspace-800 bg-workspace-900 hover:border-workspace-700"
                 )}
               >
                 {yearlySavings > 0 && (
@@ -388,7 +388,7 @@ export default function SetupPage() {
                 )}
                 <ShoppingCart className="h-5 w-5 mx-auto mb-1" />
                 <div className="font-semibold">Yearly</div>
-                <div className="text-sm text-slate-400">
+                <div className="text-sm text-workspace-400">
                   NPR {totalYearly.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/yr
                 </div>
                 <div className="text-[10px] text-emerald-400">
@@ -398,7 +398,7 @@ export default function SetupPage() {
             </div>
 
             {/* Module summary */}
-            <Card className="bg-slate-900 border-slate-800 p-4 mb-6">
+            <Card className="bg-workspace-900 border-workspace-800 p-4 mb-6">
               <h3 className="font-semibold text-sm mb-3">
                 {activeSelectedModules.length} selected module{activeSelectedModules.length !== 1 ? "s" : ""}
               </h3>
@@ -414,19 +414,19 @@ export default function SetupPage() {
                         <div className="flex items-center gap-2">
                           <span className={cn(
                             "h-1.5 w-1.5 rounded-full",
-                            mod.is_core ? "bg-emerald-400" : "bg-cyan-400"
+                            mod.is_core ? "bg-emerald-400" : "bg-brand-400"
                           )} />
                           <span>{mod.name}</span>
                           {mod.is_core && <span className="text-[10px] text-emerald-400 font-medium">Core</span>}
                         </div>
-                        <span className="text-slate-400">
+                        <span className="text-workspace-400">
                           {price > 0 ? `NPR ${price.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo` : "Free"}
                         </span>
                       </div>
                     );
                   })}
               </div>
-              <div className="border-t border-slate-800 mt-3 pt-3 flex items-center justify-between font-semibold">
+              <div className="border-t border-workspace-800 mt-3 pt-3 flex items-center justify-between font-semibold">
                 <span>Total</span>
                 <span>
                   {billingCycle === "monthly"
@@ -448,7 +448,7 @@ export default function SetupPage() {
                 <><Sparkles className="h-4 w-4 mr-2" /> Start 14-day free trial</>
               )}
             </Button>
-            <p className="text-xs text-slate-500 text-center mt-3">
+            <p className="text-xs text-workspace-500 text-center mt-3">
               No payment required for 14 days. You can change modules anytime.
             </p>
           </div>
@@ -480,26 +480,26 @@ function ModuleCard({
       className={cn(
         "p-4 border transition-all cursor-pointer",
         selected
-          ? "border-cyan-500 bg-cyan-500/10"
-          : "border-slate-800 bg-slate-900 hover:border-slate-700"
+          ? "border-brand-500 bg-brand-500/10"
+          : "border-workspace-800 bg-workspace-900 hover:border-workspace-700"
       )}
       onClick={depsSatisfied ? onToggle : undefined}
     >
       <div className="flex items-start gap-3">
         <div className={cn(
           "h-5 w-5 rounded border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors",
-          selected ? "bg-cyan-500 border-cyan-500" : "border-slate-600",
+          selected ? "bg-brand-500 border-brand-500" : "border-workspace-600",
           !depsSatisfied && "opacity-40"
         )}>
           {selected && <Check className="h-3 w-3 text-white" />}
         </div>
         <div className="flex-1 min-w-0">
           <div className={cn("font-medium text-sm", !depsSatisfied && "opacity-40")}>{mod.name}</div>
-          <div className={cn("text-xs text-slate-500 line-clamp-1", !depsSatisfied && "opacity-40")}>
+          <div className={cn("text-xs text-workspace-500 line-clamp-1", !depsSatisfied && "opacity-40")}>
             {mod.description}
           </div>
           {price > 0 ? (
-            <div className="text-xs text-slate-400 mt-1">
+            <div className="text-xs text-workspace-400 mt-1">
               NPR {price.toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo
               {mod.price_yearly && `  |  NPR ${parseFloat(mod.price_yearly).toLocaleString("en-IN", { maximumFractionDigits: 0 })}/yr`}
             </div>

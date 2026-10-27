@@ -49,3 +49,8 @@ Verified the existing free-tier Hotel Management System project in sudipparajuli
 The visual owner-dashboard check exposed catalog-based MRR estimates that incorrectly counted free demo module access as revenue. Module MRR now uses actual contracted prices and normalizes yearly amounts to months; zero-price demo access contributes zero MRR. The trial plan record marks the sample hotel active without charging it.
 
 The cloud UI verification also caught duplicated `/api/api` prefixes in the module and timed-session API clients. Both now use paths relative to the shared API base; a real Axios URL-composition regression test passes. The frontend suite now contains 13 passing tests.
+
+
+## Cloud services update
+
+Private media, tenant-scoped live polling and scheduled maintenance are now implemented. See [Cloud operations](CLOUD_OPERATIONS.md) for the current configuration, limits, verification and recovery steps. The shared visual system and persistent light/dark themes are documented in [Design](DESIGN.md). Earlier notes about unconfigured durable media and process-local cloud updates are superseded by these documents.

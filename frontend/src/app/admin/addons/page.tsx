@@ -119,16 +119,16 @@ export default function AddonMarketplacePage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-workspace-900/50 border border-workspace-800 p-6 rounded-2xl">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <ShoppingBag className="text-indigo-400" size={22} />
             Module Catalog
           </h1>
-          <p className="text-zinc-500 text-sm mt-1">Manage the module catalog, pricing, and dependencies.</p>
+          <p className="text-workspace-500 text-sm mt-1">Manage the module catalog, pricing, and dependencies.</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={loadAll} className="p-2 rounded-lg border border-zinc-700 text-zinc-400 hover:text-white transition-all">
+          <button onClick={loadAll} className="p-2 rounded-lg border border-workspace-700 text-workspace-400 hover:text-white transition-all">
             <RefreshCw size={15} />
           </button>
           <button
@@ -140,7 +140,7 @@ export default function AddonMarketplacePage() {
         </div>
       </div>
 
-      <div className="flex gap-1 border-b border-zinc-800">
+      <div className="flex gap-1 border-b border-workspace-800">
         {(["catalog", "requests"] as PageTab[]).map((t) => (
           <button
             key={t}
@@ -148,7 +148,7 @@ export default function AddonMarketplacePage() {
             className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition-all capitalize ${
               tab === t
                 ? "border-indigo-500 text-indigo-400"
-                : "border-transparent text-zinc-500 hover:text-zinc-300"
+                : "border-transparent text-workspace-500 hover:text-workspace-300"
             }`}
           >
             {t === "catalog" ? <Package size={14} /> : <ChevronRight size={14} />}
@@ -212,7 +212,7 @@ function CatalogTab({
 
   if (catalog.length === 0) {
     return (
-      <div className="text-center py-16 text-zinc-600 rounded-xl border border-zinc-800">
+      <div className="text-center py-16 text-workspace-600 rounded-xl border border-workspace-800">
         <Package size={40} className="mx-auto mb-3 opacity-40" />
         <p className="font-medium">No modules in the catalog yet.</p>
       </div>
@@ -223,18 +223,18 @@ function CatalogTab({
     <div className="space-y-8">
       {Object.entries(grouped).map(([cat, mods]) => (
         <div key={cat}>
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-workspace-500 mb-3">
             {CATEGORY_OPTIONS.find((o) => o.value === cat)?.label || cat}
-            <span className="ml-2 text-zinc-600 font-normal">({mods.length})</span>
+            <span className="ml-2 text-workspace-600 font-normal">({mods.length})</span>
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {mods.map((addon) => (
               <div
                 key={addon.id}
-                className={`rounded-xl border p-5 transition-all hover:border-zinc-600 ${
+                className={`rounded-xl border p-5 transition-all hover:border-workspace-600 ${
                   addon.is_active
-                    ? "border-zinc-800 bg-zinc-900/40"
-                    : "border-zinc-800/50 bg-zinc-900/20 opacity-60"
+                    ? "border-workspace-800 bg-workspace-900/40"
+                    : "border-workspace-800/50 bg-workspace-900/20 opacity-60"
                 }`}
               >
                 <div className="flex items-start justify-between mb-3">
@@ -247,10 +247,10 @@ function CatalogTab({
                     )}
                     {addon.is_active
                       ? <ToggleRight size={16} className="text-emerald-400" />
-                      : <ToggleLeft size={16} className="text-zinc-600" />}
+                      : <ToggleLeft size={16} className="text-workspace-600" />}
                     <button
                       onClick={() => onEdit(addon)}
-                      className="p-1.5 rounded-lg hover:bg-zinc-700 text-zinc-500 hover:text-zinc-200 transition-all"
+                      className="p-1.5 rounded-lg hover:bg-workspace-700 text-workspace-500 hover:text-workspace-200 transition-all"
                     >
                       <Edit2 size={13} />
                     </button>
@@ -261,11 +261,11 @@ function CatalogTab({
                   {addon.icon_name && <span className="mr-1.5 text-lg">{addon.icon_name}</span>}
                   {addon.name}
                 </h3>
-                <p className="text-xs text-zinc-500 font-mono mt-0.5">{addon.key}</p>
-                <p className="text-sm text-zinc-400 mt-2 leading-relaxed line-clamp-2">{addon.description}</p>
+                <p className="text-xs text-workspace-500 font-mono mt-0.5">{addon.key}</p>
+                <p className="text-sm text-workspace-400 mt-2 leading-relaxed line-clamp-2">{addon.description}</p>
 
-                <div className="mt-4 pt-3 border-t border-zinc-800 flex items-center gap-4 text-xs flex-wrap">
-                  <div className="flex items-center gap-1 text-zinc-400">
+                <div className="mt-4 pt-3 border-t border-workspace-800 flex items-center gap-4 text-xs flex-wrap">
+                  <div className="flex items-center gap-1 text-workspace-400">
                     <DollarSign size={11} className="text-indigo-400" />
                     <span className="font-semibold text-foreground">
                       {addon.price_monthly ? `NPR ${Number(addon.price_monthly).toLocaleString()}` : "Free"}
@@ -273,12 +273,12 @@ function CatalogTab({
                     {addon.price_monthly && <span>/mo</span>}
                   </div>
                   {addon.price_yearly && (
-                    <span className="text-zinc-500">
+                    <span className="text-workspace-500">
                       NPR {Number(addon.price_yearly).toLocaleString()}/yr
                     </span>
                   )}
                   {addon.depends_on_keys && addon.depends_on_keys.length > 0 && (
-                    <span className="text-zinc-500">
+                    <span className="text-workspace-500">
                       Depends: {addon.depends_on_keys.join(", ")}
                     </span>
                   )}
@@ -311,7 +311,7 @@ function RequestsTab({
 
   if (requests.length === 0) {
     return (
-      <div className="text-center py-16 text-zinc-600 rounded-xl border border-zinc-800">
+      <div className="text-center py-16 text-workspace-600 rounded-xl border border-workspace-800">
         <Package size={40} className="mx-auto mb-3 opacity-40" />
         <p className="font-medium">No add-on requests yet.</p>
       </div>
@@ -319,25 +319,25 @@ function RequestsTab({
   }
 
   return (
-    <div className="rounded-xl border border-zinc-800 overflow-hidden">
+    <div className="rounded-xl border border-workspace-800 overflow-hidden">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-zinc-800 bg-zinc-900/80">
+          <tr className="border-b border-workspace-800 bg-workspace-900/80">
             {["Tenant", "Add-on", "Requested By", "Date", "Status", "Actions"].map((h) => (
-              <th key={h} className="text-left px-4 py-3 text-xs text-zinc-500 font-semibold uppercase tracking-wider">{h}</th>
+              <th key={h} className="text-left px-4 py-3 text-xs text-workspace-500 font-semibold uppercase tracking-wider">{h}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {requests.map((req) => (
-            <tr key={req.id} className="border-b border-zinc-800/50 hover:bg-zinc-800/20 transition-colors">
+            <tr key={req.id} className="border-b border-workspace-800/50 hover:bg-workspace-800/20 transition-colors">
               <td className="px-4 py-3 font-medium text-foreground">{req.tenant_name}</td>
               <td className="px-4 py-3">
-                <p className="text-zinc-200">{req.addon_name}</p>
-                {req.message && <p className="text-xs text-zinc-500 mt-0.5 max-w-[200px] truncate" title={req.message}>{req.message}</p>}
+                <p className="text-workspace-200">{req.addon_name}</p>
+                {req.message && <p className="text-xs text-workspace-500 mt-0.5 max-w-[200px] truncate" title={req.message}>{req.message}</p>}
               </td>
-              <td className="px-4 py-3 text-zinc-400 text-xs">{req.requested_by_name || "—"}</td>
-              <td className="px-4 py-3 text-zinc-500 text-xs">{fmt(req.requested_at)}</td>
+              <td className="px-4 py-3 text-workspace-400 text-xs">{req.requested_by_name || "—"}</td>
+              <td className="px-4 py-3 text-workspace-500 text-xs">{fmt(req.requested_at)}</td>
               <td className="px-4 py-3">
                 <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE[req.status] ?? ""}`}>{req.status}</span>
                 {req.rejection_reason && <p className="text-xs text-red-400 mt-1 max-w-[150px] truncate" title={req.rejection_reason}>{req.rejection_reason}</p>}
@@ -358,7 +358,7 @@ function RequestsTab({
                   </div>
                 )}
                 {req.status !== "pending" && (
-                  <div className="text-xs text-zinc-600">
+                  <div className="text-xs text-workspace-600">
                     {req.reviewed_by_name && <p>By {req.reviewed_by_name}</p>}
                     <p>{fmt(req.reviewed_at)}</p>
                   </div>
@@ -421,7 +421,7 @@ function ModuleFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div className="w-full max-w-2xl bg-zinc-900 border border-zinc-700 rounded-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div className="w-full max-w-2xl bg-workspace-900 border border-workspace-700 rounded-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
         <h3 className="text-lg font-bold text-foreground mb-5">
           {initial ? "Edit Module" : "Create Module"}
         </h3>
@@ -429,37 +429,37 @@ function ModuleFormModal({
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-zinc-400 block mb-1">Key (slug) *</label>
+              <label className="text-xs text-workspace-400 block mb-1">Key (slug) *</label>
               <input value={form.key} onChange={(e) => handleChange("key", e.target.value)}
                 placeholder="e.g. timed_sessions" disabled={!!initial}
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500 disabled:opacity-50" />
+                className="w-full bg-workspace-800 border border-workspace-700 rounded-lg px-3 py-2 text-sm text-white placeholder-workspace-600 focus:outline-none focus:border-indigo-500 disabled:opacity-50" />
             </div>
             <div>
-              <label className="text-xs text-zinc-400 block mb-1">Name *</label>
+              <label className="text-xs text-workspace-400 block mb-1">Name *</label>
               <input value={form.name} onChange={(e) => handleChange("name", e.target.value)}
-                placeholder="Display name" className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500" />
+                placeholder="Display name" className="w-full bg-workspace-800 border border-workspace-700 rounded-lg px-3 py-2 text-sm text-white placeholder-workspace-600 focus:outline-none focus:border-indigo-500" />
             </div>
           </div>
 
           <div>
-            <label className="text-xs text-zinc-400 block mb-1">Description *</label>
+            <label className="text-xs text-workspace-400 block mb-1">Description *</label>
             <textarea value={form.description} onChange={(e) => handleChange("description", e.target.value)}
               placeholder="Describe what this module provides..." rows={3}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500 resize-none" />
+              className="w-full bg-workspace-800 border border-workspace-700 rounded-lg px-3 py-2 text-sm text-white placeholder-workspace-600 focus:outline-none focus:border-indigo-500 resize-none" />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-zinc-400 block mb-1">Icon Name (Lucide)</label>
+              <label className="text-xs text-workspace-400 block mb-1">Icon Name (Lucide)</label>
               <input value={form.icon_name} onChange={(e) => handleChange("icon_name", e.target.value)}
                 placeholder="e.g. Gamepad2, Hotel, Utensils"
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500" />
-              <p className="text-[10px] text-zinc-600 mt-0.5">Use camelCase name from lucide-react</p>
+                className="w-full bg-workspace-800 border border-workspace-700 rounded-lg px-3 py-2 text-sm text-white placeholder-workspace-600 focus:outline-none focus:border-indigo-500" />
+              <p className="text-[10px] text-workspace-600 mt-0.5">Use camelCase name from lucide-react</p>
             </div>
             <div>
-              <label className="text-xs text-zinc-400 block mb-1">Category</label>
+              <label className="text-xs text-workspace-400 block mb-1">Category</label>
               <select value={form.category} onChange={(e) => handleChange("category", e.target.value)}
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                className="w-full bg-workspace-800 border border-workspace-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                 {CATEGORY_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>{o.label}</option>
                 ))}
@@ -469,24 +469,24 @@ function ModuleFormModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-zinc-400 block mb-1">Monthly Price (NPR)</label>
+              <label className="text-xs text-workspace-400 block mb-1">Monthly Price (NPR)</label>
               <input type="number" value={form.price_monthly} onChange={(e) => handleChange("price_monthly", e.target.value)}
-                placeholder="0.00" className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500" />
+                placeholder="0.00" className="w-full bg-workspace-800 border border-workspace-700 rounded-lg px-3 py-2 text-sm text-white placeholder-workspace-600 focus:outline-none focus:border-indigo-500" />
             </div>
             <div>
-              <label className="text-xs text-zinc-400 block mb-1">Yearly Price (NPR)</label>
+              <label className="text-xs text-workspace-400 block mb-1">Yearly Price (NPR)</label>
               <input type="number" value={form.price_yearly} onChange={(e) => handleChange("price_yearly", e.target.value)}
-                placeholder="0.00 (optional)" className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500" />
+                placeholder="0.00 (optional)" className="w-full bg-workspace-800 border border-workspace-700 rounded-lg px-3 py-2 text-sm text-white placeholder-workspace-600 focus:outline-none focus:border-indigo-500" />
             </div>
           </div>
 
           <div className="flex items-center gap-6">
             <label className="flex items-center gap-2 cursor-pointer select-none">
               <div onClick={() => handleChange("is_core", !form.is_core)}
-                className={`w-10 h-5 rounded-full transition-all ${form.is_core ? "bg-indigo-600" : "bg-zinc-700"} relative`}>
+                className={`w-10 h-5 rounded-full transition-all ${form.is_core ? "bg-indigo-600" : "bg-workspace-700"} relative`}>
                 <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${form.is_core ? "left-5" : "left-0.5"}`} />
               </div>
-              <span className="text-sm text-zinc-300">Core Module</span>
+              <span className="text-sm text-workspace-300">Core Module</span>
             </label>
             {form.is_core && (
               <span className="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">
@@ -495,23 +495,23 @@ function ModuleFormModal({
             )}
             <label className="flex items-center gap-2 cursor-pointer select-none">
               <div onClick={() => handleChange("is_active", !form.is_active)}
-                className={`w-10 h-5 rounded-full transition-all ${form.is_active ? "bg-emerald-600" : "bg-zinc-700"} relative`}>
+                className={`w-10 h-5 rounded-full transition-all ${form.is_active ? "bg-emerald-600" : "bg-workspace-700"} relative`}>
                 <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${form.is_active ? "left-5" : "left-0.5"}`} />
               </div>
-              <span className="text-sm text-zinc-300">{form.is_active ? "Active" : "Inactive"}</span>
+              <span className="text-sm text-workspace-300">{form.is_active ? "Active" : "Inactive"}</span>
             </label>
           </div>
 
           {/* Depends On */}
           <div>
-            <label className="text-xs text-zinc-400 block mb-1.5">Depends On (multi-select)</label>
+            <label className="text-xs text-workspace-400 block mb-1.5">Depends On (multi-select)</label>
             <div className="flex flex-wrap gap-1.5">
               {otherModules.map((m) => (
                 <button key={m.key} type="button" onClick={() => toggleArray("depends_on", m.key)}
                   className={`text-xs px-2 py-0.5 rounded-full border transition-all ${
                     form.depends_on.includes(m.key)
                       ? "border-indigo-500 bg-indigo-500/20 text-indigo-300"
-                      : "border-zinc-700 text-zinc-500 hover:text-zinc-300"
+                      : "border-workspace-700 text-workspace-500 hover:text-workspace-300"
                   }`}>
                   {m.name}
                 </button>
@@ -521,15 +521,15 @@ function ModuleFormModal({
 
           {/* Recommended For */}
           <div>
-            <label className="text-xs text-zinc-400 block mb-1.5">Recommended For (business types)</label>
+            <label className="text-xs text-workspace-400 block mb-1.5">Recommended For (business types)</label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
               {BUSINESS_TYPE_OPTIONS.map((bt) => (
-                <label key={bt.key} className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300">
+                <label key={bt.key} className="flex items-center gap-2 cursor-pointer text-sm text-workspace-300">
                   <input
                     type="checkbox"
                     checked={form.recommended_for.includes(bt.key)}
                     onChange={() => toggleArray("recommended_for", bt.key)}
-                    className="rounded border-zinc-600 bg-zinc-800 text-indigo-500 focus:ring-indigo-500"
+                    className="rounded border-workspace-600 bg-workspace-800 text-indigo-500 focus:ring-indigo-500"
                   />
                   {bt.name}
                 </label>
@@ -540,7 +540,7 @@ function ModuleFormModal({
 
         <div className="flex gap-3 mt-6">
           <button onClick={onClose}
-            className="flex-1 py-2 rounded-lg border border-zinc-700 text-zinc-400 hover:text-zinc-200 transition-all text-sm">
+            className="flex-1 py-2 rounded-lg border border-workspace-700 text-workspace-400 hover:text-workspace-200 transition-all text-sm">
             Cancel
           </button>
           <button onClick={() => onSave(form)}

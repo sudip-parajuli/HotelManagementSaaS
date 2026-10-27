@@ -140,3 +140,8 @@ A legacy local credentials Markdown file was tracked by the original repository.
 `python scripts/smoke_vercel.py` repeats that flow only in the explicitly labelled demo. It refuses to select a different hotel. It leaves fictional demo records and a sample invoice, never contacts a payment gateway, and never prints credentials or session tokens.
 
 Supabase Authentication's Users page is not the app's staff directory: existing Django JWT authentication and the shared `accounts_user` table remain the source of staff identity.
+
+
+## Cloud services update
+
+Private media, tenant-scoped live polling and scheduled maintenance are now implemented. See [Cloud operations](CLOUD_OPERATIONS.md) for the current configuration, limits, verification and recovery steps. The shared visual system and persistent light/dark themes are documented in [Design](DESIGN.md). Earlier notes about unconfigured durable media and process-local cloud updates are superseded by these documents.

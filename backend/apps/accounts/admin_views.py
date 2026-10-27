@@ -953,6 +953,31 @@ class SystemHealthView(APIView):
         except Exception as e:
             services["database"] = {"status": "error", "error": str(e)}
 
+        from django.conf import settings
+        if getattr(settings, "STAYWIRED_RUNTIME", "") == "vercel":
+            from apps.tenants.models import ScheduledRun, RealtimeEvent
+            from django_tenants.utils import schema_context
+            from datetime import timedelta
+            import os
+            with schema_context("public"):
+                # Query the actual shared event table, rather than a local cache.
+                RealtimeEvent.objects.order_by("-id").values_list("id", flat=True).first()
+                services["live_updates"] = {"status": "ok"}
+                latest = ScheduledRun.objects.filter(status="success").order_by("-finished_at").first()
+                failed = ScheduledRun.objects.filter(status="failed", started_at__gte=timezone.now()-timedelta(minutes=3)).exists()
+                recent = latest and latest.finished_at >= timezone.now()-timedelta(minutes=3)
+                services["scheduler"] = {"status": "ok" if recent and not failed else "degraded"}
+                if not recent:
+                    services["scheduler"]["error"] = "No successful maintenance run in the last three minutes."
+                elif failed:
+                    services["scheduler"]["error"] = "A recent maintenance job failed. Check its audit record."
+            services["private_media"] = {"status": "configured" if os.environ.get("BLOB_READ_WRITE_TOKEN") else "error"}
+            return Response({
+                "overall": "ok" if all(item["status"] in {"ok", "configured"} for item in services.values()) else "degraded",
+                "services": services,
+                "checked_at": timezone.now().isoformat(),
+            })
+
         # Redis
         try:
             import redis

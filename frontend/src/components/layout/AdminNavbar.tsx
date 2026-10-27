@@ -49,7 +49,7 @@ export function AdminNavbar({ title }: AdminNavbarProps) {
                 {user?.first_name} {user?.last_name}
               </span>
               <span className="text-[10px] font-medium mt-0.5 px-1.5 py-0.5 rounded-full border bg-brand-500/10 text-brand-400 border-brand-500/20">
-                Staywiredistrator
+                Platform administrator
               </span>
             </div>
           </DropdownMenuTrigger>

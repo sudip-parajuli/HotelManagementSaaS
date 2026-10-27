@@ -93,3 +93,8 @@ Use the **sudipparajuli800@gmail.com** Supabase account for this deployment as r
 Environment files, local credentials and runtime scheduler files are ignored. A legacy tracked credentials document is removed from the current tracked tree while its local copy is preserved; rotate any live credentials it previously contained, since older Git commits retain their history. Never commit database passwords, wallet secrets, JWT secrets or production guest records.
 
 The original GitHub repository URL is retained to preserve integrations. The product and new deployment are named **Staywired**.
+
+
+### Current operations and design
+
+See [cloud operations](docs/CLOUD_OPERATIONS.md) for private uploads, scheduled maintenance and tenant-scoped live updates, and [the Staywired design system](docs/DESIGN.md) for the shared palette and light/dark theme.

@@ -1,93 +1,52 @@
 "use client";
-
 import { useEffect, useRef, useCallback } from "react";
-
-type WebSocketMessage = Record<string, any>;
-
-interface UseWebSocketOptions {
-  onMessage?: (data: WebSocketMessage) => void;
-  onOpen?: () => void;
-  onClose?: () => void;
-  onError?: (error: Event) => void;
-  reconnectInterval?: number;
-  maxRetries?: number;
-}
-
-export function useWebSocket(channel: string, options: UseWebSocketOptions = {}) {
-  const {
-    onMessage,
-    onOpen,
-    onClose,
-    onError,
-    reconnectInterval = 3000,
-    maxRetries = 5,
-  } = options;
-
-  const wsRef = useRef<WebSocket | null>(null);
-  const retriesRef = useRef(0);
-  const reconnectTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const getWsUrl = useCallback(() => {
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const host = process.env.NEXT_PUBLIC_WS_URL || window.location.host;
-    return `${protocol}//${host}/ws/${channel}/`;
-  }, [channel]);
-
-  const connect = useCallback(() => {
-    if (typeof window === "undefined") return;
-
-    const url = getWsUrl();
-    const ws = new WebSocket(url);
-    wsRef.current = ws;
-
-    ws.onopen = () => {
-      retriesRef.current = 0;
-      onOpen?.();
-    };
-
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        onMessage?.(data);
-      } catch {
-        // Non-JSON message
-        onMessage?.({ raw: event.data });
-      }
-    };
-
-    ws.onclose = () => {
-      onClose?.();
-      if (retriesRef.current < maxRetries) {
-        retriesRef.current++;
-        reconnectTimerRef.current = setTimeout(connect, reconnectInterval);
-      }
-    };
-
-    ws.onerror = (error) => {
-      onError?.(error);
-    };
-  }, [getWsUrl, onMessage, onOpen, onClose, onError, reconnectInterval, maxRetries]);
-
-  const send = useCallback((data: WebSocketMessage) => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify(data));
-    }
-  }, []);
-
-  const disconnect = useCallback(() => {
-    if (reconnectTimerRef.current) {
-      clearTimeout(reconnectTimerRef.current);
-    }
-    retriesRef.current = maxRetries; // Prevent reconnect
-    wsRef.current?.close();
-  }, [maxRetries]);
-
+type Message = Record<string, any>;
+interface Options { onMessage?: (data: Message) => void; onOpen?: () => void; onClose?: () => void; onError?: (error: Event) => void; reconnectInterval?: number; maxRetries?: number; }
+/** Shared authenticated HTTP event feed. The legacy hook name keeps callers compatible. */
+export function useWebSocket(channel: string, options: Options = {}) {
+  const handlers = useRef(options);
+  handlers.current = options;
+  const abort = useRef<AbortController | null>(null);
+  const stopped = useRef(false);
   useEffect(() => {
-    connect();
-    return () => {
-      disconnect();
-    };
-  }, [connect, disconnect]);
-
+    stopped.current = false;
+    let cursor: number | undefined;
+    let timer: ReturnType<typeof setTimeout>;
+    let connected = false;
+    let failures = 0;
+    async function poll() {
+      if (stopped.current) return;
+      if (document.hidden) { timer = setTimeout(poll, 5000); return; }
+      const controller = new AbortController();
+      abort.current = controller;
+      try {
+        const query = new URLSearchParams({ channel });
+        if (cursor !== undefined) query.set("cursor", String(cursor));
+        const response = await fetch(`/api/operations/events/?${query}`, { credentials: "same-origin", cache: "no-store", signal: controller.signal });
+        if (!response.ok) throw new Error(String(response.status));
+        const result = await response.json();
+        if (stopped.current) return;
+        cursor = result.cursor;
+        if (!connected) { connected = true; handlers.current.onOpen?.(); }
+        failures = 0;
+        if (result.resync) handlers.current.onMessage?.({ event: "resync" });
+        for (const message of result.events) handlers.current.onMessage?.(message);
+      } catch (error) {
+        if (controller.signal.aborted || stopped.current) return;
+        failures++;
+        cursor = undefined; // Reconcile the screen after any delivery gap.
+        if (connected) { connected = false; handlers.current.onClose?.(); }
+        handlers.current.onError?.(new Event("error"));
+      }
+      if (!stopped.current) timer = setTimeout(poll, failures ? Math.min(30000, 3000 * failures) : 5000);
+    }
+    const resume = () => { if (!document.hidden && !stopped.current) { clearTimeout(timer); abort.current?.abort(); cursor = undefined; void poll(); } };
+    void poll();
+    document.addEventListener("visibilitychange", resume);
+    return () => { stopped.current = true; clearTimeout(timer); abort.current?.abort(); document.removeEventListener("visibilitychange", resume); if (connected) handlers.current.onClose?.(); };
+  }, [channel]);
+  const disconnect = useCallback(() => { stopped.current = true; abort.current?.abort(); }, []);
+  // Mutations continue through the ordinary authorized REST endpoints.
+  const send = useCallback((_data: Message) => {}, []);
   return { send, disconnect };
 }

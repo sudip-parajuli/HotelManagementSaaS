@@ -7,7 +7,7 @@ from apps.restaurant.models import MenuItem, DiningTable
 from apps.restaurant.serializers import MenuItemSerializer
 from apps.bookings.models import Reservation
 from .models import Order, OrderItem, KOT, OrderDiscount
-from channels.layers import get_channel_layer
+from apps.tenants.realtime import get_channel_layer
 from asgiref.sync import async_to_sync
 
 

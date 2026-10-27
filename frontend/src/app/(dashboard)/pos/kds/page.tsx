@@ -55,9 +55,10 @@ export default function KDSPage() {
     loadKOTs();
   }, [loadKOTs]);
 
-  // Handle live WebSocket event updates
+  // Handle shared live events
   const handleWebSocketMessage = useCallback((message: any) => {
-    const { event, kot, kot_id, item_id, status } = message.data || {};
+    if (message.event === "resync") { void loadKOTs(); return; }
+    const { event, kot, kot_id, item_id, status } = message.data || message;
 
     if (event === "kot_created" && kot) {
       // Append if it matches current station and isn't already added
@@ -102,15 +103,15 @@ export default function KDSPage() {
       // Remove from display
       setKots((prev) => prev.filter((k) => k.id !== kot_id));
     }
-  }, [selectedStation]);
+  }, [selectedStation, loadKOTs]);
 
-  // Setup WebSocket connection to selected station group
+  // Setup live feed connection to selected station group
   const wsChannel = `kds/${selectedStation}`;
   useWebSocket(wsChannel, {
     onMessage: handleWebSocketMessage,
     onOpen: () => setIsConnected(true),
     onClose: () => setIsConnected(false),
-    onError: (err) => console.error("WebSocket Error in KDS:", err),
+    onError: (err) => console.error("live feed Error in KDS:", err),
   });
 
   const handleKOTComplete = async (kotId: number) => {

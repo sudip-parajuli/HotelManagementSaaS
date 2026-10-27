@@ -17,7 +17,7 @@ import {
   CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from "recharts";
 
-const COLORS_PIE = ["#06b6d4", "#10b981", "#8b5cf6", "#f59e0b", "#ec4899", "#3b82f6"];
+const COLORS_PIE = ["#4d8060", "#10b981", "#8b5cf6", "#f59e0b", "#b39766", "#73988b"];
 
 export default function AnalyticsDashboard() {
   const t = useTranslations("Analytics");
@@ -314,8 +314,8 @@ export default function AnalyticsDashboard() {
                 <AreaChart data={revenueChartData}>
                   <defs>
                     <linearGradient id="colorRooms" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.2} />
-                      <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#4d8060" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="#4d8060" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="colorPOS" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.2} />
@@ -326,15 +326,15 @@ export default function AnalyticsDashboard() {
                       <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                  <XAxis dataKey="date" stroke="#64748b" fontSize={9} tickLine={false} />
-                  <YAxis stroke="#64748b" fontSize={9} tickLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="date" stroke="var(--muted-foreground)" fontSize={9} tickLine={false} />
+                  <YAxis stroke="var(--muted-foreground)" fontSize={9} tickLine={false} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#020617", borderColor: "#1e293b", borderRadius: "8px", fontSize: "11px" }}
+                    contentStyle={{ backgroundColor: "#020617", borderColor: "var(--border)", borderRadius: "8px", fontSize: "11px" }}
                     itemStyle={{ color: "#ffffff" }}
                   />
                   <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: "10px", color: "#94a3b8" }} />
-                  <Area type="monotone" dataKey="Rooms" name={locale === "ne" ? "कोठाहरू" : "Rooms"} stroke="#06b6d4" fillOpacity={1} fill="url(#colorRooms)" stackId="1" />
+                  <Area type="monotone" dataKey="Rooms" name={locale === "ne" ? "कोठाहरू" : "Rooms"} stroke="#4d8060" fillOpacity={1} fill="url(#colorRooms)" stackId="1" />
                   <Area type="monotone" dataKey="Restaurant" name={locale === "ne" ? "रेस्टुरेन्ट" : "Restaurant"} stroke="#8b5cf6" fillOpacity={1} fill="url(#colorPOS)" stackId="1" />
                   <Area type="monotone" dataKey="Other" name={locale === "ne" ? "अन्य" : "Other"} stroke="#f59e0b" fillOpacity={1} fill="url(#colorOther)" stackId="1" />
                 </AreaChart>
@@ -431,7 +431,7 @@ export default function AnalyticsDashboard() {
                         ))}
                       </Pie>
                       <Tooltip
-                        contentStyle={{ backgroundColor: "#020617", borderColor: "#1e293b", borderRadius: "8px", fontSize: "11px" }}
+                        contentStyle={{ backgroundColor: "#020617", borderColor: "var(--border)", borderRadius: "8px", fontSize: "11px" }}
                         itemStyle={{ color: "#ffffff" }}
                       />
                     </PieChart>
@@ -473,15 +473,15 @@ export default function AnalyticsDashboard() {
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={barChartData} layout="vertical" margin={{ left: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                  <XAxis type="number" stroke="#64748b" fontSize={9} tickLine={false} />
-                  <YAxis dataKey="name" type="category" stroke="#64748b" fontSize={8.5} tickLine={false} width={80} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis allowDecimals={false} type="number" stroke="var(--muted-foreground)" fontSize={9} tickLine={false} />
+                  <YAxis dataKey="name" type="category" stroke="var(--muted-foreground)" fontSize={8.5} tickLine={false} width={80} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#020617", borderColor: "#1e293b", borderRadius: "8px", fontSize: "11px" }}
+                    contentStyle={{ backgroundColor: "#020617", borderColor: "var(--border)", borderRadius: "8px", fontSize: "11px" }}
                     itemStyle={{ color: "#ffffff" }}
                   />
                   <Legend wrapperStyle={{ fontSize: "10px" }} />
-                  <Bar dataKey="Sales" fill="#ec4899" radius={[0, 4, 4, 0]} name={locale === "ne" ? "राजस्व (रु)" : "Revenue (NPR)"} />
+                  <Bar dataKey="Sales" fill="#b39766" radius={[0, 4, 4, 0]} name={locale === "ne" ? "राजस्व (रु)" : "Revenue (NPR)"} />
                 </BarChart>
               </ResponsiveContainer>
             )}

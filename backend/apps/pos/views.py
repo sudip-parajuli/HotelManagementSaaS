@@ -21,7 +21,7 @@ from .models import Order, OrderItem, KOT, OrderDiscount
 from .serializers import (
     OrderSerializer, OrderItemSerializer, KOTSerializer, OrderDiscountSerializer
 )
-from channels.layers import get_channel_layer
+from apps.tenants.realtime import get_channel_layer
 from asgiref.sync import async_to_sync
 
 

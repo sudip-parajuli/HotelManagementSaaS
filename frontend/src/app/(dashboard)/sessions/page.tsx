@@ -65,6 +65,15 @@ export default function SessionsDashboardPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
+  useWebSocket("sessions", {
+    onMessage: (message) => {
+      fetchData();
+      if (message.type === "session_expiring") toast.warning(`${message.unit_name}: ${message.remaining_minutes} minutes remaining`);
+    },
+    onOpen: () => setConnected(true),
+    onClose: () => setConnected(false),
+  });
+
   // Sync timer calibration every 60s
   useEffect(() => {
     const intervalId = setInterval(fetchData, 60000);

@@ -12,6 +12,9 @@ class TrustedFrontendMiddleware:
         # This endpoint must work before tenant migrations or domain bootstrap.
         if request.path == "/api/health/":
             return JsonResponse({"service": "staywired-api", "status": "ok", "runtime": "vercel"})
+        if request.path == "/api/operations/tick/":
+            from .operations import tick
+            return tick(request)
         host = request.META.get("HTTP_X_STAYWIRED_HOST")
         if host:
             supplied = request.META.get("HTTP_X_STAYWIRED_PROXY_SECRET", "")

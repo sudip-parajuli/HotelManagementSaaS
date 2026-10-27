@@ -136,6 +136,7 @@ def aggregate_daily_metrics(date_str=None, property_id=None):
             logger.info(f"Successfully aggregated daily metrics for {prop.name}: Metric ID {metric.id}")
         except Exception as e:
             logger.exception(f"Failed to aggregate metrics for property {prop.id} on {target_date}: {e}")
+            raise
 
 
 @shared_task

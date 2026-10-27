@@ -124,3 +124,26 @@ class Domain(DomainMixin):
 
     def __str__(self):
         return self.domain
+
+
+class RealtimeEvent(models.Model):
+    tenant_schema = models.CharField(max_length=63)
+    channel = models.CharField(max_length=80)
+    payload = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        indexes = [models.Index(fields=["tenant_schema", "channel", "id"], name="tenant_event_cursor")]
+
+
+class ScheduledRun(models.Model):
+    job = models.CharField(max_length=60)
+    tenant_schema = models.CharField(max_length=63)
+    slot = models.CharField(max_length=40)
+    status = models.CharField(max_length=20, default="running")
+    started_at = models.DateTimeField(auto_now_add=True)
+    finished_at = models.DateTimeField(null=True)
+    error = models.CharField(max_length=120, blank=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["job", "tenant_schema", "slot"], name="unique_scheduled_slot")]
