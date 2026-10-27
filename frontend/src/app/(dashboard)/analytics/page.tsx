@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 import { analyticsApi } from "@/lib/api/analytics";
 import type { DailyMetric, TodaySnapshot } from "@/lib/types";
 import {
@@ -18,6 +20,10 @@ import {
 const COLORS_PIE = ["#06b6d4", "#10b981", "#8b5cf6", "#f59e0b", "#ec4899", "#3b82f6"];
 
 export default function AnalyticsDashboard() {
+  const t = useTranslations("Analytics");
+  const tData = useTransData();
+  const locale = useLocale();
+
   const [startDate, setStartDate] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() - 30);
@@ -49,7 +55,7 @@ export default function AnalyticsDashboard() {
       setSources(sourceRes.data);
     } catch (err) {
       console.error(err);
-      setError("Failed to fetch analytics datasets. Please verify database connection.");
+      setError(locale === "ne" ? "एनालिटिक्स डेटा प्राप्त गर्न असफल भयो। कृपया डाटाबेस जडान प्रमाणित गर्नुहोस्।" : "Failed to fetch analytics datasets. Please verify database connection.");
     } finally {
       setLoading(false);
     }
@@ -63,11 +69,11 @@ export default function AnalyticsDashboard() {
     setTriggeringAgg(true);
     try {
       await analyticsApi.calculateMetrics();
-      alert("Successfully triggered metrics compilation for yesterday's operations!");
+      alert(locale === "ne" ? "हिजोको सञ्चालनका लागि सूचकहरू गणना सफलतापूर्वक सुरु गरियो!" : "Successfully triggered metrics compilation for yesterday's operations!");
       fetchData();
     } catch (err) {
       console.error(err);
-      alert("Could not compile daily aggregates.");
+      alert(locale === "ne" ? "दैनिक सूचकहरू कम्पाइल गर्न सकिएन।" : "Could not compile daily aggregates.");
     } finally {
       setTriggeringAgg(false);
     }
@@ -95,7 +101,7 @@ export default function AnalyticsDashboard() {
   }));
 
   const pieChartData = sources.map((s) => ({
-    name: s.source.replace("_", " ").toUpperCase(),
+    name: tData(s.source),
     value: s.count,
   }));
 
@@ -122,10 +128,10 @@ export default function AnalyticsDashboard() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
             <TrendingUp className="h-6 w-6 text-cyan-400" />
-            Operations Analytics Dashboard
+            {t("title")}
           </h1>
           <p className="text-slate-400 text-xs mt-0.5">
-            Monitor occupancy metrics, ADR, RevPAR, food orders, and booking acquisitions.
+            {t("subtitle")}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -137,14 +143,14 @@ export default function AnalyticsDashboard() {
             className="border-slate-800 text-slate-300 hover:bg-slate-900"
           >
             <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${triggeringAgg ? "animate-spin" : ""}`} />
-            Force Re-aggregate
+            {locale === "ne" ? "पुनः गणना गर्नुहोस्" : "Force Re-aggregate"}
           </Button>
           <Button
             size="sm"
             onClick={fetchData}
             className="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold"
           >
-            Refresh
+            {locale === "ne" ? "रिफ्रेस" : "Refresh"}
           </Button>
         </div>
       </div>
@@ -153,7 +159,7 @@ export default function AnalyticsDashboard() {
       <div className="bg-slate-900/40 border border-slate-800/80 rounded-xl p-4 flex flex-col md:flex-row md:items-end gap-4 shadow-lg">
         <div className="grid grid-cols-2 gap-4 flex-1">
           <div className="space-y-1.5">
-            <Label className="text-xs text-slate-400">Start Date</Label>
+            <Label className="text-xs text-slate-400">{locale === "ne" ? "सुरु मिति" : "Start Date"}</Label>
             <Input
               type="date"
               value={startDate}
@@ -162,7 +168,7 @@ export default function AnalyticsDashboard() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs text-slate-400">End Date</Label>
+            <Label className="text-xs text-slate-400">{locale === "ne" ? "अन्तिम मिति" : "End Date"}</Label>
             <Input
               type="date"
               value={endDate}
@@ -183,7 +189,7 @@ export default function AnalyticsDashboard() {
               setEndDate(new Date().toISOString().split("T")[0]);
             }}
           >
-            7 Days
+            {locale === "ne" ? "७ दिन" : "7 Days"}
           </Button>
           <Button
             variant="outline"
@@ -196,7 +202,7 @@ export default function AnalyticsDashboard() {
               setEndDate(new Date().toISOString().split("T")[0]);
             }}
           >
-            30 Days
+            {locale === "ne" ? "३० दिन" : "30 Days"}
           </Button>
           <Button
             variant="outline"
@@ -209,7 +215,7 @@ export default function AnalyticsDashboard() {
               setEndDate(new Date().toISOString().split("T")[0]);
             }}
           >
-            90 Days
+            {locale === "ne" ? "९० दिन" : "90 Days"}
           </Button>
         </div>
       </div>
@@ -225,41 +231,41 @@ export default function AnalyticsDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {[
           {
-            title: "Average Occupancy",
+            title: locale === "ne" ? "औसत ओगटिएको दर" : "Average Occupancy",
             value: `${avgOccupancy.toFixed(1)}%`,
-            desc: today ? `Today: ${today.occupancy_rate.toFixed(1)}%` : "N/A",
+            desc: today ? `${locale === "ne" ? "आज: " : "Today: "}${today.occupancy_rate.toFixed(1)}%` : (locale === "ne" ? "उपलब्ध छैन" : "N/A"),
             icon: Bed,
             color: "from-cyan-500 to-cyan-600",
             glow: "shadow-cyan-500/20",
           },
           {
-            title: "Average ADR",
-            value: `Rs. ${avgADR.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
-            desc: today ? `Today: Rs. ${today.adr.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : "N/A",
+            title: locale === "ne" ? "औसत ADR" : "Average ADR",
+            value: `${locale === "ne" ? "रु. " : "Rs. "}${avgADR.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
+            desc: today ? `${locale === "ne" ? "आज: " : "Today: "}${locale === "ne" ? "रु. " : "Rs. "}${today.adr.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : (locale === "ne" ? "उपलब्ध छैन" : "N/A"),
             icon: DollarSign,
             color: "from-emerald-500 to-emerald-600",
             glow: "shadow-emerald-500/20",
           },
           {
-            title: "Average RevPAR",
-            value: `Rs. ${avgRevPAR.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
-            desc: today ? `Today: Rs. ${today.revpar.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : "N/A",
+            title: locale === "ne" ? "औसत RevPAR" : "Average RevPAR",
+            value: `${locale === "ne" ? "रु. " : "Rs. "}${avgRevPAR.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
+            desc: today ? `${locale === "ne" ? "आज: " : "Today: "}${locale === "ne" ? "रु. " : "Rs. "}${today.revpar.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : (locale === "ne" ? "उपलब्ध छैन" : "N/A"),
             icon: Landmark,
             color: "from-purple-500 to-purple-600",
             glow: "shadow-purple-500/20",
           },
           {
-            title: "Total Revenue",
-            value: `Rs. ${totalRangeRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
-            desc: today ? `Today: Rs. ${today.total_revenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : "N/A",
+            title: locale === "ne" ? "कुल राजस्व" : "Total Revenue",
+            value: `${locale === "ne" ? "रु. " : "Rs. "}${totalRangeRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
+            desc: today ? `${locale === "ne" ? "आज: " : "Today: "}${locale === "ne" ? "रु. " : "Rs. "}${today.total_revenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : (locale === "ne" ? "उपलब्ध छैन" : "N/A"),
             icon: DollarSign,
             color: "from-amber-500 to-amber-600",
             glow: "shadow-amber-500/20",
           },
           {
-            title: "Restaurant Covers",
+            title: locale === "ne" ? "रेस्टुरेन्ट कभरहरू" : "Restaurant Covers",
             value: `${metrics.reduce((acc, m) => acc + m.restaurant_covers, 0)}`,
-            desc: today ? `Today: ${today.restaurant_covers} served` : "N/A",
+            desc: today ? `${locale === "ne" ? "आज: " : "Today: "}${today.restaurant_covers}${locale === "ne" ? " सेवा गरिएको" : " served"}` : (locale === "ne" ? "उपलब्ध छैन" : "N/A"),
             icon: Utensils,
             color: "from-rose-500 to-rose-600",
             glow: "shadow-rose-500/20",
@@ -292,17 +298,17 @@ export default function AnalyticsDashboard() {
           <CardHeader>
             <CardTitle className="text-sm font-semibold text-white flex items-center gap-1.5">
               <DollarSign className="h-4 w-4 text-cyan-400" />
-              Revenue Stream Breakdown
+              {t("revenue_breakdown")}
             </CardTitle>
             <CardDescription className="text-[10px] text-slate-400">
-              Visualizes room billing, restaurant charges, and extras stack over the period.
+              {locale === "ne" ? "यस अवधिमा कोठा बिलिङ, रेस्टुरेन्ट शुल्क र अतिरिक्त सेवाहरूको विश्लेषण।" : "Visualizes room billing, restaurant charges, and extras stack over the period."}
             </CardDescription>
           </CardHeader>
           <CardContent className="h-[280px]">
             {loading ? (
-              <div className="h-full flex items-center justify-center text-slate-400 text-xs">Loading metrics...</div>
+              <div className="h-full flex items-center justify-center text-slate-400 text-xs">{locale === "ne" ? "लोड हुँदैछ..." : "Loading metrics..."}</div>
             ) : metrics.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-slate-500 text-xs">No revenue data found.</div>
+              <div className="h-full flex items-center justify-center text-slate-500 text-xs">{locale === "ne" ? "कुनै राजस्व डेटा फेला परेन।" : "No revenue data found."}</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={revenueChartData}>
@@ -328,9 +334,9 @@ export default function AnalyticsDashboard() {
                     itemStyle={{ color: "#ffffff" }}
                   />
                   <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: "10px", color: "#94a3b8" }} />
-                  <Area type="monotone" dataKey="Rooms" stroke="#06b6d4" fillOpacity={1} fill="url(#colorRooms)" stackId="1" />
-                  <Area type="monotone" dataKey="Restaurant" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorPOS)" stackId="1" />
-                  <Area type="monotone" dataKey="Other" stroke="#f59e0b" fillOpacity={1} fill="url(#colorOther)" stackId="1" />
+                  <Area type="monotone" dataKey="Rooms" name={locale === "ne" ? "कोठाहरू" : "Rooms"} stroke="#06b6d4" fillOpacity={1} fill="url(#colorRooms)" stackId="1" />
+                  <Area type="monotone" dataKey="Restaurant" name={locale === "ne" ? "रेस्टुरेन्ट" : "Restaurant"} stroke="#8b5cf6" fillOpacity={1} fill="url(#colorPOS)" stackId="1" />
+                  <Area type="monotone" dataKey="Other" name={locale === "ne" ? "अन्य" : "Other"} stroke="#f59e0b" fillOpacity={1} fill="url(#colorOther)" stackId="1" />
                 </AreaChart>
               </ResponsiveContainer>
             )}
@@ -342,17 +348,17 @@ export default function AnalyticsDashboard() {
           <CardHeader>
             <CardTitle className="text-sm font-semibold text-white flex items-center gap-1.5">
               <Calendar className="h-4 w-4 text-cyan-400" />
-              Occupancy Heatmap
+              {locale === "ne" ? "कोठा ओगटिएको तातो नक्सा" : "Occupancy Heatmap"}
             </CardTitle>
             <CardDescription className="text-[10px] text-slate-400">
-              Color intensity indicates daily occupancy levels.
+              {locale === "ne" ? "रङको तीव्रताले दैनिक कोठा ओगटिएको स्तर देखाउँछ।" : "Color intensity indicates daily occupancy levels."}
             </CardDescription>
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="h-[220px] flex items-center justify-center text-slate-400 text-xs">Loading...</div>
+              <div className="h-[220px] flex items-center justify-center text-slate-400 text-xs">{locale === "ne" ? "लोड हुँदैछ..." : "Loading..."}</div>
             ) : metrics.length === 0 ? (
-              <div className="h-[220px] flex items-center justify-center text-slate-500 text-xs">No metrics log.</div>
+              <div className="h-[220px] flex items-center justify-center text-slate-500 text-xs">{locale === "ne" ? "कुनै लग रेकर्ड छैन।" : "No metrics log."}</div>
             ) : (
               <div className="space-y-4">
                 <div className="grid grid-cols-7 gap-1.5">
@@ -362,7 +368,7 @@ export default function AnalyticsDashboard() {
                       <div
                         key={idx}
                         className={`aspect-square rounded flex flex-col items-center justify-center border text-[9px] transition-all cursor-help ${getHeatmapColor(m.occupancy_rate)}`}
-                        title={`Date: ${m.date}\nOccupancy: ${parseFloat(m.occupancy_rate).toFixed(1)}%\nADR: Rs. ${parseFloat(m.adr).toFixed(0)}`}
+                        title={`${locale === "ne" ? "मिति" : "Date"}: ${m.date}\n${locale === "ne" ? "ओगटिएको दर" : "Occupancy"}: ${parseFloat(m.occupancy_rate).toFixed(1)}%\nADR: ${locale === "ne" ? "रु. " : "Rs. "}${parseFloat(m.adr).toFixed(0)}`}
                       >
                         <span>{d.getDate()}</span>
                         <span className="text-[6.5px] opacity-75">{parseFloat(m.occupancy_rate).toFixed(0)}%</span>
@@ -372,7 +378,7 @@ export default function AnalyticsDashboard() {
                 </div>
                 {/* Legend bar */}
                 <div className="flex justify-between items-center text-[8.5px] text-slate-400 pt-2 border-t border-slate-800">
-                  <span>0% (Empty)</span>
+                  <span>{locale === "ne" ? "०% (खाली)" : "0% (Empty)"}</span>
                   <div className="flex gap-1">
                     <span className="w-2.5 h-2.5 rounded bg-slate-900 border border-slate-800"></span>
                     <span className="w-2.5 h-2.5 rounded bg-sky-950 border border-sky-900"></span>
@@ -380,7 +386,7 @@ export default function AnalyticsDashboard() {
                     <span className="w-2.5 h-2.5 rounded bg-sky-700 border border-sky-600"></span>
                     <span className="w-2.5 h-2.5 rounded bg-sky-500 border border-sky-400"></span>
                   </div>
-                  <span>100% (Full)</span>
+                  <span>{locale === "ne" ? "१००% (भरिएको)" : "100% (Full)"}</span>
                 </div>
               </div>
             )}
@@ -395,17 +401,17 @@ export default function AnalyticsDashboard() {
           <CardHeader>
             <CardTitle className="text-sm font-semibold text-white flex items-center gap-1.5">
               <Users className="h-4 w-4 text-cyan-400" />
-              Booking Acquisitions
+              {locale === "ne" ? "बुकिङ च्यानलहरू" : "Booking Acquisitions"}
             </CardTitle>
             <CardDescription className="text-[10px] text-slate-400">
-              Acquisition channels distribution logic over the selected range.
+              {locale === "ne" ? "छनौट गरिएको अवधिमा बुकिङ च्यानलहरूको वितरण स्थिति।" : "Acquisition channels distribution logic over the selected range."}
             </CardDescription>
           </CardHeader>
           <CardContent className="h-[240px] flex items-center justify-center">
             {loading ? (
-              <div className="text-slate-400 text-xs">Loading...</div>
+              <div className="text-slate-400 text-xs">{locale === "ne" ? "लोड हुँदैछ..." : "Loading..."}</div>
             ) : pieChartData.length === 0 ? (
-              <div className="text-slate-500 text-xs">No channels log recorded.</div>
+              <div className="text-slate-500 text-xs">{locale === "ne" ? "कुनै लग रेकर्ड छैन।" : "No channels log recorded."}</div>
             ) : (
               <div className="w-full h-full flex flex-col sm:flex-row items-center gap-4">
                 <div className="flex-1 h-full w-full">
@@ -421,7 +427,7 @@ export default function AnalyticsDashboard() {
                         dataKey="value"
                       >
                         {pieChartData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS_PIE[index % COLORS_PIE.length]} />
+                           <Cell key={`cell-${index}`} fill={COLORS_PIE[index % COLORS_PIE.length]} />
                         ))}
                       </Pie>
                       <Tooltip
@@ -439,7 +445,7 @@ export default function AnalyticsDashboard() {
                         <span className="h-2 w-2 rounded-full" style={{ backgroundColor: COLORS_PIE[idx % COLORS_PIE.length] }}></span>
                         <span className="font-semibold text-slate-300">{item.name}</span>
                       </div>
-                      <span className="font-mono">{item.value} reservation(s)</span>
+                      <span className="font-mono">{item.value} {locale === "ne" ? "बुकिङ(हरू)" : "reservation(s)"}</span>
                     </div>
                   ))}
                 </div>
@@ -453,17 +459,17 @@ export default function AnalyticsDashboard() {
           <CardHeader>
             <CardTitle className="text-sm font-semibold text-white flex items-center gap-1.5">
               <Utensils className="h-4 w-4 text-cyan-400" />
-              Top Menu Sales Products
+              {locale === "ne" ? "उत्कृष्ट मेनु बिक्री उत्पादनहरू" : "Top Menu Sales Products"}
             </CardTitle>
             <CardDescription className="text-[10px] text-slate-400">
-              Analyzes revenue performance of top restaurant kitchen orders.
+              {locale === "ne" ? "भान्साका उत्कृष्ट अर्डरहरूको राजस्व विश्लेषण।" : "Analyzes revenue performance of top restaurant kitchen orders."}
             </CardDescription>
           </CardHeader>
           <CardContent className="h-[240px]">
             {loading ? (
-              <div className="h-full flex items-center justify-center text-slate-400 text-xs">Loading...</div>
+              <div className="h-full flex items-center justify-center text-slate-400 text-xs">{locale === "ne" ? "लोड हुँदैछ..." : "Loading..."}</div>
             ) : barChartData.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-slate-500 text-xs">No restaurant orders.</div>
+              <div className="h-full flex items-center justify-center text-slate-500 text-xs">{locale === "ne" ? "कुनै अर्डर रेकर्ड छैन।" : "No restaurant orders."}</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={barChartData} layout="vertical" margin={{ left: 20 }}>
@@ -475,7 +481,7 @@ export default function AnalyticsDashboard() {
                     itemStyle={{ color: "#ffffff" }}
                   />
                   <Legend wrapperStyle={{ fontSize: "10px" }} />
-                  <Bar dataKey="Sales" fill="#ec4899" radius={[0, 4, 4, 0]} name="Revenue (NPR)" />
+                  <Bar dataKey="Sales" fill="#ec4899" radius={[0, 4, 4, 0]} name={locale === "ne" ? "राजस्व (रु)" : "Revenue (NPR)"} />
                 </BarChart>
               </ResponsiveContainer>
             )}

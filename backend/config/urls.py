@@ -37,6 +37,10 @@ urlpatterns = [
     path("api/analytics/", include("apps.analytics.urls")),
     # Notifications
     path("api/notifications/", include("apps.notifications.urls")),
+    # Timed Sessions
+    path("api/sessions/", include("apps.timed_sessions.urls")),
+    # Tenant-Facing Module Management
+    path("api/modules/", include("apps.subscriptions.tenant_urls")),
     # Super Admin & Subscriptions
     path("api/admin/", include("apps.subscriptions.urls")),
 ]

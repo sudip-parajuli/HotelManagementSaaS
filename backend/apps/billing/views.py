@@ -11,7 +11,7 @@ from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from apps.accounts.permissions import IsPropertyManager, IsAnyStaff
-from .models import Invoice, InvoiceItem, Payment, InvoiceStatus, PaymentMethod
+from .models import Invoice, InvoiceItem, Payment, InvoiceStatus, PaymentMethod, InvoiceItemType
 from .serializers import InvoiceSerializer, InvoiceItemSerializer, PaymentSerializer
 
 
@@ -170,24 +170,59 @@ class InvoiceItemViewSet(viewsets.ModelViewSet):
         self._recalculate_invoice(invoice)
 
     def _recalculate_invoice(self, invoice):
+        from apps.properties.models import Property
+        prop = Property.objects.first()
+        
+        # Determine rates
+        if prop:
+            service_charge_applicable = prop.service_charge_applicable
+            sc_rate = prop.service_charge_rate if service_charge_applicable else Decimal("0.00")
+            vat_rate = prop.vat_rate
+            rebate_rate = prop.digital_payment_rebate_rate
+        else:
+            sc_rate = Decimal("10.00")
+            vat_rate = Decimal("13.00")
+            rebate_rate = Decimal("10.00")
+            
+        invoice.service_charge_rate = sc_rate
+        invoice.tax_rate = vat_rate
+        
         # Sum items total
         items = invoice.items.all()
-        subtotal = sum(i.amount for i in items)
+        subtotal = sum(i.amount for i in items if i.item_type != InvoiceItemType.DISCOUNT)
+        discount_items = sum(i.amount for i in items if i.item_type == InvoiceItemType.DISCOUNT)
         
-        # Calculate Service Charge (10% of subtotal)
-        sc = subtotal * (invoice.service_charge_rate / Decimal("100.00"))
+        # Base Price (subtotal of normal items minus discount items)
+        base_price = subtotal - abs(discount_items)
+        if base_price < Decimal("0.00"):
+            base_price = Decimal("0.00")
+            
+        # 1. Base Price (less discounts)
+        invoice.subtotal = base_price
         
-        # Calculate VAT (13% of subtotal + service charge)
-        taxable_amount = subtotal + sc
-        vat = taxable_amount * (invoice.tax_rate / Decimal("100.00"))
+        # 2. Service Charge = Base Price * sc_rate
+        sc_amount = base_price * (sc_rate / Decimal("100.00"))
+        invoice.service_charge_amount = sc_amount
         
-        # Calculate final amount
-        total = taxable_amount + vat - invoice.discount_amount
+        # 3. Subtotal = Base Price + Service Charge
+        taxable_amount = base_price + sc_amount
         
-        invoice.subtotal = subtotal
-        invoice.service_charge_amount = sc
-        invoice.tax_amount = vat
-        invoice.total_amount = total
+        # 4. VAT = Subtotal * vat_rate
+        vat_amount = taxable_amount * (vat_rate / Decimal("100.00"))
+        invoice.tax_amount = vat_amount
+        invoice.vat_amount = vat_amount
+        
+        # 5. Gross Total = Subtotal + VAT
+        gross_total = taxable_amount + vat_amount - invoice.discount_amount
+        if gross_total < Decimal("0.00"):
+            gross_total = Decimal("0.00")
+        invoice.total_amount = gross_total
+        
+        # Digital payment rebate: rebate_rate% of VAT
+        digital_rebate = vat_amount * (rebate_rate / Decimal("100.00"))
+        invoice.digital_rebate_amount = digital_rebate
+        invoice.net_payable_amount = gross_total - digital_rebate
+        
         invoice.save()
 
 

@@ -11,6 +11,7 @@ from .views import (
     PurchaseOrderViewSet,
     StockMovementViewSet,
     RecipeViewSet,
+    RoomAmenityConsumptionViewSet,
 )
 
 router = DefaultRouter()
@@ -20,6 +21,7 @@ router.register(r"suppliers", SupplierViewSet, basename="supplier")
 router.register(r"purchase-orders", PurchaseOrderViewSet, basename="purchaseorder")
 router.register(r"movements", StockMovementViewSet, basename="stockmovement")
 router.register(r"recipes", RecipeViewSet, basename="recipe")
+router.register(r"room-consumptions", RoomAmenityConsumptionViewSet, basename="roomconsumption")
 
 urlpatterns = [
     path("", include(router.urls)),

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { bookingsApi } from "@/lib/api/bookings";
 import type { GuestProfile } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
 
 interface GuestSearchInputProps {
   onSelect: (guest: GuestProfile) => void;
@@ -13,6 +14,9 @@ interface GuestSearchInputProps {
 }
 
 export const GuestSearchInput: React.FC<GuestSearchInputProps> = ({ onSelect, onAddNew }) => {
+  const t = useTranslations("Bookings");
+  const locale = useLocale();
+
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<GuestProfile[]>([]);
   const [loading, setLoading] = useState(false);
@@ -48,7 +52,7 @@ export const GuestSearchInput: React.FC<GuestSearchInputProps> = ({ onSelect, on
             setQuery(e.target.value);
             setIsOpen(true);
           }}
-          placeholder="Search guest by name or phone number..."
+          placeholder={t("guest_search_placeholder")}
           className="bg-slate-900 border-slate-800 text-slate-100 placeholder:text-slate-600 rounded-lg pl-10 h-10 w-full"
           onFocus={() => setIsOpen(true)}
         />
@@ -60,7 +64,7 @@ export const GuestSearchInput: React.FC<GuestSearchInputProps> = ({ onSelect, on
           {loading ? (
             <div className="flex items-center justify-center py-6 gap-2 text-slate-400 text-xs font-medium">
               <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
-              Searching guest ledger...
+              {locale === "ne" ? "खोजिँदैछ..." : "Searching guest ledger..."}
             </div>
           ) : (
             <>
@@ -105,7 +109,7 @@ export const GuestSearchInput: React.FC<GuestSearchInputProps> = ({ onSelect, on
                   className="w-full justify-start text-xs font-semibold text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/5 h-9 gap-2"
                 >
                   <Plus className="h-4 w-4" />
-                  Create profile for "{query}"
+                  {locale === "ne" ? `"${query}" को लागि नयाँ प्रोफाइल सिर्जना गर्नुहोस्` : `Create profile for "${query}"`}
                 </Button>
               </div>
             </>

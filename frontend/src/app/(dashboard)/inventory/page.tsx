@@ -19,8 +19,14 @@ import type { InventoryItem, PurchaseOrder, StockMovement } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 export default function InventoryDashboard() {
+  const t = useTranslations("Inventory");
+  const tData = useTransData();
+  const locale = useLocale();
+
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [pos, setPos] = useState<PurchaseOrder[]>([]);
   const [movements, setMovements] = useState<StockMovement[]>([]);
@@ -76,23 +82,23 @@ export default function InventoryDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-            Inventory Management
+            {t("title")}
           </h1>
           <p className="text-muted-foreground text-sm">
-            Monitor stocks, recipe auto-deductions, purchase orders, and supplier catalogs.
+            {t("subtitle")}
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Link href="/inventory/items">
             <Button className="bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 flex items-center gap-2">
               <Package className="h-4 w-4" />
-              Manage Items
+              {locale === "ne" ? "मौज्दात सामग्री" : "Manage Items"}
             </Button>
           </Link>
           <Link href="/inventory/po">
             <Button className="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white flex items-center gap-2">
               <Plus className="h-4 w-4" />
-              New Purchase Order
+              {locale === "ne" ? "नयाँ खरिद अर्डर" : "New Purchase Order"}
             </Button>
           </Link>
         </div>
@@ -105,11 +111,11 @@ export default function InventoryDashboard() {
             <Package className="h-24 w-24 text-white" />
           </div>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Total Catalog Items</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-400">{locale === "ne" ? "कुल सूचिबद्ध सामग्री" : "Total Catalog Items"}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-white">{items.length}</div>
-            <p className="text-xs text-slate-500 mt-1">Active ingredients and commodities</p>
+            <p className="text-xs text-slate-500 mt-1">{locale === "ne" ? "सक्रिय सामग्री र कमोडिटीहरू" : "Active ingredients and commodities"}</p>
           </CardContent>
         </Card>
 
@@ -118,7 +124,7 @@ export default function InventoryDashboard() {
             <AlertTriangle className="h-24 w-24 text-white" />
           </div>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Low Stock Alerts</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-400">{t("low_stock")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-baseline gap-2">
@@ -127,11 +133,11 @@ export default function InventoryDashboard() {
               </div>
               {lowStockItems.length > 0 && (
                 <Badge variant="outline" className="border-amber-500/30 text-amber-500 bg-amber-500/10 text-[10px]">
-                  Reorder Needed
+                  {locale === "ne" ? "पुनः अर्डर आवश्यक" : "Reorder Needed"}
                 </Badge>
               )}
             </div>
-            <p className="text-xs text-slate-500 mt-1">Items at or below critical level</p>
+            <p className="text-xs text-slate-500 mt-1">{locale === "ne" ? "क्रिटिकल स्तर वा सोभन्दा तलका सामग्रीहरू" : "Items at or below critical level"}</p>
           </CardContent>
         </Card>
 
@@ -140,11 +146,11 @@ export default function InventoryDashboard() {
             <FileText className="h-24 w-24 text-white" />
           </div>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Active Purchase Orders</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-400">{locale === "ne" ? "सक्रिय खरिद अर्डरहरू" : "Active Purchase Orders"}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-white">{activePOs.length}</div>
-            <p className="text-xs text-slate-500 mt-1">Pending delivery and GRN audits</p>
+            <p className="text-xs text-slate-500 mt-1">{locale === "ne" ? "डेलिभरी र GRN अडिट बाँकी" : "Pending delivery and GRN audits"}</p>
           </CardContent>
         </Card>
 
@@ -153,11 +159,11 @@ export default function InventoryDashboard() {
             <Activity className="h-24 w-24 text-white" />
           </div>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Stock Movements (30d)</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-400">{locale === "ne" ? "मौज्दात चलखेल (३० दिन)" : "Stock Movements (30d)"}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-white">{movements.length}</div>
-            <p className="text-xs text-slate-500 mt-1">Serves, manual adjustments & inputs</p>
+            <p className="text-xs text-slate-500 mt-1">{locale === "ne" ? "वितरण, म्यानुअल समायोजन र प्रविष्टि" : "Serves, manual adjustments & inputs"}</p>
           </CardContent>
         </Card>
       </div>
@@ -170,12 +176,12 @@ export default function InventoryDashboard() {
             <div className="space-y-1">
               <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5 text-amber-500" />
-                Critical Low Stock
+                {locale === "ne" ? "गम्भीर न्यून मौज्दात" : "Critical Low Stock"}
               </CardTitle>
             </div>
             {lowStockItems.length > 0 && (
               <Badge className="bg-amber-500/20 text-amber-500 border-amber-500/30 font-semibold">
-                Action Required
+                {locale === "ne" ? "कार्य आवश्यक" : "Action Required"}
               </Badge>
             )}
           </CardHeader>
@@ -183,8 +189,8 @@ export default function InventoryDashboard() {
             {lowStockItems.length === 0 ? (
               <div className="text-center py-12 space-y-3">
                 <Package className="h-10 w-10 text-emerald-500 mx-auto opacity-40" />
-                <p className="text-slate-400 font-medium text-sm">All stocks healthy</p>
-                <p className="text-xs text-slate-500">No items are below reorder level</p>
+                <p className="text-slate-400 font-medium text-sm">{locale === "ne" ? "सबै मौज्दात सुरक्षित छ" : "All stocks healthy"}</p>
+                <p className="text-xs text-slate-500">{locale === "ne" ? "कुनै पनि सामग्री पुनः अर्डर स्तरभन्दा तल छैन" : "No items are below reorder level"}</p>
               </div>
             ) : (
               <div className="space-y-4 max-h-[400px] overflow-y-auto pr-1">
@@ -199,10 +205,10 @@ export default function InventoryDashboard() {
                     </div>
                     <div className="text-right">
                       <div className="text-sm font-bold text-amber-500">
-                        {parseFloat(item.current_stock).toFixed(1)} {item.unit}
+                        {parseFloat(item.current_stock).toFixed(1)} {tData(item.unit)}
                       </div>
                       <div className="text-[10px] text-slate-500">
-                        Limit: {parseFloat(item.reorder_level).toFixed(1)} {item.unit}
+                        {locale === "ne" ? "सीमा:" : "Limit:"} {parseFloat(item.reorder_level).toFixed(1)} {tData(item.unit)}
                       </div>
                     </div>
                   </div>
@@ -218,11 +224,11 @@ export default function InventoryDashboard() {
             <div>
               <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
                 <ArrowUpDown className="h-5 w-5 text-emerald-500" />
-                Recent Stock Ledger Feed
+                {locale === "ne" ? "हालैको मौज्दात लेजर फिड" : "Recent Stock Ledger Feed"}
               </CardTitle>
             </div>
             <Link href="/inventory/items" className="text-xs text-primary hover:underline flex items-center gap-1">
-              View Items Ledger
+              {locale === "ne" ? "सामग्री लेजर हेर्नुहोस्" : "View Items Ledger"}
               <ArrowRight className="h-3 w-3" />
             </Link>
           </CardHeader>
@@ -230,7 +236,7 @@ export default function InventoryDashboard() {
             {movements.length === 0 ? (
               <div className="text-center py-12 space-y-3">
                 <Activity className="h-10 w-10 text-slate-500 mx-auto opacity-40" />
-                <p className="text-slate-400 text-sm">No ledger entries logged yet</p>
+                <p className="text-slate-400 text-sm">{locale === "ne" ? "अहिलेसम्म कुनै लेजर प्रविष्टि रेकर्ड गरिएको छैन" : "No ledger entries logged yet"}</p>
               </div>
             ) : (
               <div className="space-y-4 max-h-[400px] overflow-y-auto pr-1">
@@ -248,7 +254,7 @@ export default function InventoryDashboard() {
                         <div>
                           <div className="font-semibold text-white">{m.item_name}</div>
                           <div className="text-slate-500 mt-0.5">
-                            {m.notes || `Type: ${m.movement_type}`}
+                            {m.notes || `${locale === "ne" ? "प्रकार: " : "Type: "}${tData(m.movement_type)}`}
                           </div>
                         </div>
                       </div>
@@ -257,7 +263,7 @@ export default function InventoryDashboard() {
                           {isPositive ? "+" : "-"}{parseFloat(m.quantity).toFixed(2)}
                         </div>
                         <div className="text-[10px] text-slate-500">
-                          {new Date(m.created_at).toLocaleString("en-US", {
+                          {new Date(m.created_at).toLocaleString(locale === "ne" ? "ne-NP" : "en-US", {
                             month: "short",
                             day: "numeric",
                             hour: "2-digit",
@@ -279,10 +285,10 @@ export default function InventoryDashboard() {
         <CardHeader className="flex flex-row items-center justify-between border-b border-slate-800/50 pb-4">
           <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
             <FileText className="h-5 w-5 text-indigo-500" />
-            Ongoing Purchase Orders
+            {locale === "ne" ? "चालू खरिद अर्डरहरू" : "Ongoing Purchase Orders"}
           </CardTitle>
           <Link href="/inventory/po" className="text-xs text-primary hover:underline flex items-center gap-1">
-            Open PO Workspace
+            {locale === "ne" ? "खरिद अर्डर कार्यक्षेत्र खोल्नुहोस्" : "Open PO Workspace"}
             <ArrowRight className="h-3 w-3" />
           </Link>
         </CardHeader>
@@ -290,18 +296,18 @@ export default function InventoryDashboard() {
           {activePOs.length === 0 ? (
             <div className="text-center py-10 space-y-3">
               <FileText className="h-10 w-10 text-slate-500 mx-auto opacity-40" />
-              <p className="text-slate-400 text-sm">No active purchase orders</p>
+              <p className="text-slate-400 text-sm">{locale === "ne" ? "कुनै सक्रिय खरिद अर्डर छैन" : "No active purchase orders"}</p>
             </div>
           ) : (
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-slate-800 text-slate-400 font-semibold">
-                  <th className="py-3 px-4">PO Code</th>
-                  <th className="py-3 px-4">Supplier</th>
-                  <th className="py-3 px-4">Order Date</th>
-                  <th className="py-3 px-4">Total Amount</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4 text-right">Action</th>
+                  <th className="py-3 px-4">{locale === "ne" ? "अर्डर कोड" : "PO Code"}</th>
+                  <th className="py-3 px-4">{locale === "ne" ? "आपूर्तिकर्ता" : "Supplier"}</th>
+                  <th className="py-3 px-4">{locale === "ne" ? "अर्डर मिति" : "Order Date"}</th>
+                  <th className="py-3 px-4">{locale === "ne" ? "कुल रकम" : "Total Amount"}</th>
+                  <th className="py-3 px-4">{locale === "ne" ? "स्थिति" : "Status"}</th>
+                  <th className="py-3 px-4 text-right">{locale === "ne" ? "कार्य" : "Action"}</th>
                 </tr>
               </thead>
               <tbody>
@@ -310,22 +316,22 @@ export default function InventoryDashboard() {
                     <td className="py-3 px-4 font-mono font-bold text-white">#PO-{po.id}</td>
                     <td className="py-3 px-4 text-slate-300 font-medium">{po.supplier_name}</td>
                     <td className="py-3 px-4 text-slate-400">
-                      {new Date(po.created_at).toLocaleDateString()}
+                      {new Date(po.created_at).toLocaleDateString(locale === "ne" ? "ne-NP" : undefined)}
                     </td>
-                    <td className="py-3 px-4 text-slate-300 font-bold">Rs. {parseFloat(po.total_amount).toLocaleString()}</td>
+                    <td className="py-3 px-4 text-slate-300 font-bold">{locale === "ne" ? "रु. " : "Rs. "}{parseFloat(po.total_amount).toLocaleString()}</td>
                     <td className="py-3 px-4">
                       <Badge className={
                         po.status === "sent" ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" :
                         po.status === "partial" ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" :
                         "bg-slate-500/20 text-slate-400 border border-slate-500/30"
                       }>
-                        {po.status.toUpperCase()}
+                        {tData(po.status).toUpperCase()}
                       </Badge>
                     </td>
                     <td className="py-3 px-4 text-right">
                       <Link href="/inventory/po">
                         <Button size="sm" variant="ghost" className="h-7 text-primary hover:text-white hover:bg-slate-800 text-[11px]">
-                          Open GRN Wizard
+                          {locale === "ne" ? "GRN विजार्ड खोल्नुहोस्" : "Open GRN Wizard"}
                         </Button>
                       </Link>
                     </td>

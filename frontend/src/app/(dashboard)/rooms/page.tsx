@@ -11,11 +11,16 @@ import { roomsApi } from "@/lib/api/rooms";
 import { RoomStatusGrid } from "@/components/modules/rooms/RoomStatusGrid";
 import { RoomDetailSheet } from "@/components/modules/rooms/RoomDetailSheet";
 import type { Room, RoomType, RoomStatus } from "@/lib/types";
+import { useTranslations } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 export default function RoomsPage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const t = useTranslations("Rooms");
+  const tData = useTransData();
 
   // Filters State
   const [search, setSearch] = useState("");
@@ -92,9 +97,9 @@ export default function RoomsPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-white tracking-tight">Room Operations</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">{t("title")}</h1>
           <p className="text-slate-400 text-sm">
-            Monitor and manage physical room occupancy, cleaning states, and service status.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -102,7 +107,7 @@ export default function RoomsPage() {
           <Link href="/rooms/types">
             <Button variant="outline" className="border-slate-800 text-slate-300 hover:text-white bg-slate-900/40 hover:bg-slate-900 gap-2 font-medium">
               <Settings className="h-4 w-4 text-cyan-400" />
-              Room Classes
+              {t("room_classes")}
             </Button>
           </Link>
         </div>
@@ -112,7 +117,7 @@ export default function RoomsPage() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <Card className="bg-slate-900/40 border-slate-800 shadow-md">
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Rooms</CardTitle>
+            <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{t("total_rooms")}</CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
             <div className="text-3xl font-extrabold text-white">{stats.total}</div>
@@ -120,7 +125,7 @@ export default function RoomsPage() {
         </Card>
         <Card className="bg-slate-900/40 border-slate-800 shadow-md">
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Available</CardTitle>
+            <CardTitle className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">{t("available")}</CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
             <div className="text-3xl font-extrabold text-emerald-400">{stats.available}</div>
@@ -128,7 +133,7 @@ export default function RoomsPage() {
         </Card>
         <Card className="bg-slate-900/40 border-slate-800 shadow-md">
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-xs font-semibold text-rose-400 uppercase tracking-wider">Occupied</CardTitle>
+            <CardTitle className="text-xs font-semibold text-rose-400 uppercase tracking-wider">{t("occupied")}</CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
             <div className="text-3xl font-extrabold text-rose-400">{stats.occupied}</div>
@@ -136,7 +141,7 @@ export default function RoomsPage() {
         </Card>
         <Card className="bg-slate-900/40 border-slate-800 shadow-md">
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-xs font-semibold text-amber-400 uppercase tracking-wider">Dirty</CardTitle>
+            <CardTitle className="text-xs font-semibold text-amber-400 uppercase tracking-wider">{t("dirty")}</CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
             <div className="text-3xl font-extrabold text-amber-400">{stats.dirty}</div>
@@ -144,7 +149,7 @@ export default function RoomsPage() {
         </Card>
         <Card className="bg-slate-900/40 border-slate-800 shadow-md col-span-2 md:col-span-1">
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Maintenance</CardTitle>
+            <CardTitle className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t("maintenance")}</CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
             <div className="text-3xl font-extrabold text-slate-300">{stats.maintenance}</div>
@@ -160,7 +165,7 @@ export default function RoomsPage() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search room..."
+              placeholder={t("search_placeholder")}
               className="bg-slate-950 border-slate-800 text-slate-100 placeholder:text-slate-600 rounded-lg text-sm pl-3 h-10 w-full"
             />
           </div>
@@ -171,10 +176,10 @@ export default function RoomsPage() {
             onChange={(e) => setFloor(e.target.value)}
             className="rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-cyan-500"
           >
-            <option value="all">All Floors</option>
+            <option value="all">{t("all_floors")}</option>
             {uniqueFloors.map((f) => (
               <option key={f} value={String(f)}>
-                Floor {f}
+                {t("floor_n", { n: f })}
               </option>
             ))}
           </select>
@@ -185,10 +190,10 @@ export default function RoomsPage() {
             onChange={(e) => setRoomType(e.target.value)}
             className="rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-cyan-500"
           >
-            <option value="all">All Room Types</option>
-            {roomTypes.map((t) => (
-              <option key={t.id} value={String(t.id)}>
-                {t.name}
+            <option value="all">{t("all_types")}</option>
+            {roomTypes.map((rt) => (
+              <option key={rt.id} value={String(rt.id)}>
+                {tData(rt.name)}
               </option>
             ))}
           </select>
@@ -199,12 +204,12 @@ export default function RoomsPage() {
             onChange={(e) => setStatus(e.target.value)}
             className="rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-cyan-500"
           >
-            <option value="all">All Statuses</option>
-            <option value="available">Available</option>
-            <option value="occupied">Occupied</option>
-            <option value="dirty">Dirty</option>
-            <option value="maintenance">Maintenance</option>
-            <option value="out_of_order">Out of Order</option>
+            <option value="all">{t("all_statuses")}</option>
+            <option value="available">{tData("available")}</option>
+            <option value="occupied">{tData("occupied")}</option>
+            <option value="dirty">{tData("dirty")}</option>
+            <option value="maintenance">{tData("maintenance")}</option>
+            <option value="out_of_order">{tData("out_of_order")}</option>
           </select>
         </div>
       </div>
@@ -213,7 +218,7 @@ export default function RoomsPage() {
       {isLoading ? (
         <div className="py-20 flex flex-col items-center justify-center space-y-4">
           <div className="h-10 w-10 border-4 border-t-cyan-500 border-r-cyan-500 border-slate-800 rounded-full animate-spin" />
-          <p className="text-sm text-slate-400 font-medium">Synchronizing room states...</p>
+          <p className="text-sm text-slate-400 font-medium">{t("sync_states")}</p>
         </div>
       ) : (
         <RoomStatusGrid rooms={filteredRooms} onRoomClick={handleRoomClick} />
@@ -229,3 +234,4 @@ export default function RoomsPage() {
     </div>
   );
 }
+

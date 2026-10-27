@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import axios from "axios";
 
 const BACKEND_URL = process.env.INTERNAL_BACKEND_URL || "http://127.0.0.1:8000";
@@ -13,14 +12,12 @@ export async function POST(request: NextRequest) {
       "Content-Type": "application/json",
     };
     if (host) {
-      // Forward the host header so django-tenants can identify the correct tenant schema
       headers["Host"] = host;
     }
 
-    // Call the Django backend login endpoint
     const response = await axios.post(`${BACKEND_URL}/api/auth/login/`, body, {
       headers,
-      validateStatus: () => true, // Handle errors gracefully
+      validateStatus: () => true,
     });
 
     if (response.status !== 200) {
@@ -29,26 +26,25 @@ export async function POST(request: NextRequest) {
 
     const { access, refresh, user } = response.data;
 
-    // Set httpOnly cookies for access and refresh tokens
-    const cookieStore = cookies();
+    const res = NextResponse.json({ user });
 
-    cookieStore.set("access_token", access, {
+    res.cookies.set("access_token", access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 15 * 60, // 15 minutes
+      maxAge: 15 * 60,
     });
 
-    cookieStore.set("refresh_token", refresh, {
+    res.cookies.set("refresh_token", refresh, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 7 * 24 * 60 * 60, // 7 days
+      maxAge: 7 * 24 * 60 * 60,
     });
 
-    return NextResponse.json({ user });
+    return res;
   } catch (error: any) {
     console.error("Login route error:", error);
     return NextResponse.json(

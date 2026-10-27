@@ -13,6 +13,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { Reservation } from "@/lib/types";
+import { useTranslations } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 interface CheckInModalProps {
   reservation: Reservation | null;
@@ -33,6 +35,10 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
   onClose,
   onConfirm,
 }) => {
+  const t = useTranslations("FrontDesk");
+  const tCommon = useTranslations("Common");
+  const tData = useTransData();
+
   const [keyIssued, setKeyIssued] = useState("");
   const [lockerNumber, setLockerNumber] = useState("");
   const [notes, setNotes] = useState("");
@@ -72,32 +78,32 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-white flex items-center gap-2">
               <ShieldCheck className="h-5 w-5 text-cyan-400" />
-              Check In Guest
+              {t("check_in_guest")}
             </DialogTitle>
             <DialogDescription className="text-slate-500 text-xs">
-              Confirm guest credentials and assign room keys.
+              {t("subtitle")}
             </DialogDescription>
           </DialogHeader>
 
           {/* Guest Stay Review */}
           <div className="rounded-xl border border-slate-900/60 bg-slate-900/10 p-3.5 space-y-2 text-xs">
-            <h4 className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">Stay Summary</h4>
+            <h4 className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">{t("stay_summary")}</h4>
             <div className="grid grid-cols-2 gap-2 text-slate-300">
               <div>
-                <span className="text-slate-500 block text-[10px]">Guest Name</span>
+                <span className="text-slate-500 block text-[10px]">{t("guest_name")}</span>
                 <span className="font-semibold">{reservation.guest.first_name} {reservation.guest.last_name}</span>
               </div>
               <div>
-                <span className="text-slate-500 block text-[10px]">Assigned Room</span>
-                <span className="font-semibold text-cyan-400">Room {reservation.room.room_number} ({reservation.room.room_type.name})</span>
+                <span className="text-slate-500 block text-[10px]">{t("assigned_room")}</span>
+                <span className="font-semibold text-cyan-400">{t("room")} {reservation.room.room_number} ({tData(reservation.room.room_type.name)})</span>
               </div>
               <div>
-                <span className="text-slate-500 block text-[10px]">Phone Number</span>
+                <span className="text-slate-500 block text-[10px]">{t("phone_number")}</span>
                 <span className="font-semibold">{reservation.guest.phone}</span>
               </div>
               <div>
-                <span className="text-slate-500 block text-[10px]">Nights Count</span>
-                <span className="font-semibold">{reservation.total_nights} Nights</span>
+                <span className="text-slate-500 block text-[10px]">{t("nights_count").split(" ")[0]}</span>
+                <span className="font-semibold">{t("nights_count", { count: reservation.total_nights })}</span>
               </div>
             </div>
           </div>
@@ -107,7 +113,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
             <div className="space-y-1.5">
               <Label htmlFor="key-card" className="text-slate-400 font-bold uppercase text-[10px] flex items-center gap-1">
                 <Key className="h-3.5 w-3.5 text-cyan-400" />
-                Assigned Key Card ID *
+                {t("assigned_key")}
               </Label>
               <Input
                 id="key-card"
@@ -122,7 +128,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
             {/* Locker field */}
             <div className="space-y-1.5">
               <Label htmlFor="locker" className="text-slate-400 font-bold uppercase text-[10px]">
-                Locker Identifier (Optional)
+                {t("locker")}
               </Label>
               <Input
                 id="locker"
@@ -137,7 +143,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
             <div className="space-y-1.5">
               <Label htmlFor="id-upload" className="text-slate-400 font-bold uppercase text-[10px] flex items-center gap-1">
                 <FileText className="h-3.5 w-3.5 text-cyan-400" />
-                ID document photo path (MinIO)
+                {t("id_upload")}
               </Label>
               <Input
                 id="id-upload"
@@ -151,7 +157,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
             {/* Check-in notes */}
             <div className="space-y-1.5">
               <Label htmlFor="checkin-notes" className="text-slate-400 font-bold uppercase text-[10px]">
-                Check-in Notes
+                {t("notes")}
               </Label>
               <Textarea
                 id="checkin-notes"
@@ -170,7 +176,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
               variant="ghost"
               className="border border-slate-800 text-slate-400 hover:text-white rounded-lg h-10"
             >
-              Cancel
+              {tCommon("cancel")}
             </Button>
             <Button
               type="submit"
@@ -180,10 +186,10 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
               {submitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin text-white" />
-                  Checking In...
+                  {t("checking_in")}
                 </>
               ) : (
-                "Confirm Check In"
+                t("confirm_check_in")
               )}
             </Button>
           </DialogFooter>

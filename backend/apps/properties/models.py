@@ -3,6 +3,7 @@ SIA HMS — Property & Room Models
 Defines Property, Amenity, RoomType, Room, and RoomImage.
 """
 
+from decimal import Decimal
 from django.db import models
 from django.utils.text import slugify
 
@@ -39,6 +40,12 @@ class Property(models.Model):
     timezone = models.CharField(max_length=100, default="Asia/Kathmandu")
     vat_number = models.CharField(max_length=50, blank=True)
     pan_number = models.CharField(max_length=50, blank=True)
+    
+    # Nepal tax & billing configuration
+    service_charge_applicable = models.BooleanField(default=True)
+    service_charge_rate = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal("10.00"))
+    vat_rate = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal("13.00"))
+    digital_payment_rebate_rate = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal("10.00"))
     
     check_in_time = models.TimeField(default="14:00:00")
     check_out_time = models.TimeField(default="12:00:00")

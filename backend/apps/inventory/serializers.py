@@ -6,7 +6,7 @@ Defines serializers for Category, InventoryItem, Supplier, PurchaseOrder, POItem
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from apps.restaurant.models import MenuItem
-from .models import Category, InventoryItem, Supplier, PurchaseOrder, POItem, StockMovement, Recipe
+from .models import Category, InventoryItem, Supplier, PurchaseOrder, POItem, StockMovement, Recipe, RoomAmenityConsumption
 
 User = get_user_model()
 
@@ -232,3 +232,24 @@ class RecipeSerializer(serializers.ModelSerializer):
             "unit",
         ]
         read_only_fields = ["id"]
+
+
+class RoomAmenityConsumptionSerializer(serializers.ModelSerializer):
+    room_number = serializers.CharField(source="room.room_number", read_only=True)
+    item_name = serializers.CharField(source="inventory_item.name", read_only=True)
+
+    class Meta:
+        model = RoomAmenityConsumption
+        fields = [
+            "id",
+            "room",
+            "room_number",
+            "inventory_item",
+            "item_name",
+            "quantity",
+            "consumed_at",
+            "logged_by",
+            "is_complimentary",
+            "reservation",
+        ]
+        read_only_fields = ["id", "consumed_at", "logged_by"]

@@ -17,12 +17,14 @@ from channels.security.websocket import AllowedHostsOriginValidator  # noqa: E40
 from apps.pos.routing import websocket_urlpatterns as pos_ws_patterns  # noqa: E402
 from apps.housekeeping.routing import websocket_urlpatterns as hk_ws_patterns  # noqa: E402
 from apps.frontdesk.routing import websocket_urlpatterns as fd_ws_patterns  # noqa: E402
+from apps.timed_sessions.routing import websocket_urlpatterns as ts_ws_patterns  # noqa: E402
 
 # Combine all WebSocket URL patterns
 all_websocket_patterns = (
     pos_ws_patterns
     + hk_ws_patterns
     + fd_ws_patterns
+    + ts_ws_patterns
 )
 
 application = ProtocolTypeRouter(

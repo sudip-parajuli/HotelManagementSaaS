@@ -5,7 +5,7 @@ SIA HMS — Housekeeping Serializers
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from apps.properties.models import Room
-from .models import HousekeepingTask, MaintenanceRequest
+from .models import HousekeepingTask, MaintenanceRequest, RoomDiscrepancy, LostFoundItem
 
 User = get_user_model()
 
@@ -117,4 +117,66 @@ class MaintenanceRequestSerializer(serializers.ModelSerializer):
     def get_resolved_by_name(self, obj):
         if obj.resolved_by:
             return obj.resolved_by.get_full_name() or obj.resolved_by.username
+        return None
+
+
+class RoomDiscrepancySerializer(serializers.ModelSerializer):
+    room_number = serializers.CharField(source="room.room_number", read_only=True)
+    reported_by_name = serializers.SerializerMethodField(read_only=True)
+    
+    room_id = serializers.PrimaryKeyRelatedField(
+        queryset=Room.objects.all(),
+        source="room",
+        write_only=True,
+    )
+
+    class Meta:
+        model = RoomDiscrepancy
+        fields = [
+            "id",
+            "room",
+            "room_id",
+            "room_number",
+            "system_status",
+            "physical_status_found",
+            "reported_by",
+            "reported_by_name",
+            "reported_at",
+            "resolved",
+            "resolution_notes",
+        ]
+        read_only_fields = ["id", "reported_at"]
+
+    def get_reported_by_name(self, obj):
+        if obj.reported_by:
+            return obj.reported_by.get_full_name() or obj.reported_by.username
+        return None
+
+
+class LostFoundItemSerializer(serializers.ModelSerializer):
+    room_number = serializers.CharField(source="room.room_number", read_only=True)
+    found_by_name = serializers.SerializerMethodField(read_only=True)
+    claimed_by_guest_name = serializers.CharField(source="claimed_by_guest.full_name", read_only=True)
+
+    class Meta:
+        model = LostFoundItem
+        fields = [
+            "id",
+            "room",
+            "room_number",
+            "found_by",
+            "found_by_name",
+            "description",
+            "photo",
+            "found_at",
+            "status",
+            "claimed_by_guest",
+            "claimed_by_guest_name",
+            "claimed_at",
+        ]
+        read_only_fields = ["id", "found_at", "claimed_at"]
+
+    def get_found_by_name(self, obj):
+        if obj.found_by:
+            return obj.found_by.get_full_name() or obj.found_by.username
         return None

@@ -3,13 +3,14 @@ SIA HMS — Booking & Reservation Views
 """
 
 from rest_framework import viewsets, permissions, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django.utils import timezone
-from datetime import date
+from datetime import date, datetime, timedelta
 from django.db import transaction
 
 from apps.accounts.permissions import IsAnyStaff, IsPropertyManager, IsFrontDesk
@@ -97,7 +98,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
         reservation = self.get_object()
         reason = request.data.get("cancellation_reason", "")
         
-        if reservation.status in [ReservationStatus.CHECKED_OUT, ReservationStatus.CANCELLED]:
+        if reservation.status not in [ReservationStatus.PENDING, ReservationStatus.CONFIRMED]:
             return Response(
                 {"error": f"Cannot cancel a reservation in {reservation.status} state."},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -113,7 +114,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def today(self, request):
         """Returns check-ins, check-outs, and in-house counts for today."""
-        today_val = date.today()
+        today_val = timezone.localdate()
         
         arrivals = self.queryset.filter(check_in_date=today_val, status=ReservationStatus.CONFIRMED)
         departures = self.queryset.filter(check_out_date=today_val, status=ReservationStatus.CHECKED_IN)
@@ -236,7 +237,7 @@ class PublicBookingCreateView(APIView):
         guest_data = request.data.get("guest")
         booking_data = request.data.get("booking")
 
-        if not guest_data or not booking_data:
+        if not isinstance(guest_data, dict) or not isinstance(booking_data, dict):
             return Response(
                 {"error": "Missing guest or booking payload parameters"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -267,10 +268,17 @@ class PublicBookingCreateView(APIView):
         check_in = booking_data.get("check_in_date")
         check_out = booking_data.get("check_out_date")
         room_type_id = booking_data.get("room_type_id")
-        adults = int(booking_data.get("adults", 1))
+        try:
+            adults = int(booking_data.get("adults", 1))
+            children = int(booking_data.get("children", 0))
+            infants = int(booking_data.get("infants", 0))
+            if adults < 1 or children < 0 or infants < 0:
+                raise ValueError
+        except (TypeError, ValueError):
+            return Response({"error": "Guest counts must be nonnegative integers, with at least one adult."}, status=status.HTTP_400_BAD_REQUEST)
 
         # 3. Find first available room of that type
-        available_rooms = get_available_rooms(check_in, check_out, adults, room_type_id)
+        available_rooms = get_available_rooms(check_in, check_out, adults + children, room_type_id)
         if not available_rooms.exists():
             return Response(
                 {"error": "No rooms of this class are available for the selected dates."},
@@ -285,8 +293,8 @@ class PublicBookingCreateView(APIView):
             "check_in_date": check_in,
             "check_out_date": check_out,
             "adults": adults,
-            "children": int(booking_data.get("children", 0)),
-            "infants": int(booking_data.get("infants", 0)),
+            "children": children,
+            "infants": infants,
             "status": ReservationStatus.PENDING,
             "booking_source": BookingSource.ONLINE,
             "special_requests": booking_data.get("special_requests", ""),
@@ -298,3 +306,58 @@ class PublicBookingCreateView(APIView):
             return Response(ReservationSerializer(reservation).data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BookingGapsView(APIView):
+    """
+    Endpoint to identify booking gaps - dates where rooms are unbooked but could be.
+    Returns gaps in the booking calendar for revenue optimization insights.
+    """
+    permission_classes = [IsAuthenticated, IsAnyStaff]
+
+    def get(self, request):
+        start_date = request.query_params.get("start_date")
+        end_date = request.query_params.get("end_date")
+        room_id = request.query_params.get("room_id")
+
+        if not start_date or not end_date:
+            # Default to next 30 days
+            end_dt = timezone.localdate() + timedelta(days=30)
+            start_dt = timezone.localdate()
+        else:
+            try:
+                start_dt = datetime.strptime(start_date, "%Y-%m-%d").date()
+                end_dt = datetime.strptime(end_date, "%Y-%m-%d").date()
+            except (TypeError, ValueError):
+                return Response({"error": "Use YYYY-MM-DD dates."}, status=status.HTTP_400_BAD_REQUEST)
+        if end_dt <= start_dt or (end_dt - start_dt).days > 366:
+            return Response({"error": "Choose an end date after the start, within 366 days."}, status=status.HTTP_400_BAD_REQUEST)
+
+        gaps = []
+        current_date = start_dt
+
+        rooms = Room.objects.filter(is_active=True)
+        if room_id:
+            rooms = rooms.filter(id=room_id)
+
+        while current_date < end_dt:
+            for room in rooms:
+                # Check if room is booked on this date
+                has_booking = Reservation.objects.filter(
+                    room=room,
+                    status__in=[ReservationStatus.CONFIRMED, ReservationStatus.CHECKED_IN, ReservationStatus.CHECKED_OUT],
+                    check_in_date__lte=current_date,
+                    check_out_date__gt=current_date
+                ).exists()
+
+                if not has_booking:
+                    gaps.append({
+                        "date": current_date.isoformat(),
+                        "room_id": room.id,
+                        "room_number": room.room_number,
+                        "is_available": True,
+                        "reservation_id": None,
+                    })
+            current_date += timedelta(days=1)
+
+        return Response(gaps)

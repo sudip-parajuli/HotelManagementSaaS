@@ -177,6 +177,93 @@ class TestBillingCalculations:
             assert invoice.total_amount == Decimal("9944.00")
             assert invoice.balance_due == Decimal("9944.00")
 
+    def test_nepal_tax_compliance_and_digital_rebate(self, billing_tenant, billing_setup_data):
+        with schema_context(billing_tenant.schema_name):
+            # Get property and reservation
+            prop = billing_setup_data["property"]
+            res = billing_setup_data["reservation"]
+            
+            # Ensure property settings
+            prop.service_charge_applicable = True
+            prop.service_charge_rate = Decimal("10.00")
+            prop.vat_rate = Decimal("13.00")
+            prop.digital_payment_rebate_rate = Decimal("10.00")
+            prop.save()
+            
+            # Create an invoice
+            invoice = Invoice.objects.create(
+                invoice_type=InvoiceType.HOTEL,
+                reservation=res,
+                total_amount=Decimal("0.00"),
+                status=InvoiceStatus.UNPAID,
+            )
+            
+            # Add an item
+            from apps.billing.views import InvoiceItemViewSet
+            item = InvoiceItem.objects.create(
+                invoice=invoice,
+                description="Room Charge",
+                quantity=Decimal("1.00"),
+                unit_price=Decimal("1000.00"),
+                item_type=InvoiceItemType.ROOM_CHARGE,
+            )
+            InvoiceItemViewSet()._recalculate_invoice(invoice)
+            
+            invoice.refresh_from_db()
+            
+            # Math validation:
+            # 1. Base Price = 1000.00
+            # 2. Service Charge = 1000.00 * 10% = 100.00
+            # 3. Subtotal = 1000.00 + 100.00 = 1100.00
+            # 4. VAT = 1100.00 * 13% = 143.00
+            # 5. Gross Total = 1100.00 + 143.00 = 1243.00
+            # 6. Digital payment rebate = 143.00 * 10% = 14.30
+            # 7. Net Payable = 1243.00 - 14.30 = 1228.70
+            assert invoice.subtotal == Decimal("1000.00")
+            assert invoice.service_charge_amount == Decimal("100.00")
+            assert invoice.tax_amount == Decimal("143.00")
+            assert invoice.vat_amount == Decimal("143.00")
+            assert invoice.total_amount == Decimal("1243.00")
+            assert invoice.digital_rebate_amount == Decimal("14.30")
+            assert invoice.net_payable_amount == Decimal("1228.70")
+            assert invoice.balance_due == Decimal("1243.00")
+            
+            # Now simulate recording a digital payment (eSewa)
+            Payment.objects.create(
+                invoice=invoice,
+                amount=Decimal("1228.70"),
+                payment_method=PaymentMethod.ESEWA,
+                received_by=User.objects.first(),
+            )
+            
+            # Recalculate balance_due via model save
+            invoice.paid_amount = Decimal("1228.70")
+            invoice.save()
+            
+            assert invoice.balance_due == Decimal("0.00")
+            
+            # Test 2: Service charge disabled
+            prop.service_charge_applicable = False
+            prop.save()
+            InvoiceItemViewSet()._recalculate_invoice(invoice)
+            invoice.refresh_from_db()
+            
+            # Math validation:
+            # 1. Base Price = 1000.00
+            # 2. Service Charge = 0.00
+            # 3. Subtotal = 1000.00
+            # 4. VAT = 1000.00 * 13% = 130.00
+            # 5. Gross Total = 1130.00
+            # 6. Rebate = 130.00 * 10% = 13.00
+            # 7. Net Payable = 1117.00
+            assert invoice.subtotal == Decimal("1000.00")
+            assert invoice.service_charge_amount == Decimal("0.00")
+            assert invoice.tax_amount == Decimal("130.00")
+            assert invoice.total_amount == Decimal("1130.00")
+            assert invoice.digital_rebate_amount == Decimal("13.00")
+            assert invoice.net_payable_amount == Decimal("1117.00")
+
+
 
 class TestBillingAPIs:
     """Verifies billing endpoints and manual settling."""

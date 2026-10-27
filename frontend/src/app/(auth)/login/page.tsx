@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -94,7 +95,7 @@ export default function LoginPage() {
               <KeyRound className="h-6 w-6 text-white" />
             </div>
             <CardTitle className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-              SIA Enterprises
+              Staywired
             </CardTitle>
             <CardDescription className="text-slate-400 font-medium">
               {t.subtitle}
@@ -160,9 +161,10 @@ export default function LoginPage() {
               </Button>
             </form>
           </CardContent>
-          <CardFooter className="flex justify-center border-t border-white/5 pt-4 pb-6">
+          <CardFooter className="flex flex-col gap-3 justify-center border-t border-white/5 pt-4 pb-6">
+            <Link href="/demo/" className="text-sm text-cyan-300 hover:text-cyan-200">Explore the interactive demo →</Link>
             <span className="text-xs text-slate-500 font-medium">
-              SIA Enterprises SaaS Engine © 2026
+              Staywired · Powered by Techwired Solutions
             </span>
           </CardFooter>
         </Card>

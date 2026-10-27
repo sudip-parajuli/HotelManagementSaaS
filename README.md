@@ -1,183 +1,91 @@
-# SIA HMS — SaaS Hotel Management System
+# Staywired
 
-SIA HMS is a multi-tenant SaaS Hotel Management System built using a Django backend (with isolated PostgreSQL schema-per-tenant architecture) and a Next.js App Router frontend.
+**Hospitality management, powered by Techwired Solutions.**
 
-This guide provides step-by-step instructions on setting up and running the application.
+Staywired connects reservations, rooms, front desk, housekeeping and guest balances in a hospitality workspace. The repository also contains the existing multi-tenant Django operational system, including restaurant POS, billing, staff, inventory, CRM and modular subscriptions.
 
----
+## Try the demo
 
-## 🚀 Quick Start (Docker Compose — Recommended)
+Run the frontend and open [http://localhost:3000/demo/](http://localhost:3000/demo/). The public demo needs no database or login and uses fictional hotel data. Create a reservation, check a guest in, settle a sample balance, check out and mark the room ready. Changes persist in that browser. No real payments are processed.
 
-The easiest way to run the entire system (including Database, Redis, Celery, Nginx, MinIO, Backend, and Frontend) is via Docker Compose.
-
-### 1. Prerequisites
-Ensure you have the following installed:
-* [Docker Desktop](https://www.docker.com/products/docker-desktop) (which includes Docker Compose)
-* Git
-
-### 2. Configure Environment
-1. Copy the `.env.example` file to `.env` in the root directory:
-   ```bash
-   cp .env.example .env
-   ```
-2. For local Docker testing, the default environment values are pre-configured.
-
-### 3. Build and Run the Services
-Run the following command to build and launch all 8 services in the background:
 ```bash
-docker-compose up --build
-```
-This boots:
-* **db**: PostgreSQL database (port `5432`)
-* **redis**: In-memory broker (port `6379`)
-* **backend**: Django Rest Framework API (port `8000`)
-* **celery_worker / celery_beat**: Background reports & billing task queues
-* **minio**: S3-compatible storage engine (port `9000` / Console `9001`)
-* **frontend**: Next.js 14 Web App (port `3000`)
-* **nginx**: Gateway Router (proxies all web traffic)
-
-### 4. Bootstrap the Database & Super Admin
-On the first run, initialize the shared `public` schema containing subscription plans and create the global Super Admin credentials:
-```bash
-# 1. Run migrations for public schema
-docker-compose exec backend python manage.py migrate
-
-# 2. Onboard the public root tenant and superadmin user
-docker-compose exec backend python manage.py create_tenant --schema=public --name="Public Tenant" --domain=localhost --email=superadmin@sia.com --password=SecureAdminPass123!
-
-# 3. Seed SaaS plans (starter, professional, enterprise)
-docker-compose exec backend python manage.py shell -c "
-from apps.subscriptions.models import SubscriptionPlan
-SubscriptionPlan.objects.get_or_create(name='Starter Plan', slug='starter', price_monthly=2000.0, price_yearly=21600.0, max_rooms=15, max_staff_users=5, max_restaurants=1, features=['pos'])
-SubscriptionPlan.objects.get_or_create(name='Professional Plan', slug='professional', price_monthly=5000.0, price_yearly=54000.0, max_rooms=50, max_staff_users=20, max_restaurants=2, features=['pos', 'payroll', 'crm'])
-SubscriptionPlan.objects.get_or_create(name='Enterprise Plan', slug='enterprise', price_monthly=12000.0, price_yearly=129600.0, max_rooms=200, max_staff_users=100, max_restaurants=5, features=['pos', 'payroll', 'crm', 'analytics'])
-"
+cd frontend
+npm ci
+npm run dev
 ```
 
----
+Marketing page: `/landing/`. Interactive demo: `/demo/`. Existing team login: `/login/`.
 
-## 🛠️ Local Development (Manual Setup)
+## What's new
 
-If you prefer to run services natively (outside Docker), follow these steps:
+- Staywired branding and Techwired Solutions attribution across the public site, login and workspace.
+- A redesigned, responsive hospitality landing page and six-view interactive demo.
+- Connected room availability, reservation, front-desk, housekeeping and revenue demo workflows.
+- Native dialogs, keyboard focus, reduced-motion support, subtle transitions, feedback and empty states.
+- Protected booking/admin page routing; only the actual `/book/` guest widget remains public.
+- Booking validation for malformed availability inputs, unsellable rooms, capacity and negative discounts.
+- Room locking and conflict revalidation for competing reservation writes; partial date edits reprice stays.
+- Supabase-compatible SSL connection settings and Vercel frontend configuration.
+- Automated frontend domain/routing tests and backend booking regression coverage.
 
-### 1. Prerequisites
-* **Python**: `3.11` or `3.12`
-* **Node.js**: `v18+` or `v20+`
-* **PostgreSQL**: Running locally on port `5432` with a database named `sia_hms_db`
-* **Redis**: Running locally on port `6379`
+The demo is separate from live hotel data. The authenticated application's existing modules still require its backend services. This is not a claim that every legacy feature has been audited for production.
 
-### 2. Configure Local Env Files
-Create a `.env` file in the `backend/` directory and a `.env.local` file in the `frontend/` directory based on their respective examples. Set `POSTGRES_HOST=localhost` and `REDIS_URL=redis://localhost:6379/0` for local connection.
+## Architecture
 
-### 3. Backend Setup
-1. Open a terminal inside the `backend/` directory:
-   ```bash
-   cd backend
-   ```
-2. Create and activate a Python virtual environment:
-   ```bash
-   python -m venv .venv
-   # Windows:
-   .venv\Scripts\activate
-   # Linux/Mac:
-   source .venv/bin/activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements/development.txt
-   ```
-4. Run migrations and bootstrap the public schema:
-   ```bash
-   python manage.py migrate
-   python manage.py create_tenant --schema=public --name="Public Tenant" --domain=localhost --email=superadmin@sia.com --password=SecureAdminPass123!
-   ```
-5. Launch the Django server:
-   ```bash
-   python manage.py runserver 8000
-   ```
-6. Run Celery Worker & Beat (in separate terminals with virtual environment activated):
-   ```bash
-   # Terminal 2: Worker
-   celery -A config worker --loglevel=info
-   
-   # Terminal 3: Beat Scheduler
-   celery -A config beat --loglevel=info
-   ```
+| Layer | Technology | Deployment |
+| --- | --- | --- |
+| Public site, demo and operational UI | Next.js 14, React 18, TypeScript | Vercel, root `frontend` |
+| API and tenant isolation | Django 5, DRF, django-tenants | Persistent ASGI/container host |
+| Database | PostgreSQL, schema per tenant | Supabase, direct/session-mode connection |
+| Background jobs and realtime | Celery, Redis, Channels | Persistent worker/Redis services |
+| Existing media storage | S3-compatible storage | Existing MinIO/S3 configuration |
 
-### 4. Frontend Setup
-1. Open a terminal inside the `frontend/` directory:
-   ```bash
-   cd frontend
-   ```
-2. Install Node dependencies:
-   ```bash
-   npm install
-   ```
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
-   The application will be accessible at [http://localhost:3000](http://localhost:3000).
+Supabase hosts PostgreSQL; it does not replace the Django application, Redis or Celery workers. Existing staff authentication uses Django JWT cookies. No Supabase service-role key is sent to the browser.
 
----
+## Full local setup
 
-## 🔑 Default Credentials & Onboarding Flow
+Use Node 20/22, Python 3.11/3.12, PostgreSQL and Redis. Copy `.env.example` to `.env` and configure unique local credentials. For the existing Docker stack:
 
-1. Go to the dashboard login page at [http://localhost:3000/login](http://localhost:3000/login).
-2. Log in as the Super Admin:
-   * **Email:** `superadmin@sia.com`
-   * **Password:** `SecureAdminPass123!`
-3. You will be redirected to the **SaaS Super Admin Platform** (`/superadmin`).
-4. Navigate to **Hotels Directory** (`/superadmin/tenants`) and click **Onboard New Hotel**:
-   * Complete the form (e.g. name: `Himalayan Oasis`, schema: `himalayan_oasis`, subdomain: `himalayan`).
-   * Specify the administrator credentials (e.g. `admin@oasis.com` / `Password123!`).
-5. Upon submitting, the system programmatically creates the PostgreSQL database schema `himalayan_oasis`, applies migrations, seeds basic defaults, and redirects you.
-6. The new hotel is now routable at `http://himalayan.localhost:3000`.
-
----
-
-## 🎭 Tenant Impersonation & Feature Gating
-
-### How to Impersonate:
-1. In the **Hotels Directory** (`/superadmin/tenants`), click the **Impersonate** button next to any active hotel.
-2. The browser automatically swaps cookies, routes database connections dynamically to the target schema, and redirects you to the main hotel dashboard (`/`).
-3. You will see an amber banner at the top of the screen: `Viewing system as [Hotel Name] (Impersonating)`.
-4. Click **Stop Impersonating** at any time to restore your original Super Admin session and return to the panel.
-
-### Gated Modules:
-Module permissions are dynamically checked based on the active plan:
-* **Starter Plan:** Only supports basic rooms and restaurant POS. Accessing Payroll or Analytics returns permission warnings.
-* **Enterprise Plan:** Unlocks all modules: progressive Nepalese payroll, campaigns, loyalty tiers, and Recharts performance dashboards.
-
----
-
-## 💳 Nepal Payment Sandbox Testing
-
-To test integration checkout flows under simulated sandbox parameters, use the following:
-
-### 1. eSewa (epay v2)
-1. Initiate checkout from the invoice payment settlement screen and select **eSewa**.
-2. You will be redirected to the official eSewa sandbox checkout screen.
-3. Enter credentials:
-   * **Mobile Number / Email:** `9841000000`
-   * **MPIN / Password:** `1234`
-   * **OTP Code (Received on screen):** `123456`
-
-### 2. Khalti Wallet Checkout
-1. Select **Khalti** on checkout.
-2. In the modal, provide any test Nepalese mobile number (e.g., `9800000000`).
-3. Use test verification credentials:
-   * **OTP Code:** `12345`
-   * **Pin:** `9876`
-
----
-
-## 🧪 Running Tests
-To verify all SaaS logic, onboarding hooks, and billing triggers, activate the virtual environment inside `backend/` and run:
 ```bash
-pytest apps/subscriptions/tests/
+docker compose up --build
+docker compose exec backend python manage.py migrate_schemas --shared
+docker compose exec backend python manage.py migrate_schemas --tenant
+docker compose exec backend python manage.py create_tenant --help
 ```
-To run the full suite:
+
+Use the management command to create the public tenant and unique administrator credentials. Register a tenant domain for each hotel. Do not reuse credentials from legacy sample files.
+
+For manual development, create a virtual environment inside `backend`, install `requirements/development.txt`, configure PostgreSQL/Redis environment variables, migrate schemas, and run `python manage.py runserver 8000`. Configure `frontend/.env.local` from `frontend/.env.local.example`; then run the frontend commands above. The standalone demo works without these backend steps.
+
+## Verification
+
 ```bash
-pytest
+cd frontend
+npm test
+npm run typecheck
+npm run build
 ```
+
+```bash
+cd backend
+python manage.py check
+pytest apps/bookings/tests/test_booking_regressions.py --reuse-db
+pytest apps/bookings/tests/ --reuse-db
+```
+
+Backend tests require a reachable PostgreSQL test database with schema creation privileges. Do not point the test suite at a live hotel database. The existing CI workflow provisions PostgreSQL and Redis; frontend CI runs type checking, regression tests and a production build.
+
+## Documentation
+
+- [Demo walkthrough and metric definitions](docs/DEMO.md)
+- [Vercel, Supabase and backend deployment guide](docs/DEPLOYMENT.md)
+- [Release notes and verification status](docs/RELEASE.md)
+- [Existing production planning](SIA_HMS_SaaS_Production_Plan.md)
+
+Use the **sudipparajuli800@gmail.com** Supabase account for this deployment as requested. The other account's existing projects must remain untouched. See the deployment guide for connection setup, tenant isolation, smoke checks and rollback.
+
+## Security and operational notes
+
+Environment files, local credentials and runtime scheduler files are ignored. A legacy tracked credentials document is removed from the current tracked tree while its local copy is preserved; rotate any live credentials it previously contained, since older Git commits retain their history. Never commit database passwords, wallet secrets, JWT secrets or production guest records.
+
+The original GitHub repository URL is retained to preserve integrations. The product and new deployment are named **Staywired**.

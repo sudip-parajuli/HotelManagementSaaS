@@ -13,6 +13,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { Reservation } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 interface AdditionalCharge {
   description: string;
@@ -38,6 +40,11 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
   onClose,
   onConfirm,
 }) => {
+  const t = useTranslations("FrontDesk");
+  const tCommon = useTranslations("Common");
+  const tData = useTransData();
+  const locale = useLocale();
+
   const [additionalCharges, setAdditionalCharges] = useState<AdditionalCharge[]>([]);
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
@@ -111,32 +118,32 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-white flex items-center gap-2">
               <ShieldAlert className="h-5 w-5 text-emerald-400" />
-              Check Out Guest & Settle Balance
+              {t("confirm_check_out")}
             </DialogTitle>
             <DialogDescription className="text-slate-500 text-xs">
-              Settle room charges, minibar logs, and additional service payments.
+              {t("subtitle")}
             </DialogDescription>
           </DialogHeader>
 
           {/* Stay review details */}
           <div className="rounded-xl border border-slate-900 bg-slate-900/10 p-3.5 space-y-2 text-xs">
-            <h4 className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">Reservation details</h4>
+            <h4 className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">{t("stay_summary")}</h4>
             <div className="grid grid-cols-2 gap-2 text-slate-300">
               <div>
-                <span className="text-slate-500 block text-[10px]">Guest Name</span>
+                <span className="text-slate-500 block text-[10px]">{t("guest_name")}</span>
                 <span className="font-semibold">{reservation.guest.first_name} {reservation.guest.last_name}</span>
               </div>
               <div>
-                <span className="text-slate-500 block text-[10px]">Assigned Room</span>
-                <span className="font-semibold text-slate-200">Room {reservation.room.room_number}</span>
+                <span className="text-slate-500 block text-[10px]">{t("assigned_room")}</span>
+                <span className="font-semibold text-slate-200">{t("room")} {reservation.room.room_number}</span>
               </div>
               <div>
-                <span className="text-slate-500 block text-[10px]">Stay Interval</span>
-                <span className="font-semibold">{reservation.check_in_date} to {reservation.check_out_date}</span>
+                <span className="text-slate-500 block text-[10px]">{t("dates")}</span>
+                <span className="font-semibold">{reservation.check_in_date} - {reservation.check_out_date}</span>
               </div>
               <div>
-                <span className="text-slate-500 block text-[10px]">Total Stay Nights</span>
-                <span className="font-semibold">{reservation.total_nights} Nights</span>
+                <span className="text-slate-500 block text-[10px]">{t("nights_count").split(" ")[0]}</span>
+                <span className="font-semibold">{t("nights_count", { count: reservation.total_nights })}</span>
               </div>
             </div>
           </div>
@@ -144,13 +151,13 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
           <div className="space-y-4 text-xs">
             {/* Custom additional charges builder */}
             <div className="space-y-2.5">
-              <Label className="text-slate-400 font-bold uppercase text-[10px]">Additional Charges (Minibar, damage, extra items)</Label>
+              <Label className="text-slate-400 font-bold uppercase text-[10px]">{t("additional_charges")}</Label>
               <div className="grid grid-cols-12 gap-2">
                 <div className="col-span-7">
                   <Input
                     value={desc}
                     onChange={(e) => setDesc(e.target.value)}
-                    placeholder="Description (e.g. Laundry charges)"
+                    placeholder={locale === "ne" ? "विवरण (उदा. लाउन्ड्री शुल्क)" : "Description (e.g. Laundry charges)"}
                     className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9 text-xs"
                   />
                 </div>
@@ -159,7 +166,7 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    placeholder="Amount"
+                    placeholder={t("amount").split(" ")[0]}
                     className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-9 text-xs"
                   />
                 </div>
@@ -197,7 +204,7 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
             <div className="space-y-1.5">
               <Label htmlFor="payment" className="text-slate-400 font-bold uppercase text-[10px] flex items-center gap-1">
                 <DollarSign className="h-3.5 w-3.5 text-emerald-400" />
-                Settlement Payment Gateway *
+                {t("payment_method")}
               </Label>
               <select
                 id="payment"
@@ -205,12 +212,12 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 className="w-full rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-xs p-2.5 h-10 outline-none cursor-pointer focus:border-emerald-500"
               >
-                <option value="cash">Cash (NPR)</option>
-                <option value="card">Credit / Debit Card</option>
-                <option value="esewa">eSewa Wallet (Nepal)</option>
-                <option value="khalti">Khalti Wallet (Nepal)</option>
-                <option value="fonepay">Fonepay QR scan</option>
-                <option value="bank_transfer">Direct Bank Transfer</option>
+                <option value="cash">{tData("cash")} (NPR)</option>
+                <option value="card">{tData("card")}</option>
+                <option value="esewa">{tData("esewa")}</option>
+                <option value="khalti">{tData("khalti")}</option>
+                <option value="fonepay">{tData("fonepay")}</option>
+                <option value="bank_transfer">{tData("bank_transfer")}</option>
               </select>
             </div>
 
@@ -218,7 +225,7 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
             <div className="grid grid-cols-3 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="rating" className="text-slate-400 font-bold uppercase text-[10px]">
-                  Feedback Rating
+                  {t("feedback_rating")}
                 </Label>
                 <select
                   id="rating"
@@ -226,22 +233,22 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
                   onChange={(e) => setRating(Number(e.target.value))}
                   className="w-full rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-xs p-2.5 h-10 outline-none cursor-pointer"
                 >
-                  <option value={5}>5 ★ - Excellent</option>
-                  <option value={4}>4 ★ - Very Good</option>
-                  <option value={3}>3 ★ - Average</option>
-                  <option value={2}>2 ★ - Poor</option>
-                  <option value={1}>1 ★ - Bad</option>
+                  <option value={5}>{locale === "ne" ? "५ ★ - उत्कृष्ट" : "5 ★ - Excellent"}</option>
+                  <option value={4}>{locale === "ne" ? "४ ★ - धेरै राम्रो" : "4 ★ - Very Good"}</option>
+                  <option value={3}>{locale === "ne" ? "३ ★ - सामान्य" : "3 ★ - Average"}</option>
+                  <option value={2}>{locale === "ne" ? "२ ★ - खराब" : "2 ★ - Poor"}</option>
+                  <option value={1}>{locale === "ne" ? "१ ★ - अति खराब" : "1 ★ - Bad"}</option>
                 </select>
               </div>
               <div className="space-y-1.5 col-span-2">
                 <Label htmlFor="comment" className="text-slate-400 font-bold uppercase text-[10px]">
-                  Feedback Comment
+                  {t("feedback_comment")}
                 </Label>
                 <Input
                   id="comment"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
-                  placeholder="e.g. Guest loved the balcony view, smooth service."
+                  placeholder={locale === "ne" ? "उदा. पाहुनाले कोठाको दृश्य मन पराउनुभयो..." : "e.g. Guest loved the balcony view, smooth service."}
                   className="bg-slate-900 border-slate-800 text-slate-100 rounded-lg h-10"
                 />
               </div>
@@ -249,18 +256,18 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
 
             {/* Billing Estimations */}
             <div className="rounded-xl border border-slate-900 bg-slate-950 p-4 space-y-2 text-xs">
-              <h4 className="font-extrabold text-cyan-400 uppercase tracking-wider text-[10px]">Final Billing Aggregations</h4>
+              <h4 className="font-extrabold text-cyan-400 uppercase tracking-wider text-[10px]">{t("invoice_settlement")}</h4>
               <div className="space-y-1.5">
                 <div className="flex justify-between text-slate-400">
-                  <span>Room Stay Charges (with VAT)</span>
+                  <span>{t("room_charges")}</span>
                   <span>Rs. {roomTotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-slate-400">
-                  <span>Additional Services Total</span>
+                  <span>{t("additional_charges_sum")}</span>
                   <span>Rs. {additionalTotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm font-black text-white pt-1.5 border-t border-slate-900">
-                  <span>Total Amount Settled</span>
+                  <span>{t("grand_total")}</span>
                   <span className="text-emerald-400">Rs. {grandTotal.toLocaleString()}</span>
                 </div>
               </div>
@@ -274,7 +281,7 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
               variant="ghost"
               className="border border-slate-800 text-slate-400 hover:text-white rounded-lg h-10"
             >
-              Cancel
+              {tCommon("cancel")}
             </Button>
             <Button
               type="submit"
@@ -284,10 +291,10 @@ export const CheckOutModal: React.FC<CheckOutModalProps> = ({
               {submitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin text-white" />
-                  Processing Checkout...
+                  {t("checking_out")}
                 </>
               ) : (
-                "Settle Bill & Check Out"
+                t("confirm_check_out")
               )}
             </Button>
           </DialogFooter>

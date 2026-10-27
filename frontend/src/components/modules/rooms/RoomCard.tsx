@@ -5,6 +5,8 @@ import { Bed, CheckCircle2, ShieldAlert, Sparkles, AlertTriangle, Hammer } from 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Room } from "@/lib/types";
+import { useTransData } from "@/lib/hooks/useTransData";
+import { useLocale } from "next-intl";
 
 interface RoomCardProps {
   room: Room;
@@ -57,6 +59,8 @@ const statusConfigs = {
 export const RoomCard: React.FC<RoomCardProps> = ({ room, onClick }) => {
   const config = statusConfigs[room.status] || statusConfigs.available;
   const StatusIcon = config.icon;
+  const tData = useTransData();
+  const locale = useLocale();
 
   return (
     <Card
@@ -71,25 +75,29 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, onClick }) => {
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Floor {room.floor}
+              {locale === "ne" ? `तल्ला ${room.floor}` : `Floor ${room.floor}`}
             </span>
             <h3 className="text-2xl font-extrabold tracking-tight text-white group-hover:text-cyan-400 transition-colors">
-              Room {room.room_number}
+              {locale === "ne" ? `कोठा ${room.room_number}` : `Room ${room.room_number}`}
             </h3>
           </div>
           <Badge variant="outline" className={`py-1 px-2.5 font-semibold text-xs rounded-lg transition-all ${config.badgeClass}`}>
             <StatusIcon className="h-3 w-3 mr-1" />
-            {config.label}
+            {tData(room.status)}
           </Badge>
         </div>
 
         {/* Room Details */}
         <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between text-xs">
           <span className="text-slate-400 font-medium truncate max-w-[150px]">
-            {room.room_type?.name || "Standard Room"}
+            {tData(room.room_type?.name || "Standard Room")}
           </span>
           <span className="text-slate-500">
-            {room.room_type?.max_occupancy ? `Max: ${room.room_type.max_occupancy} guests` : ""}
+            {room.room_type?.max_occupancy 
+              ? (locale === "ne" 
+                ? `अधिकतम: ${room.room_type.max_occupancy} पाहुना` 
+                : `Max: ${room.room_type.max_occupancy} guests`)
+              : ""}
           </span>
         </div>
 
@@ -103,3 +111,4 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, onClick }) => {
     </Card>
   );
 };
+

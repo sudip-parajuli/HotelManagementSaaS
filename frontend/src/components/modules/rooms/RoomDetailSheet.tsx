@@ -17,9 +17,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { roomsApi } from "@/lib/api/rooms";
 import type { Room, RoomStatus } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
-// Standard selects might not be directly styleable in shadcn v4 depending on implementation.
-// We will build a clean, custom HTML select element styled with Tailwind to work perfectly.
 interface RoomDetailSheetProps {
   room: Room | null;
   open: boolean;
@@ -27,12 +27,12 @@ interface RoomDetailSheetProps {
   onSuccess: () => void;
 }
 
-const statusOptions: { value: RoomStatus; label: string; icon: any; color: string }[] = [
-  { value: "available", label: "Available", icon: Sparkles, color: "text-emerald-400" },
-  { value: "occupied", label: "Occupied", icon: Bed, color: "text-rose-400" },
-  { value: "dirty", label: "Dirty", icon: Sparkles, color: "text-amber-400" },
-  { value: "maintenance", label: "Maintenance", icon: Hammer, color: "text-slate-400" },
-  { value: "out_of_order", label: "Out of Order", icon: AlertTriangle, color: "text-red-400" },
+const statusOptions: { value: RoomStatus; icon: any; color: string }[] = [
+  { value: "available", icon: Sparkles, color: "text-emerald-400" },
+  { value: "occupied", icon: Bed, color: "text-rose-400" },
+  { value: "dirty", icon: Sparkles, color: "text-amber-400" },
+  { value: "maintenance", icon: Hammer, color: "text-slate-400" },
+  { value: "out_of_order", icon: AlertTriangle, color: "text-red-400" },
 ];
 
 export const RoomDetailSheet: React.FC<RoomDetailSheetProps> = ({
@@ -41,6 +41,12 @@ export const RoomDetailSheet: React.FC<RoomDetailSheetProps> = ({
   onOpenChange,
   onSuccess,
 }) => {
+  const t = useTranslations("Rooms");
+  const tCommon = useTranslations("Common");
+  const tFrontDesk = useTranslations("FrontDesk");
+  const tData = useTransData();
+  const locale = useLocale();
+
   const [status, setStatus] = useState<RoomStatus>("available");
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,12 +68,12 @@ export const RoomDetailSheet: React.FC<RoomDetailSheetProps> = ({
         status,
         notes,
       });
-      toast.success(`Room ${room.room_number} updated successfully!`);
+      toast.success(locale === "ne" ? `कोठा ${room.room_number} सफलतापूर्वक अद्यावधिक भयो!` : `Room ${room.room_number} updated successfully!`);
       onSuccess();
       onOpenChange(false);
     } catch (err: any) {
       console.error(err);
-      toast.error(err.response?.data?.error || "Failed to update room details.");
+      toast.error(err.response?.data?.error || (locale === "ne" ? "कोठा अद्यावधिक गर्न असफल भयो।" : "Failed to update room details."));
     } finally {
       setIsSubmitting(false);
     }
@@ -79,51 +85,51 @@ export const RoomDetailSheet: React.FC<RoomDetailSheetProps> = ({
         <SheetHeader className="p-0 border-b border-slate-900 pb-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded">
-              Floor {room.floor}
+              {t("spec_floor", { n: room.floor })}
             </span>
             <Link href={`/rooms/${room.id}`}>
               <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-slate-400 hover:text-white">
                 <Eye className="h-3.5 w-3.5" />
-                Full Page
+                {locale === "ne" ? "पूर्ण पृष्ठ" : "Full Page"}
               </Button>
             </Link>
           </div>
           <SheetTitle className="text-2xl font-black text-white mt-2">
-            Room {room.room_number}
+            {tFrontDesk("room")} {room.room_number}
           </SheetTitle>
           <SheetDescription className="text-slate-400 text-xs">
-            {room.room_type?.name || "Standard Room Type"}
+            {tData(room.room_type?.name || "Standard Room Type")}
           </SheetDescription>
         </SheetHeader>
 
         {/* Room type brief information */}
         <div className="rounded-xl border border-slate-900 bg-slate-900/20 p-4 space-y-3">
           <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-            Room Type Details
+            {locale === "ne" ? "कोठा प्रकार विवरण" : "Room Type Details"}
           </h4>
           <div className="grid grid-cols-2 gap-4 text-xs">
             <div>
-              <span className="text-slate-500 block">Base Price</span>
+              <span className="text-slate-500 block">{t("base_price")}</span>
               <span className="font-semibold text-slate-200">
                 Rs. {Number(room.room_type?.base_price_per_night || 0).toLocaleString()}
               </span>
             </div>
             <div>
-              <span className="text-slate-500 block">Max Occupancy</span>
+              <span className="text-slate-500 block">{t("max_occupancy")}</span>
               <span className="font-semibold text-slate-200">
-                {room.room_type?.max_occupancy || 2} guests
+                {t("max_guests", { count: room.room_type?.max_occupancy || 2 })}
               </span>
             </div>
             {room.room_type?.weekend_price && (
               <div>
-                <span className="text-slate-500 block">Weekend Price</span>
+                <span className="text-slate-500 block">{t("weekend_rate")}</span>
                 <span className="font-semibold text-slate-200">
                   Rs. {Number(room.room_type.weekend_price).toLocaleString()}
                 </span>
               </div>
             )}
             <div>
-              <span className="text-slate-500 block">Extra Person Charge</span>
+              <span className="text-slate-500 block">{t("extra_person_charge")}</span>
               <span className="font-semibold text-slate-200">
                 Rs. {Number(room.room_type?.extra_person_charge || 0).toLocaleString()}
               </span>
@@ -135,7 +141,7 @@ export const RoomDetailSheet: React.FC<RoomDetailSheetProps> = ({
         <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-5">
           <div className="space-y-2">
             <Label htmlFor="room-status" className="text-xs font-bold text-slate-400 uppercase">
-              Current Status
+              {t("current_status") || (locale === "ne" ? "हालको स्थिति" : "Current Status")}
             </Label>
             <div className="relative">
               <select
@@ -146,7 +152,7 @@ export const RoomDetailSheet: React.FC<RoomDetailSheetProps> = ({
               >
                 {statusOptions.map((opt) => (
                   <option key={opt.value} value={opt.value} className="bg-slate-950 text-slate-100">
-                    {opt.label}
+                    {tData(opt.value)}
                   </option>
                 ))}
               </select>
@@ -160,13 +166,13 @@ export const RoomDetailSheet: React.FC<RoomDetailSheetProps> = ({
 
           <div className="space-y-2">
             <Label htmlFor="room-notes" className="text-xs font-bold text-slate-400 uppercase">
-              Operational Notes / Issues
+              {locale === "ne" ? "सञ्चालन टिपोटहरू / समस्याहरू" : "Operational Notes / Issues"}
             </Label>
             <Input
               id="room-notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Needs bulb replacement, guest requests extra pillows"
+              placeholder={t("notes_placeholder")}
               className="bg-slate-900 border-slate-800 focus:border-cyan-500 text-slate-100 p-3 h-20 placeholder:text-slate-600 rounded-lg resize-none"
             />
           </div>
@@ -178,7 +184,7 @@ export const RoomDetailSheet: React.FC<RoomDetailSheetProps> = ({
               className="w-full bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold gap-2 shadow-lg shadow-cyan-500/20"
             >
               <Save className="h-4 w-4" />
-              {isSubmitting ? "Saving Updates..." : "Save Room Details"}
+              {isSubmitting ? tCommon("saving") : t("save_room_type")}
             </Button>
           </SheetFooter>
         </form>

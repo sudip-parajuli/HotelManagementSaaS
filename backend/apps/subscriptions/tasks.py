@@ -7,7 +7,11 @@ import logging
 from django.utils import timezone
 from datetime import timedelta
 from celery import shared_task
-from apps.subscriptions.models import TenantSubscription, SubscriptionInvoice, SubscriptionStatus, InvoiceStatus
+from apps.subscriptions.models import (
+    TenantSubscription, SubscriptionInvoice, SubscriptionStatus, InvoiceStatus,
+    TenantModuleSubscription, TenantModuleSubscriptionStatus, ModuleInvoice,
+)
+from apps.subscriptions.billing_service import generate_monthly_invoice
 from apps.notifications.sms import send_sms
 
 logger = logging.getLogger(__name__)
@@ -60,8 +64,8 @@ def suspend_delinquent_tenants():
 @shared_task
 def generate_monthly_subscription_invoices():
     """
-    Compiles monthly invoices for all active/trial subscriptions whose next billing date is today.
-    Updates next billing date and marks subscription past_due.
+    LEGACY — kept for backward compatibility.
+    Compiles monthly invoices for all active/trial subscriptions.
     """
     today = timezone.localdate()
     
@@ -90,3 +94,42 @@ def generate_monthly_subscription_invoices():
         if sub.tenant.contact_phone:
             send_sms(sub.tenant.contact_phone, msg)
             logger.info(f"Generated invoice #{invoice.id} for {sub.tenant.name}")
+
+
+# ─── NEW: Modular Invoice Generation ──────────────────────────────────────────
+
+@shared_task
+def generate_module_based_invoices():
+    """
+    Celery Beat task: generates monthly ModuleInvoices for all active tenants
+    who have at least one active TenantModuleSubscription.
+    Runs on the 1st of each month at 6 AM.
+    """
+    from apps.tenants.models import Client
+    
+    today = timezone.localdate()
+    tenant_ids = (
+        TenantModuleSubscription.objects
+        .filter(status=TenantModuleSubscriptionStatus.ACTIVE)
+        .values_list("tenant_id", flat=True)
+        .distinct()
+    )
+    
+    generated = 0
+    for tenant_id in tenant_ids:
+        try:
+            invoice = generate_monthly_invoice(tenant_id)
+            tenant = Client.objects.get(id=tenant_id)
+            msg = (
+                f"SIA HMS Invoice: Module-based bill generated for {tenant.name} "
+                f"for Rs.{invoice.total}. {invoice.line_items.count()} modules."
+            )
+            if tenant.contact_phone:
+                send_sms(tenant.contact_phone, msg)
+            generated += 1
+            logger.info(f"Generated module invoice #{invoice.id} for {tenant.name}")
+        except Exception as e:
+            logger.error(f"Failed to generate module invoice for tenant {tenant_id}: {e}")
+    
+    logger.info(f"Generated {generated} module-based invoices.")
+    return generated

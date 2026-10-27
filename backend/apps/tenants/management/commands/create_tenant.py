@@ -25,7 +25,7 @@ class Command(BaseCommand):
         parser.add_argument("--schema", required=True, help="PostgreSQL schema name (e.g., hotel_paraiso)")
         parser.add_argument("--domain", required=True, help="Subdomain prefix (e.g., paraiso)")
         parser.add_argument("--admin-email", required=True, help="Initial admin email")
-        parser.add_argument("--admin-password", default="ChangeMe123!", help="Initial admin password")
+        parser.add_argument("--admin-password", required=True, help="Unique initial admin password (required; no shared default)")
         parser.add_argument("--contact-phone", default="", help="Hotel contact phone")
         parser.add_argument(
             "--plan",

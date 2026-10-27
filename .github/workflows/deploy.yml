@@ -111,7 +111,12 @@ jobs:
       - name: Run frontend tests
         run: |
           cd frontend
-          npm run test -- --run
+          npm test
+
+      - name: Build production frontend
+        run: |
+          cd frontend
+          npm run build
 
   # ─────────────────────────────
   # Deploy to Production (main only)

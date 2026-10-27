@@ -1,12 +1,12 @@
 """
-SIA HMS — POS Serializers
+SIA HMS — POS Serializers (B.2 upgraded)
 """
 
 from rest_framework import serializers
 from apps.restaurant.models import MenuItem, DiningTable
 from apps.restaurant.serializers import MenuItemSerializer
 from apps.bookings.models import Reservation
-from .models import Order, OrderItem, KOT
+from .models import Order, OrderItem, KOT, OrderDiscount
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
@@ -36,6 +36,28 @@ class OrderItemSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "unit_price", "status"]
 
 
+class OrderDiscountSerializer(serializers.ModelSerializer):
+    requested_by_name = serializers.CharField(source="requested_by.get_full_name", read_only=True)
+    approved_by_name = serializers.CharField(source="approved_by.get_full_name", read_only=True)
+    requires_approval = serializers.BooleanField(read_only=True)
+
+    class Meta:
+        model = OrderDiscount
+        fields = [
+            "id",
+            "discount_type",
+            "value",
+            "reason",
+            "approval_status",
+            "requires_approval",
+            "requested_by_name",
+            "approved_by_name",
+            "created_at",
+            "reviewed_at",
+        ]
+        read_only_fields = ["id", "approval_status", "requested_by_name", "approved_by_name", "created_at", "reviewed_at"]
+
+
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True)
     table_id = serializers.PrimaryKeyRelatedField(
@@ -54,6 +76,7 @@ class OrderSerializer(serializers.ModelSerializer):
         allow_null=True,
     )
     guest_name = serializers.CharField(source="reservation.guest.full_name", read_only=True)
+    discount_detail = OrderDiscountSerializer(read_only=True)
 
     class Meta:
         model = Order
@@ -68,10 +91,13 @@ class OrderSerializer(serializers.ModelSerializer):
             "order_type",
             "status",
             "notes",
+            "scheduled_at",
+            "is_pre_order",
             "subtotal",
             "tax_amount",
             "discount_amount",
             "total_amount",
+            "discount_detail",
             "items",
             "created_by",
             "created_at",
@@ -93,7 +119,7 @@ class OrderSerializer(serializers.ModelSerializer):
         from decimal import Decimal
         items_data = validated_data.pop("items", [])
         discount_amount = Decimal(str(validated_data.get("discount_amount") or 0.00))
-        
+
         # Settle creator
         request = self.context.get("request")
         if request and request.user and request.user.is_authenticated:
@@ -101,17 +127,17 @@ class OrderSerializer(serializers.ModelSerializer):
 
         # Create Order
         order = Order.objects.create(**validated_data)
-        
+
         subtotal = Decimal("0.00")
         order_items = []
-        
+
         for item_data in items_data:
             menu_item = item_data["menu_item"]
             qty = item_data["quantity"]
             price = menu_item.price
-            
+
             subtotal += price * qty
-            
+
             order_item = OrderItem.objects.create(
                 order=order,
                 menu_item=menu_item,
@@ -124,7 +150,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
         # Set totals
         order.subtotal = subtotal
-        order.tax_amount = subtotal * Decimal("0.13") # 13% VAT
+        order.tax_amount = subtotal * Decimal("0.13")  # 13% VAT
         order.total_amount = max((subtotal + order.tax_amount) - discount_amount, Decimal("0.00"))
         order.save()
 
@@ -133,8 +159,9 @@ class OrderSerializer(serializers.ModelSerializer):
             order.table.status = DiningTable.TableStatus.OCCUPIED
             order.table.save()
 
-        # Generate KOT tickets grouped by prep station
-        self._generate_kots(order, order_items)
+        # For pre-orders, skip KOT broadcast until scheduled_at fires (Celery task)
+        if not order.is_pre_order:
+            self._generate_kots(order, order_items)
 
         return order
 
@@ -147,19 +174,20 @@ class OrderSerializer(serializers.ModelSerializer):
             station_groups[station].append(item)
 
         for station, station_items in station_groups.items():
-            kot = KOT.objects.create(order=order, station=station)
+            # BOT for bar station, KOT for everything else
+            ticket_type = KOT.TicketType.BOT if station == KOT.StationChoices.BAR else KOT.TicketType.KOT
+            kot = KOT.objects.create(order=order, station=station, ticket_type=ticket_type)
             kot.items.set(station_items)
-            
-            # Broadcast to KDS station group
+
             self._broadcast_kds_kot(station, kot)
 
     def _get_station_for_item(self, menu_item):
         cat_name = menu_item.category.name.lower()
-        if any(k in cat_name for k in ["drink", "beverage", "soda", "wine", "beer", "bar"]):
+        if any(k in cat_name for k in ["drink", "beverage", "soda", "wine", "beer", "bar", "cocktail"]):
             return KOT.StationChoices.BAR
         if any(k in cat_name for k in ["dessert", "pastry", "cake", "sweet"]):
             return KOT.StationChoices.PASTRY
-        if any(k in cat_name for k in ["salad", "cold", "starter"]):
+        if any(k in cat_name for k in ["salad", "cold", "starter", "appetizer"]):
             return KOT.StationChoices.COLD_PREP
         return KOT.StationChoices.HOT_KITCHEN
 
@@ -167,9 +195,10 @@ class OrderSerializer(serializers.ModelSerializer):
         channel_layer = get_channel_layer()
         if not channel_layer:
             return
-        
+
         kot_data = {
             "kot_id": kot.id,
+            "ticket_type": kot.ticket_type,
             "order_id": kot.order.id,
             "table_number": kot.order.table.table_number if kot.order.table else "N/A",
             "order_type": kot.order.get_order_type_display(),
@@ -188,7 +217,7 @@ class OrderSerializer(serializers.ModelSerializer):
                 for it in kot.items.all()
             ],
         }
-        
+
         async_to_sync(channel_layer.group_send)(
             f"kds_{station}",
             {
@@ -207,11 +236,18 @@ class KOTSerializer(serializers.ModelSerializer):
     order_type = serializers.CharField(source="order.get_order_type_display", read_only=True)
     items = OrderItemSerializer(many=True, read_only=True)
     station_display = serializers.CharField(source="get_station_display", read_only=True)
+    ticket_type_display = serializers.CharField(source="get_ticket_type_display", read_only=True)
+
+    # Cycle-time helpers (seconds)
+    accept_time_seconds = serializers.SerializerMethodField()
+    cook_time_seconds = serializers.SerializerMethodField()
 
     class Meta:
         model = KOT
         fields = [
             "id",
+            "ticket_type",
+            "ticket_type_display",
             "order_id",
             "table_number",
             "order_type",
@@ -219,5 +255,22 @@ class KOTSerializer(serializers.ModelSerializer):
             "station_display",
             "status",
             "created_at",
+            "accepted_at",
+            "completed_at",
+            "served_at",
+            "accept_time_seconds",
+            "cook_time_seconds",
             "items",
         ]
+
+    def get_accept_time_seconds(self, obj):
+        """Seconds from ticket creation to chef acceptance."""
+        if obj.accepted_at:
+            return int((obj.accepted_at - obj.created_at).total_seconds())
+        return None
+
+    def get_cook_time_seconds(self, obj):
+        """Seconds from chef acceptance to completion."""
+        if obj.accepted_at and obj.completed_at:
+            return int((obj.completed_at - obj.accepted_at).total_seconds())
+        return None

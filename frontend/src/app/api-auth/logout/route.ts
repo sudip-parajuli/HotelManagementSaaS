@@ -1,19 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import axios from "axios";
 
 const BACKEND_URL = process.env.INTERNAL_BACKEND_URL || "http://127.0.0.1:8000";
 
 export async function POST(request: NextRequest) {
-  const cookieStore = cookies();
-  const accessToken = cookieStore.get("access_token")?.value;
-  const refreshToken = cookieStore.get("refresh_token")?.value;
+  const accessToken = request.cookies.get("access_token")?.value;
+  const refreshToken = request.cookies.get("refresh_token")?.value;
 
-  // Even if tokens are missing, we still clear cookies and return OK to be safe
   if (!refreshToken) {
-    cookieStore.delete("access_token");
-    cookieStore.delete("refresh_token");
-    return NextResponse.json({ message: "Successfully logged out (local)." });
+    const res = NextResponse.json({ message: "Successfully logged out (local)." });
+    res.cookies.delete("access_token");
+    res.cookies.delete("refresh_token");
+    return res;
   }
 
   try {
@@ -28,7 +26,6 @@ export async function POST(request: NextRequest) {
       headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
-    // Call backend to blacklist the token
     await axios.post(
       `${BACKEND_URL}/api/auth/logout/`,
       { refresh: refreshToken },
@@ -36,11 +33,10 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error("Logout backend error:", error);
-  } finally {
-    // Always clear the local cookies
-    cookieStore.delete("access_token");
-    cookieStore.delete("refresh_token");
   }
 
-  return NextResponse.json({ message: "Successfully logged out." });
+  const res = NextResponse.json({ message: "Successfully logged out." });
+  res.cookies.delete("access_token");
+  res.cookies.delete("refresh_token");
+  return res;
 }

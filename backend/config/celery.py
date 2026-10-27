@@ -46,10 +46,25 @@ app.conf.beat_schedule = {
         "task": "apps.subscriptions.tasks.suspend_overdue_tenants",
         "schedule": crontab(hour=0, minute=5),
     },
-    # Subscriptions: generate monthly invoices on the 1st at 6am
+    # Subscriptions: generate monthly invoices on the 1st at 6am (legacy)
     "generate-monthly-invoices": {
-        "task": "apps.subscriptions.tasks.generate_monthly_invoices",
+        "task": "apps.subscriptions.tasks.generate_monthly_subscription_invoices",
         "schedule": crontab(hour=6, minute=0, day_of_month=1),
+    },
+    # Subscriptions: generate module-based invoices on the 1st at 6:30am
+    "generate-module-based-invoices": {
+        "task": "apps.subscriptions.tasks.generate_module_based_invoices",
+        "schedule": crontab(hour=6, minute=30, day_of_month=1),
+    },
+    # Timed Sessions: check expiring sessions every 1 minute
+    "check-expiring-sessions": {
+        "task": "apps.timed_sessions.tasks.check_expiring_sessions",
+        "schedule": crontab(minute="*"),
+    },
+    # Timed Sessions: auto-end overdue sessions every 5 minutes
+    "auto-end-overdue-sessions": {
+        "task": "apps.timed_sessions.tasks.auto_end_overdue_sessions",
+        "schedule": crontab(minute="*/5"),
     },
 }
 

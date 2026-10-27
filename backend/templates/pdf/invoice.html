@@ -218,7 +218,7 @@
     <div class="summary-wrapper">
         <table class="summary-table">
             <tr>
-                <td>{% if lang == 'ne' %}कुल (Subtotal){% else %}Subtotal (Base){% endif %}</td>
+                <td>{% if lang == 'ne' %}मूल्य (Base Price){% else %}Base Price{% endif %}</td>
                 <td class="num">{{ invoice.subtotal }}</td>
             </tr>
             {% if invoice.discount_amount > 0 %}
@@ -233,6 +233,14 @@
                 <td class="num">{{ invoice.service_charge_amount }}</td>
             </tr>
             {% endif %}
+            <tr>
+                <td>{% if lang == 'ne' %}कर योग्य कुल (Subtotal){% else %}Taxable Subtotal{% endif %}</td>
+                <td class="num">
+                    {% with base=invoice.subtotal sc=invoice.service_charge_amount %}
+                        {{ invoice.subtotal|add:invoice.service_charge_amount }}
+                    {% endwith %}
+                </td>
+            </tr>
             {% if invoice.tax_amount > 0 %}
             <tr>
                 <td>{% if lang == 'ne' %}मूल्य अभिवृद्धि कर{% else %}Value Added Tax{% endif %} (VAT {{ invoice.tax_rate }}%)</td>
@@ -240,9 +248,19 @@
             </tr>
             {% endif %}
             <tr class="total">
-                <td>{% if lang == 'ne' %}कुल जम्मा{% else %}Grand Total{% endif %}</td>
+                <td>{% if lang == 'ne' %}कुल जम्मा (Grand Total){% else %}Grand Total{% endif %}</td>
                 <td class="num">NPR {{ invoice.total_amount }}</td>
             </tr>
+            {% if invoice.digital_rebate_amount > 0 %}
+            <tr style="color: #319795; font-weight: bold;">
+                <td>{% if lang == 'ne' %}डिजिटल भुक्तानी कर फिर्ता{% else %}Digital VAT Rebate{% endif %} (10%)</td>
+                <td class="num">-NPR {{ invoice.digital_rebate_amount }}</td>
+            </tr>
+            <tr class="total" style="background-color: #e6fffa; border-top: 1px solid #319795; border-bottom: 1px solid #319795;">
+                <td>{% if lang == 'ne' %}खुद देय रकम{% else %}Net Payable{% endif %}</td>
+                <td class="num">NPR {{ invoice.net_payable_amount }}</td>
+            </tr>
+            {% endif %}
             <tr>
                 <td>{% if lang == 'ne' %}भुक्तानी रकम{% else %}Paid Amount{% endif %}</td>
                 <td class="num">NPR {{ invoice.paid_amount }}</td>

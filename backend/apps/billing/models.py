@@ -56,6 +56,10 @@ class Invoice(models.Model):
     tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal("13.00"))
     tax_amount = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0.00"))
     
+    vat_amount = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0.00"))
+    digital_rebate_amount = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0.00"))
+    net_payable_amount = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0.00"))
+    
     total_amount = models.DecimalField(max_digits=12, decimal_places=2)
     paid_amount = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0.00"))
     balance_due = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0.00"))
@@ -92,11 +96,21 @@ class Invoice(models.Model):
         from decimal import Decimal
         total = Decimal(str(self.total_amount)) if self.total_amount is not None else Decimal("0.00")
         paid = Decimal(str(self.paid_amount)) if self.paid_amount is not None else Decimal("0.00")
+        net_payable = Decimal(str(self.net_payable_amount)) if self.net_payable_amount is not None else total
         
         self.total_amount = total
         self.paid_amount = paid
-        # Balance calculation
-        self.balance_due = total - paid
+        
+        # Check if any payments are digital
+        is_digital = False
+        if self.pk:
+            is_digital = self.payments.filter(payment_method__in=["esewa", "khalti", "fonepay", "card"]).exists()
+            
+        if is_digital:
+            self.balance_due = net_payable - paid
+        else:
+            self.balance_due = total - paid
+            
         super().save(*args, **kwargs)
 
     @property
@@ -148,6 +162,7 @@ class InvoiceItem(models.Model):
 
 class PaymentMethod(models.TextChoices):
     CASH = "cash", "Cash"
+    CARD = "card", "Card"
     ESEWA = "esewa", "eSewa"
     KHALTI = "khalti", "Khalti"
     FONEPAY = "fonepay", "Fonepay QR"

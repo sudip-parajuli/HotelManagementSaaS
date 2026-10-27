@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LanguageToggle } from "./LanguageToggle";
+import { useTranslations } from "next-intl";
 
 interface NavbarProps {
   title?: string;
@@ -30,14 +31,15 @@ const ROLE_BADGE_COLORS: Record<string, string> = {
 
 export function Navbar({ title }: NavbarProps) {
   const { user, logout } = useAuth();
+  const t = useTranslations("Navbar");
 
   const roleClass = user ? (ROLE_BADGE_COLORS[user.role] ?? "bg-slate-800 text-slate-400") : "";
 
   return (
-    <header className="h-16 flex items-center justify-between px-6 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40">
+    <header className="h-16 flex items-center justify-between px-3 sm:px-6 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40">
       {/* Page title */}
       <h1 className="text-base font-semibold text-slate-200 tracking-tight">
-        {title ?? "Dashboard"}
+        {title ?? t("dashboard")}
       </h1>
 
       <div className="flex items-center gap-3">
@@ -82,7 +84,7 @@ export function Navbar({ title }: NavbarProps) {
             <DropdownMenuSeparator className="bg-slate-800" />
             <DropdownMenuItem className="hover:bg-slate-800 cursor-pointer gap-2">
               <Settings className="h-4 w-4 text-slate-400" />
-              Profile Settings
+              {t("profile_settings")}
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-slate-800" />
             <DropdownMenuItem
@@ -90,7 +92,7 @@ export function Navbar({ title }: NavbarProps) {
               onClick={logout}
             >
               <LogOut className="h-4 w-4" />
-              Sign Out
+              {t("sign_out")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

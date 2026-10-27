@@ -13,8 +13,8 @@ from channels.layers import get_channel_layer
 
 from apps.accounts.permissions import IsHousekeeping, IsPropertyManager, IsAnyStaff
 from apps.properties.models import Room, RoomStatus
-from .models import HousekeepingTask, HousekeepingStatus, HousekeepingPriority, MaintenanceRequest
-from .serializers import HousekeepingTaskSerializer, MaintenanceRequestSerializer
+from .models import HousekeepingTask, HousekeepingStatus, HousekeepingPriority, MaintenanceRequest, RoomDiscrepancy, LostFoundItem
+from .serializers import HousekeepingTaskSerializer, MaintenanceRequestSerializer, RoomDiscrepancySerializer, LostFoundItemSerializer
 
 
 class HousekeepingTaskViewSet(viewsets.ModelViewSet):
@@ -226,3 +226,50 @@ class HousekeepingBoardViewSet(viewsets.ViewSet):
             })
             
         return Response(board_data)
+
+
+class RoomDiscrepancyViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for room discrepancy tracking - logs mismatches between system and physical status.
+    """
+    queryset = RoomDiscrepancy.objects.all().order_by("-reported_at")
+    serializer_class = RoomDiscrepancySerializer
+    permission_classes = [IsAuthenticated, IsAnyStaff]
+    pagination_class = None
+
+    def perform_create(self, serializer):
+        from apps.crm.models import GuestActivity
+        discrepancy = serializer.save(reported_by=self.request.user)
+        GuestActivity.objects.create(
+            guest=None,
+            activity_type="profile_update",
+            description=f"Room discrepancy reported for Room {discrepancy.room.room_number}: {discrepancy.system_status} vs {discrepancy.physical_status_found}",
+        )
+
+    @action(detail=True, methods=["post"])
+    def resolve(self, request, pk=None):
+        """Resolve a discrepancy with notes."""
+        discrepancy = self.get_object()
+        notes = request.data.get("resolution_notes", "")
+        discrepancy.resolved = True
+        discrepancy.resolution_notes = notes
+        discrepancy.save()
+        return Response(RoomDiscrepancySerializer(discrepancy).data)
+
+
+class LostFoundItemViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for lost and found item management.
+    """
+    queryset = LostFoundItem.objects.all().order_by("-found_at")
+    serializer_class = LostFoundItemSerializer
+    permission_classes = [IsAuthenticated, IsAnyStaff]
+    pagination_class = None
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return [IsAnyStaff()]
+        return [IsHousekeeping() | IsPropertyManager()]
+
+    def perform_create(self, serializer):
+        serializer.save(found_by=self.request.user)

@@ -45,6 +45,20 @@ class DiningTable(models.Model):
         default=TableStatus.AVAILABLE,
     )
     qr_code = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    
+    # Floor plan coordinates
+    position_x = models.PositiveIntegerField(default=0, help_text="X coordinate on floor plan")
+    position_y = models.PositiveIntegerField(default=0, help_text="Y coordinate on floor plan")
+    
+    # Steward/waiter assignment
+    assigned_waiter = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="assigned_tables",
+        help_text="Currently assigned steward/waiter for this table",
+    )
 
     class Meta:
         verbose_name = "Dining Table"

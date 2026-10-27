@@ -67,6 +67,7 @@ TENANT_APPS = [
     "apps.analytics",
     "apps.reports",
     "apps.notifications",
+    "apps.timed_sessions",
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
@@ -137,6 +138,8 @@ DATABASES = {
         "PASSWORD": config("POSTGRES_PASSWORD", default="sia_hms_password"),
         "HOST": config("POSTGRES_HOST", default="localhost"),
         "PORT": config("POSTGRES_PORT", default="5432"),
+        "OPTIONS": {"sslmode": config("POSTGRES_SSLMODE", default="prefer")},
+        "CONN_MAX_AGE": config("POSTGRES_CONN_MAX_AGE", default=0, cast=int),
     }
 }
 

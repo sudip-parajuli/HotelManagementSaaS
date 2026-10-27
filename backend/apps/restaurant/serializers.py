@@ -14,10 +14,14 @@ class DiningAreaSerializer(serializers.ModelSerializer):
 
 class DiningTableSerializer(serializers.ModelSerializer):
     area_name = serializers.CharField(source="area.name", read_only=True)
+    assigned_waiter_name = serializers.CharField(source="assigned_waiter.get_full_name", read_only=True)
 
     class Meta:
         model = DiningTable
-        fields = ["id", "area", "area_name", "table_number", "capacity", "status", "qr_code"]
+        fields = [
+            "id", "area", "area_name", "table_number", "capacity", "status",
+            "qr_code", "position_x", "position_y", "assigned_waiter", "assigned_waiter_name"
+        ]
         read_only_fields = ["id", "qr_code"]
 
 

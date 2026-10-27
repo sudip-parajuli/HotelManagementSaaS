@@ -13,12 +13,18 @@ import { BookingCalendar } from "@/components/modules/bookings/BookingCalendar";
 import { BookingDetailSheet } from "@/components/modules/bookings/BookingDetailSheet";
 import { NewBookingDialog } from "@/components/modules/bookings/NewBookingDialog";
 import type { Room, RoomType, Reservation } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 export default function BookingCalendarPage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   
+  const t = useTranslations("Bookings");
+  const tData = useTransData();
+  const locale = useLocale();
+
   // Today Stats Summaries
   const [stats, setStats] = useState({
     arrivals: 0,
@@ -101,16 +107,16 @@ export default function BookingCalendarPage() {
       {/* Header Info */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-white tracking-tight">Stay Timeline</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">{t("title")}</h1>
           <p className="text-slate-400 text-sm">
-            Overview of room occupancy calendar, check-in intervals, and visual reservations mapping.
+            {t("subtitle")}
           </p>
         </div>
 
         <Link href="/bookings/new">
           <Button className="bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold gap-2 shadow-lg shadow-cyan-500/20">
             <Plus className="h-4 w-4" />
-            Book Stay
+            {t("book_stay")}
           </Button>
         </Link>
       </div>
@@ -121,33 +127,39 @@ export default function BookingCalendarPage() {
           <CardHeader className="p-4 pb-2">
             <CardTitle className="text-xs font-semibold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
               <CalendarDays className="h-4 w-4" />
-              Arrivals Today
+              {t("arrivals_today")}
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <div className="text-2xl font-extrabold text-white">{stats.arrivals} Guests</div>
+            <div className="text-2xl font-extrabold text-white">
+              {t("guests_count", { count: stats.arrivals })}
+            </div>
           </CardContent>
         </Card>
         <Card className="bg-slate-900/40 border-slate-800 shadow-md">
           <CardHeader className="p-4 pb-2">
             <CardTitle className="text-xs font-semibold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
               <Users className="h-4 w-4" />
-              Departures Today
+              {t("departures_today")}
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <div className="text-2xl font-extrabold text-white">{stats.departures} Rooms</div>
+            <div className="text-2xl font-extrabold text-white">
+              {t("rooms_count", { count: stats.departures })}
+            </div>
           </CardContent>
         </Card>
         <Card className="bg-slate-900/40 border-slate-800 shadow-md">
           <CardHeader className="p-4 pb-2">
             <CardTitle className="text-xs font-semibold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
               <UserCheck className="h-4 w-4" />
-              Active In-House
+              {t("active_in_house")}
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <div className="text-2xl font-extrabold text-white">{stats.inHouse} Guests</div>
+            <div className="text-2xl font-extrabold text-white">
+              {t("guests_count", { count: stats.inHouse })}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -170,7 +182,7 @@ export default function BookingCalendarPage() {
             variant="ghost"
             className="h-10 text-slate-300 hover:text-white font-medium border border-slate-800 hover:bg-slate-900 px-4"
           >
-            Today
+            {t("today")}
           </Button>
 
           <Button
@@ -195,10 +207,10 @@ export default function BookingCalendarPage() {
             onChange={(e) => setFloor(e.target.value)}
             className="rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-cyan-500 flex-1 lg:flex-none"
           >
-            <option value="all">All Floors</option>
+            <option value="all">{t("all_floors")}</option>
             {uniqueFloors.map((f) => (
               <option key={f} value={String(f)}>
-                Floor {f}
+                {t("floor_n", { n: f })}
               </option>
             ))}
           </select>
@@ -209,10 +221,10 @@ export default function BookingCalendarPage() {
             onChange={(e) => setRoomType(e.target.value)}
             className="rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2 h-10 outline-none cursor-pointer focus:border-cyan-500 flex-1 lg:flex-none"
           >
-            <option value="all">All Room Types</option>
-            {roomTypes.map((t) => (
-              <option key={t.id} value={String(t.id)}>
-                {t.name}
+            <option value="all">{t("all_types")}</option>
+            {roomTypes.map((rt) => (
+              <option key={rt.id} value={String(rt.id)}>
+                {tData(rt.name)}
               </option>
             ))}
           </select>
@@ -223,7 +235,7 @@ export default function BookingCalendarPage() {
       {isLoading ? (
         <div className="py-20 flex flex-col items-center justify-center space-y-4">
           <Loader2 className="h-10 w-10 animate-spin text-cyan-400" />
-          <p className="text-sm text-slate-400 font-medium">Synchronizing stay calendar...</p>
+          <p className="text-sm text-slate-400 font-medium">{t("sync_calendar")}</p>
         </div>
       ) : (
         <BookingCalendar
@@ -252,3 +264,4 @@ export default function BookingCalendarPage() {
     </div>
   );
 }
+

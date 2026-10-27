@@ -7,7 +7,8 @@ from datetime import datetime, timedelta
 from django.db.models import Q
 from decimal import Decimal
 
-from apps.properties.models import Room, RoomType
+from apps.properties.models import Room, RoomType, RoomStatus
+from rest_framework.exceptions import ValidationError
 from .models import Reservation, ReservationStatus, RatePlan
 
 
@@ -18,17 +19,27 @@ def get_available_rooms(check_in, check_out, adults, room_type=None):
     
     Excludes rooms with overlapping reservations that are not cancelled or no-show.
     """
-    # Parse dates if they are strings
-    if isinstance(check_in, str):
-        check_in = datetime.strptime(check_in, "%Y-%m-%d").date()
-    if isinstance(check_out, str):
-        check_out = datetime.strptime(check_out, "%Y-%m-%d").date()
+    # Invalid public query parameters must return a 400, never a server error.
+    try:
+        if isinstance(check_in, str):
+            check_in = datetime.strptime(check_in, "%Y-%m-%d").date()
+        if isinstance(check_out, str):
+            check_out = datetime.strptime(check_out, "%Y-%m-%d").date()
+        valid_range = check_in is not None and check_out is not None and check_out > check_in
+        valid_adults = int(adults) >= 1
+        if room_type is not None:
+            room_type = int(room_type)
+    except (TypeError, ValueError):
+        raise ValidationError("Use valid YYYY-MM-DD dates and numeric guest/room type values.")
+    if not valid_range or not valid_adults:
+        raise ValidationError("Check-out must follow check-in and at least one adult is required.")
     
     # 1. Start with active rooms that fit the occupancy
     rooms_query = Room.objects.filter(
         is_active=True,
-        room_type__max_occupancy__gte=adults,
-    )
+        room_type__max_occupancy__gte=int(adults),
+        room_type__is_active=True,
+    ).exclude(status__in=[RoomStatus.MAINTENANCE, RoomStatus.OUT_OF_ORDER])
     
     if room_type:
         rooms_query = rooms_query.filter(room_type=room_type)

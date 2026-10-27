@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 interface OccupancyBarProps {
   rate: number;
@@ -8,6 +9,7 @@ interface OccupancyBarProps {
 }
 
 export const OccupancyBar: React.FC<OccupancyBarProps> = ({ rate, totalRooms, occupiedRooms }) => {
+  const t = useTranslations("FrontDesk");
   const radius = 45;
   const stroke = 8;
   const normalizedRadius = radius - stroke * 2;
@@ -18,10 +20,10 @@ export const OccupancyBar: React.FC<OccupancyBarProps> = ({ rate, totalRooms, oc
     <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-md shadow-lg rounded-xl overflow-hidden">
       <CardContent className="p-5 flex items-center justify-between">
         <div className="space-y-1">
-          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Today Occupancy</p>
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t("today_occupancy")}</p>
           <h3 className="text-2xl font-extrabold text-white tracking-tight">{rate}%</h3>
           <p className="text-[11px] text-slate-400 font-medium">
-            {occupiedRooms} of {totalRooms} units occupied today
+            {t("units_occupied", { occupied: occupiedRooms, total: totalRooms })}
           </p>
         </div>
         <div className="relative flex items-center justify-center">

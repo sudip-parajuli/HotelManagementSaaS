@@ -11,6 +11,7 @@ from .views import (
     ReservationViewSet,
     PublicAvailabilityView,
     PublicBookingCreateView,
+    BookingGapsView,
 )
 
 router = DefaultRouter()
@@ -25,4 +26,7 @@ urlpatterns = [
     # Public guest-facing endpoints
     path("public/availability/", PublicAvailabilityView.as_view(), name="public-availability"),
     path("public/bookings/", PublicBookingCreateView.as_view(), name="public-booking-create"),
+    
+    # Booking gaps analysis
+    path("gaps/", BookingGapsView.as_view(), name="booking-gaps"),
 ]

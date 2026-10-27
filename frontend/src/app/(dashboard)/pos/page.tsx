@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Loader2, LayoutGrid, ChefHat, RefreshCw, ShoppingCart, ListCollapse, Utensils } from "lucide-react";
+import { Loader2, LayoutGrid, ChefHat, RefreshCw, ShoppingCart, Utensils, BarChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MenuPanel } from "@/components/modules/pos/MenuPanel";
 import { OrderPanel } from "@/components/modules/pos/OrderPanel";
@@ -11,11 +11,17 @@ import { restaurantApi } from "@/lib/api/restaurant";
 import { posApi } from "@/lib/api/pos";
 import { usePOSStore } from "@/lib/store/posStore";
 import type { MenuCategory, MenuItem, Order, DiningTable } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 function POSContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderIdParam = searchParams.get("orderId");
+
+  const t = useTranslations("POS");
+  const tData = useTransData();
+  const locale = useLocale();
 
   const { tableId, setTable, clearCart } = usePOSStore();
 
@@ -36,7 +42,6 @@ function POSContent() {
     return [];
   };
 
-  // Load baseline tables, categories, and active orders
   const loadBaseData = async () => {
     try {
       const [categoriesRes, tablesRes, activeOrdersRes] = await Promise.all([
@@ -52,7 +57,11 @@ function POSContent() {
     }
   };
 
-  // Sync selected table state from store tableId
+  useEffect(() => {
+    setLoading(true);
+    loadBaseData().finally(() => setLoading(false));
+  }, []);
+
   useEffect(() => {
     if (tableId && tables.length > 0) {
       const found = tables.find((t) => t.id === tableId);
@@ -62,20 +71,12 @@ function POSContent() {
     }
   }, [tableId, tables]);
 
-  // Load initial data
-  useEffect(() => {
-    setLoading(true);
-    loadBaseData().finally(() => setLoading(false));
-  }, []);
-
-  // Watch URL orderIdParam for viewing active orders
   useEffect(() => {
     if (orderIdParam) {
       setLoadingOrder(true);
       posApi.getOrder(parseInt(orderIdParam))
         .then((res) => {
           setActiveOrder(res.data);
-          // Set tableId if order has a table
           if (res.data.table) {
             setTable(res.data.table);
           }
@@ -93,7 +94,6 @@ function POSContent() {
   }, [orderIdParam, router, setTable]);
 
   const handleAddItem = (item: MenuItem) => {
-    // Convert price to float for cart representation
     usePOSStore.getState().addItem({
       id: item.id,
       name: item.name,
@@ -102,7 +102,6 @@ function POSContent() {
   };
 
   const handleOrderCreated = (order: Order) => {
-    // Reset selections and refresh orders list
     clearCart();
     loadBaseData();
     router.push(`/pos?orderId=${order.id}`);
@@ -114,7 +113,6 @@ function POSContent() {
   };
 
   const handleOrderPaid = (order: Order) => {
-    // Settle resets cart
     clearCart();
     setActiveOrder(null);
     loadBaseData();
@@ -135,7 +133,6 @@ function POSContent() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
-      {/* POS Top Bar */}
       <div className="px-6 py-3 border-b border-slate-900 bg-slate-950 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2.5">
@@ -143,15 +140,16 @@ function POSContent() {
               <ShoppingCart className="h-4.5 w-4.5 text-cyan-400" />
             </div>
             <div>
-              <h1 className="text-base font-bold text-slate-100">POS Ordering Terminal</h1>
-              <p className="text-[10px] text-slate-500">Cart checkout and order management</p>
+              <h1 className="text-base font-bold text-slate-100">{t("title")}</h1>
+              <p className="text-[10px] text-slate-500">{t("subtitle")}</p>
             </div>
           </div>
 
-          {/* Active Orders Quick-Selector */}
           {activeOrders.length > 0 && (
             <div className="flex items-center gap-1.5 ml-4">
-              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Active:</span>
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">
+                {locale === "ne" ? "सक्रिय:" : "Active:"}
+              </span>
               <div className="flex gap-1 overflow-x-auto max-w-[240px] scrollbar-none py-0.5">
                 {activeOrders.map((o) => (
                   <Button
@@ -165,7 +163,7 @@ function POSContent() {
                         : "bg-slate-900/60 text-slate-400 hover:text-slate-200"
                     }`}
                   >
-                    #{o.id} {o.table_number ? `T-${o.table_number}` : "Takeaway"}
+                    #{o.id} {o.table_number ? `T-${o.table_number}` : tData("takeaway")}
                   </Button>
                 ))}
               </div>
@@ -173,16 +171,20 @@ function POSContent() {
           )}
         </div>
 
-        {/* Route Swaps */}
         <div className="flex items-center gap-2">
           <Link href="/pos/tables">
             <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-900 text-xs">
-              <LayoutGrid className="h-4 w-4 mr-1.5" /> Tables Map
+              <LayoutGrid className="h-4 w-4 mr-1.5" /> {t("tables_view")}
             </Button>
           </Link>
           <Link href="/pos/kds">
             <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-900 text-xs">
-              <ChefHat className="h-4 w-4 mr-1.5" /> Kitchen Display (KDS)
+              <ChefHat className="h-4 w-4 mr-1.5" /> {t("kds_view")}
+            </Button>
+          </Link>
+          <Link href="/pos/insights">
+            <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-900 text-xs">
+              <BarChart className="h-4 w-4 mr-1.5" /> {t("insights_view")}
             </Button>
           </Link>
           <Button
@@ -196,24 +198,25 @@ function POSContent() {
         </div>
       </div>
 
-      {/* Main Panel Content Split */}
       {loading ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-3">
           <Loader2 className="h-8 w-8 text-cyan-500 animate-spin" />
-          <span className="text-sm text-slate-400 font-medium">Loading menu catalog...</span>
+          <span className="text-sm text-slate-400 font-medium">
+            {locale === "ne" ? "मेनु क्याटलग लोड हुँदैछ..." : "Loading menu catalog..."}
+          </span>
         </div>
       ) : (
         <div className="flex-1 flex overflow-hidden">
-          {/* Left Menu Items catalog panel */}
           <div className="flex-1 overflow-y-auto p-6">
             <MenuPanel categories={categories} onAddItem={handleAddItem} />
           </div>
 
-          {/* Right Order details cart panel */}
           {loadingOrder ? (
             <div className="w-[380px] border-l border-slate-900 bg-slate-950 flex flex-col items-center justify-center gap-2">
               <Loader2 className="h-6 w-6 text-cyan-500 animate-spin" />
-              <span className="text-xs text-slate-400">Loading order ticket...</span>
+              <span className="text-xs text-slate-400">
+                {locale === "ne" ? "अर्डर टिकट लोड हुँदैछ..." : "Loading order ticket..."}
+              </span>
             </div>
           ) : (
             <OrderPanel
@@ -236,12 +239,16 @@ function POSContent() {
 }
 
 export default function POSPage() {
+  const locale = useLocale();
+
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
         <div className="flex flex-col items-center gap-2">
           <Loader2 className="h-8 w-8 text-cyan-500 animate-spin" />
-          <span className="text-sm text-slate-400">Loading ordering screen...</span>
+          <span className="text-sm text-slate-400">
+            {locale === "ne" ? "अर्डर स्क्रिन लोड हुँदैछ..." : "Loading ordering screen..."}
+          </span>
         </div>
       </div>
     }>
@@ -249,3 +256,4 @@ export default function POSPage() {
     </Suspense>
   );
 }
+

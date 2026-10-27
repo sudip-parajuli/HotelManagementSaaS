@@ -21,6 +21,13 @@ from .serializers import (
     UserCreateSerializer,
 )
 from .permissions import IsPropertyManager, IsSuperAdmin
+from apps.subscriptions.models import (
+    TenantSubscription,
+    TenantFeatureGrant,
+    TenantModuleSubscription,
+    TenantModuleSubscriptionStatus,
+    AddonModule,
+)
 
 
 class LoginView(TokenObtainPairView):
@@ -169,3 +176,59 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
             {"message": f"User {user.email} deactivated."},
             status=status.HTTP_200_OK,
         )
+
+
+class UserFeaturesView(APIView):
+    """
+    GET /api/auth/features/
+    Returns the list of enabled feature keys for the current user's tenant.
+    Combines active module subscriptions + manual feature grants.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        tenant = getattr(request, "tenant", None)
+        if not tenant:
+            return Response({"features": []})
+
+        # 1. Active module subscriptions (new system)
+        active_module_keys = set(
+            TenantModuleSubscription.objects
+            .filter(tenant=tenant, status=TenantModuleSubscriptionStatus.ACTIVE)
+            .values_list("module__key", flat=True)
+        )
+
+        # 2. Manual feature grants (override — always included)
+        grants = TenantFeatureGrant.objects.filter(
+            tenant=tenant, is_active=True
+        )
+        grant_keys = set()
+        for g in grants:
+            if g.is_valid():
+                grant_keys.add(g.feature_key)
+
+        # 3. Legacy plan-based features (backward compat)
+        sub = TenantSubscription.objects.filter(tenant=tenant).first()
+        plan_features = set(sub.plan.features) if sub and sub.plan else set()
+
+        # 4. Combine all sources
+        all_features = active_module_keys | grant_keys | plan_features
+
+        # 5. Filter by business type — only show modules appropriate for this
+        #    tenant's industry. Feature grants always bypass the filter.
+        if tenant.business_type:
+            try:
+                bt = tenant.business_type
+                recommended = set(
+                    bt.recommended_modules.values_list("key", flat=True)
+                )
+                core = set(
+                    AddonModule.objects.filter(is_core=True).values_list("key", flat=True)
+                )
+                allowed = recommended | core | grant_keys
+                all_features = {f for f in all_features if f in allowed}
+            except AttributeError:
+                pass
+
+        return Response({"features": sorted(all_features)})

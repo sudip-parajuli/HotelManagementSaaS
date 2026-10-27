@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Reservation } from "@/lib/types";
+import { useTranslations } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 interface GuestCardProps {
   reservation: Reservation;
@@ -13,6 +15,8 @@ interface GuestCardProps {
 
 export const GuestCard: React.FC<GuestCardProps> = ({ reservation, onCheckIn, onCheckOut }) => {
   const { guest, room, check_in_date, check_out_date, status, total_amount, booking_source } = reservation;
+  const t = useTranslations("FrontDesk");
+  const tData = useTransData();
 
   const getSourceColor = (src: string) => {
     if (src.startsWith("ota")) return "bg-purple-500/10 text-purple-400 border-purple-500/20";
@@ -35,7 +39,7 @@ export const GuestCard: React.FC<GuestCardProps> = ({ reservation, onCheckIn, on
             </div>
           </div>
           <Badge className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 border ${getSourceColor(booking_source)}`} variant="outline">
-            {booking_source.replace("ota_", "").toUpperCase()}
+            {tData(booking_source)}
           </Badge>
         </div>
 
@@ -43,14 +47,14 @@ export const GuestCard: React.FC<GuestCardProps> = ({ reservation, onCheckIn, on
         <div className="grid grid-cols-2 gap-2.5 text-[11px] bg-slate-950/40 p-2.5 rounded-lg border border-slate-900/60">
           <div className="flex items-center gap-1.5 text-slate-400">
             <Home className="h-3.5 w-3.5 text-cyan-500" />
-            <span className="font-bold text-slate-200">Room {room.room_number}</span>
+            <span className="font-bold text-slate-200">{t("room")} {room.room_number}</span>
           </div>
           <div className="text-right">
-            <span className="text-slate-500">Total: </span>
+            <span className="text-slate-500">{t("total")}: </span>
             <span className="font-bold text-emerald-400">Rs. {Number(total_amount).toLocaleString()}</span>
           </div>
           <div className="col-span-2 text-slate-500 text-[10px] font-medium">
-            Class: {room.room_type.name}
+            {t("class")}: {tData(room.room_type.name)}
           </div>
         </div>
 
@@ -74,7 +78,7 @@ export const GuestCard: React.FC<GuestCardProps> = ({ reservation, onCheckIn, on
               onClick={() => onCheckIn(reservation)}
               className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs h-9 gap-1.5 rounded-lg shadow-lg shadow-cyan-600/10"
             >
-              Check In Guest
+              {t("check_in_guest")}
             </Button>
           )}
 
@@ -83,7 +87,7 @@ export const GuestCard: React.FC<GuestCardProps> = ({ reservation, onCheckIn, on
               onClick={() => onCheckOut(reservation)}
               className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs h-9 gap-1.5 rounded-lg shadow-lg shadow-emerald-600/10"
             >
-              Check Out Guest
+              {t("check_out_guest")}
             </Button>
           )}
         </div>

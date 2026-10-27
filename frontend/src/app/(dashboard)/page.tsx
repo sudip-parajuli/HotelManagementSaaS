@@ -3,79 +3,58 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Bed, CalendarCheck, UserCheck, DollarSign,
-  TrendingUp, Activity, ArrowUp, ArrowDown, Clock
+  LayoutDashboard, Bed, CalendarCheck, UserCheck, DollarSign,
+  TrendingUp, Activity, Clock, Gamepad2, UtensilsCrossed,
+  Users, Package, ArrowRight, Timer,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuthStore } from "@/lib/store/authStore";
+import { modulesApi, TenantInfo } from "@/lib/api/modules";
+import { apiClient } from "@/lib/api/client";
+import Link from "next/link";
+import { frontdeskApi, TodayStatsResponse } from "@/lib/api/frontdesk";
 
-const statCards = [
-  {
-    title: "Occupancy Rate",
-    value: "78%",
-    change: "+4.1%",
-    positive: true,
-    icon: Bed,
-    color: "from-cyan-500 to-cyan-600",
-    glow: "shadow-cyan-500/20",
-  },
-  {
-    title: "Today's Arrivals",
-    value: "8",
-    change: "3 pending",
-    positive: true,
-    icon: CalendarCheck,
-    color: "from-emerald-500 to-emerald-600",
-    glow: "shadow-emerald-500/20",
-  },
-  {
-    title: "In-House Guests",
-    value: "31",
-    change: "-2 from yesterday",
-    positive: false,
-    icon: UserCheck,
-    color: "from-violet-500 to-violet-600",
-    glow: "shadow-violet-500/20",
-  },
-  {
-    title: "Today's Revenue",
-    value: "Rs. 45,800",
-    change: "+12.3% vs yesterday",
-    positive: true,
-    icon: DollarSign,
-    color: "from-amber-500 to-amber-600",
-    glow: "shadow-amber-500/20",
-  },
-];
-
-const recentActivity = [
-  { time: "10:45 AM", event: "Check-in: Ramesh Sharma — Room 201", type: "checkin" },
-  { time: "10:12 AM", event: "New booking: 2 nights, Room Type: Deluxe", type: "booking" },
-  { time: "09:58 AM", event: "Check-out: Priya Rana — Room 105", type: "checkout" },
-  { time: "09:30 AM", event: "Housekeeping completed: Rooms 201, 202", type: "housekeeping" },
-  { time: "09:00 AM", event: "POS Order #1042 — Table 3, Rs. 2,400", type: "pos" },
-];
-
-const activityColors: Record<string, string> = {
-  checkin: "bg-emerald-500",
-  checkout: "bg-rose-500",
-  booking: "bg-cyan-500",
-  housekeeping: "bg-amber-500",
-  pos: "bg-violet-500",
+const QUICK_LINKS: Record<string, { href: string; icon: React.ReactNode; label: string }> = {
+  rooms: { href: "/rooms", icon: <Bed className="h-4 w-4" />, label: "Room Status" },
+  bookings: { href: "/bookings", icon: <CalendarCheck className="h-4 w-4" />, label: "Bookings" },
+  frontdesk: { href: "/frontdesk", icon: <UserCheck className="h-4 w-4" />, label: "Front Desk" },
+  pos: { href: "/pos", icon: <UtensilsCrossed className="h-4 w-4" />, label: "Restaurant POS" },
+  housekeeping: { href: "/housekeeping", icon: <Activity className="h-4 w-4" />, label: "Housekeeping" },
+  billing: { href: "/billing", icon: <DollarSign className="h-4 w-4" />, label: "Billing" },
+  crm: { href: "/crm", icon: <Users className="h-4 w-4" />, label: "CRM" },
+  staff: { href: "/staff", icon: <Users className="h-4 w-4" />, label: "Staff & HR" },
+  inventory: { href: "/inventory", icon: <Package className="h-4 w-4" />, label: "Inventory" },
+  timed_sessions: { href: "/sessions", icon: <Timer className="h-4 w-4" />, label: "Timed Sessions" },
 };
 
 export default function DashboardPage() {
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const [time, setTime] = useState(new Date());
+  const [tenantInfo, setTenantInfo] = useState<TenantInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [operations, setOperations] = useState<TodayStatsResponse | null>(null);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     if (user?.role === "SUPER_ADMIN") {
       const isImpersonating = document.cookie.includes("impersonated_tenant_name");
       if (!isImpersonating) {
-        router.replace("/superadmin");
+        router.replace("/admin");
+        return;
       }
     }
+
+    modulesApi.getTenantInfo()
+      .then(async (info) => {
+        setTenantInfo(info);
+        if (info.active_modules.some(key => ["rooms", "bookings", "frontdesk"].includes(key))) {
+          try { const response = await frontdeskApi.getTodayStats(); setOperations(response.data); }
+          catch { setLoadError(true); }
+        }
+      })
+      .catch(() => setLoadError(true))
+      .finally(() => setLoading(false));
   }, [user, router]);
 
   useEffect(() => {
@@ -83,19 +62,47 @@ export default function DashboardPage() {
     return () => clearInterval(timer);
   }, []);
 
+  const activeModules = tenantInfo?.active_modules ?? [];
+  const bizType = tenantInfo?.business_type_name ?? "Business";
+  const hasModule = (key: string) => activeModules.includes(key);
+
+  if (loading) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[40vh]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-500 border-t-transparent" />
+          <p className="text-slate-400 text-sm">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const quickLinks = activeModules
+    .filter((k) => QUICK_LINKS[k])
+    .map((k) => QUICK_LINKS[k]);
+
+  const translateTime = () => {
+    const hours = time.getHours();
+    if (hours < 12) return "Good morning";
+    if (hours < 17) return "Good afternoon";
+    return "Good evening";
+  };
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-6">
+      {loadError && <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm text-amber-200"><span>Some workspace data could not be loaded. Check your connection and try again.</span><button className="rounded-lg border border-amber-400/30 px-3 py-1.5 hover:bg-amber-500/10" onClick={() => window.location.reload()}>Retry</button></div>}
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-wrap gap-4 items-start justify-between">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold text-white tracking-tight">
-            Good {time.getHours() < 12 ? "Morning" : time.getHours() < 17 ? "Afternoon" : "Evening"},{" "}
+            {translateTime()},{" "}
             <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
               {user?.first_name ?? "Manager"}
             </span>
           </h1>
           <p className="text-slate-400 text-sm">
-            Here's what's happening at your hotel today.
+            {bizType} &mdash; {activeModules.length} module{activeModules.length !== 1 ? "s" : ""} active
+            {tenantInfo?.monthly_total && ` &middot; NPR ${parseFloat(tenantInfo.monthly_total).toLocaleString("en-IN", { maximumFractionDigits: 0 })}/mo`}
           </p>
         </div>
         <div className="flex items-center gap-2 text-slate-400 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5">
@@ -106,120 +113,166 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map((stat, i) => {
-          const Icon = stat.icon;
-          return (
-            <Card
-              key={i}
-              className="bg-slate-900/60 border-slate-800 hover:border-slate-700 transition-all duration-200 group overflow-hidden"
-            >
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-                  {stat.title}
-                </CardTitle>
-                <div className={`p-2 rounded-lg bg-gradient-to-br ${stat.color} shadow-md ${stat.glow} group-hover:scale-110 transition-transform duration-200`}>
-                  <Icon className="h-3.5 w-3.5 text-white" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-white">{stat.value}</div>
-                <div className={`flex items-center gap-1 mt-1 text-xs font-medium ${stat.positive ? "text-emerald-400" : "text-rose-400"}`}>
-                  {stat.positive ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
-                  {stat.change}
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+      {/* Quick Links */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        {quickLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900/40 border border-slate-800/60 hover:border-cyan-500/40 hover:bg-slate-900/60 transition-all group"
+          >
+            <span className="text-cyan-400 group-hover:scale-110 transition-transform">{link.icon}</span>
+            <span className="text-xs font-medium text-slate-300 group-hover:text-white truncate">{link.label}</span>
+            <ArrowRight className="h-3 w-3 text-slate-600 group-hover:text-cyan-400 ml-auto transition-all" />
+          </Link>
+        ))}
       </div>
 
-      {/* Bottom grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Room Status */}
-        <Card className="bg-slate-900/60 border-slate-800 lg:col-span-1">
-          <CardHeader>
-            <CardTitle className="text-sm font-semibold text-white flex items-center gap-2">
-              <Bed className="h-4 w-4 text-cyan-400" />
-              Room Status Breakdown
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {[
-              { label: "Available", count: 12, total: 40, color: "bg-emerald-500" },
-              { label: "Occupied", count: 22, total: 40, color: "bg-cyan-500" },
-              { label: "Dirty", count: 4, total: 40, color: "bg-amber-500" },
-              { label: "Maintenance", count: 2, total: 40, color: "bg-rose-500" },
-            ].map((item) => (
-              <div key={item.label} className="space-y-1">
-                <div className="flex justify-between text-xs text-slate-400">
-                  <span>{item.label}</span>
-                  <span className="font-medium text-slate-300">{item.count} rooms</span>
-                </div>
-                <div className="h-1.5 w-full rounded-full bg-slate-800 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full ${item.color}`}
-                    style={{ width: `${(item.count / item.total) * 100}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+      {/* Module-specific widgets */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Hotel-style stats */}
+        {hasModule("rooms") && (
+          <DashboardStatCard
+            title="Room Overview"
+            icon={<Bed className="h-4 w-4" />}
+            value={operations ? `${operations.occupancy_rate}%` : "--"}
+            description="Current occupancy from your property's front desk"
+            href="/rooms"
+          />
+        )}
 
-        {/* Recent Activity Feed */}
-        <Card className="bg-slate-900/60 border-slate-800 lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-sm font-semibold text-white flex items-center gap-2">
-              <Activity className="h-4 w-4 text-cyan-400" />
-              Recent Activity
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {recentActivity.map((item, i) => (
-              <div key={i} className="flex items-start gap-3 group">
-                <div className={`mt-1.5 h-2 w-2 rounded-full flex-shrink-0 ${activityColors[item.type]}`} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-slate-300 group-hover:text-white transition-colors truncate">
-                    {item.event}
-                  </p>
-                </div>
-                <span className="text-xs text-slate-500 flex-shrink-0">{item.time}</span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        {hasModule("bookings") && (
+          <DashboardStatCard
+            title="Recent Bookings"
+            icon={<CalendarCheck className="h-4 w-4" />}
+            value={operations ? String(operations.arrivals.length) : "--"}
+            description="Confirmed arrivals expected today"
+            href="/bookings"
+          />
+        )}
 
-        {/* Upcoming Arrivals teaser */}
-        <Card className="bg-slate-900/60 border-slate-800 lg:col-span-3">
-          <CardHeader>
-            <CardTitle className="text-sm font-semibold text-white flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-cyan-400" />
-              Week Ahead — Arrivals Forecast
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-end gap-2 h-20">
-              {[8, 12, 6, 15, 9, 11, 7].map((val, i) => {
-                const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-                const isToday = i === 0;
-                return (
-                  <div key={i} className="flex flex-col items-center gap-1 flex-1">
-                    <div
-                      className={`w-full rounded-t-sm transition-all duration-300 ${isToday ? "bg-gradient-to-t from-cyan-600 to-cyan-400" : "bg-slate-700 hover:bg-slate-600"}`}
-                      style={{ height: `${(val / 15) * 100}%` }}
-                    />
-                    <span className={`text-[10px] font-medium ${isToday ? "text-cyan-400" : "text-slate-500"}`}>
-                      {days[i]}
-                    </span>
-                  </div>
-                );
-              })}
+        {hasModule("frontdesk") && (
+          <DashboardStatCard
+            title="Front Desk"
+            icon={<UserCheck className="h-4 w-4" />}
+            value={operations ? String(operations.in_house.length) : "--"}
+            description={operations ? `${operations.departures.length} departures today · guests currently in-house shown above` : "Today's arrivals, departures, and in-house guests"}
+            href="/frontdesk"
+          />
+        )}
+
+        {/* Timed Sessions stats for gaming/coworking/spa */}
+        {hasModule("timed_sessions") && (
+          <DashboardStatCard
+            title="Active Sessions"
+            icon={<Timer className="h-4 w-4" />}
+            value="--"
+            description="Monitor and manage timed sessions across units"
+            href="/sessions"
+          />
+        )}
+
+        {/* Restaurant POS */}
+        {hasModule("pos") && (
+          <DashboardStatCard
+            title="Restaurant POS"
+            icon={<UtensilsCrossed className="h-4 w-4" />}
+            value="--"
+            description="Active orders, table status, and daily revenue"
+            href="/pos"
+          />
+        )}
+
+        {/* Inventory */}
+        {hasModule("inventory") && (
+          <DashboardStatCard
+            title="Inventory Status"
+            icon={<Package className="h-4 w-4" />}
+            value="--"
+            description="Stock levels, reorder alerts, and purchase orders"
+            href="/inventory"
+          />
+        )}
+
+        {/* Staff */}
+        {hasModule("staff") && (
+          <DashboardStatCard
+            title="Staff Overview"
+            icon={<Users className="h-4 w-4" />}
+            value="--"
+            description="Attendance, shifts, and payroll-ready data"
+            href="/staff"
+          />
+        )}
+
+        {/* Billing */}
+        {hasModule("billing") && (
+          <DashboardStatCard
+            title="Billing & Invoicing"
+            icon={<DollarSign className="h-4 w-4" />}
+            value="--"
+            description="Recent invoices, payments, and IRD compliance"
+            href="/billing"
+          />
+        )}
+      </div>
+
+      {/* Monthly cost summary */}
+      {tenantInfo?.monthly_total && parseFloat(tenantInfo.monthly_total) > 0 && (
+        <Card className="bg-slate-900/60 border-slate-800">
+          <CardContent className="p-5 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 shadow-md">
+                <DollarSign className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <p className="text-xs text-slate-400 font-medium">Current Monthly Spend</p>
+                <p className="text-xl font-bold text-white">
+                  NPR {parseFloat(tenantInfo.monthly_total).toLocaleString("en-IN", { maximumFractionDigits: 0 })}
+                </p>
+              </div>
             </div>
+            <Link
+              href="/settings/modules"
+              className="flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors"
+            >
+              Manage Modules <ArrowRight className="h-3 w-3" />
+            </Link>
           </CardContent>
         </Card>
-      </div>
+      )}
     </div>
+  );
+}
+
+function DashboardStatCard({
+  title,
+  icon,
+  value,
+  description,
+  href,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  value: string;
+  description: string;
+  href: string;
+}) {
+  return (
+    <Link href={href}>
+      <Card className="bg-slate-900/60 border-slate-800 hover:border-cyan-500/30 hover:bg-slate-900/80 transition-all group cursor-pointer h-full">
+        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+          <CardTitle className="text-xs font-medium text-slate-400 uppercase tracking-wider flex items-center gap-2">
+            {icon}
+            {title}
+          </CardTitle>
+          <ArrowRight className="h-3.5 w-3.5 text-slate-600 group-hover:text-cyan-400 transition-all" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-white">{value}</div>
+          <p className="text-xs text-slate-500 mt-1">{description}</p>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }

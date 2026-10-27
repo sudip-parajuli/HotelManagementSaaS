@@ -16,7 +16,9 @@ export interface UserProfile {
 interface AuthState {
   user: UserProfile | null;
   isAuthenticated: boolean;
+  features: string[];
   setUser: (user: UserProfile) => void;
+  setFeatures: (features: string[]) => void;
   clearAuth: () => void;
 }
 
@@ -25,8 +27,10 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       isAuthenticated: false,
+      features: [],
       setUser: (user) => set({ user, isAuthenticated: true }),
-      clearAuth: () => set({ user: null, isAuthenticated: false }),
+      setFeatures: (features) => set({ features }),
+      clearAuth: () => set({ user: null, isAuthenticated: false, features: [] }),
     }),
     {
       name: "sia-hms-auth",

@@ -13,8 +13,16 @@ import { roomsApi } from "@/lib/api/rooms";
 import { bookingsApi } from "@/lib/api/bookings";
 import { GuestSearchInput } from "@/components/modules/bookings/GuestSearchInput";
 import type { Room, RoomType, GuestProfile } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 export default function NewBookingPage() {
+  const t = useTranslations("Bookings");
+  const tCommon = useTranslations("Common");
+  const tFrontDesk = useTranslations("FrontDesk");
+  const tData = useTransData();
+  const locale = useLocale();
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const preRoomId = searchParams?.get("room_id");
@@ -70,22 +78,22 @@ export default function NewBookingPage() {
         }
       } catch (err) {
         console.error(err);
-        toast.error("Failed to load room classes.");
+        toast.error(locale === "ne" ? "कोठा वर्ग लोड गर्न असफल भयो।" : "Failed to load room classes.");
       } finally {
         setIsLoadingMetadata(false);
       }
     };
     loadMetadata();
-  }, [preRoomId]);
+  }, [preRoomId, locale]);
 
   // Run availability check
   const handleCheckAvailability = async () => {
     if (!checkIn || !checkOut || !selectedRoomTypeId) {
-      toast.error("Please fill in check-in, check-out, and room class.");
+      toast.error(locale === "ne" ? "कृपया चेक-इन, चेक-आउट मिति र कोठाको प्रकार भर्नुहोस्।" : "Please fill in check-in, check-out, and room class.");
       return;
     }
     if (new Date(checkIn) >= new Date(checkOut)) {
-      toast.error("Check-out date must be after check-in date.");
+      toast.error(locale === "ne" ? "चेक-आउट मिति चेक-इन मिति भन्दा पछिको हुनुपर्छ।" : "Check-out date must be after check-in date.");
       return;
     }
 
@@ -109,13 +117,13 @@ export default function NewBookingPage() {
         if (!selectedRoomId || !rooms.some((r) => r.id === selectedRoomId)) {
           setSelectedRoomId(rooms[0].id);
         }
-        toast.success(`${rooms.length} rooms available!`);
+        toast.success(locale === "ne" ? `${rooms.length} कोठाहरू उपलब्ध छन्!` : `${rooms.length} rooms available!`);
       } else {
-        toast.error("No rooms of this class are available for these dates.");
+        toast.error(locale === "ne" ? "यो मितिको लागि यो वर्गको कुनै कोठा उपलब्ध छैन।" : "No rooms of this class are available for these dates.");
       }
     } catch (err: any) {
       console.error(err);
-      toast.error(err.response?.data?.error || "Error querying availability ledger.");
+      toast.error(err.response?.data?.error || (locale === "ne" ? "उपलब्धता जाँच गर्दा त्रुटि भयो।" : "Error querying availability ledger."));
     } finally {
       setCheckingAvailability(false);
     }
@@ -135,7 +143,7 @@ export default function NewBookingPage() {
     setEmail(guest.email || "");
     setPhone(guest.phone);
     setNationality(guest.nationality || "Nepalese");
-    toast.success(`Selected guest: ${guest.first_name} ${guest.last_name}`);
+    toast.success(locale === "ne" ? `चुनिएको पाहुना: ${guest.first_name} ${guest.last_name}` : `Selected guest: ${guest.first_name} ${guest.last_name}`);
   };
 
   const handleAddNewGuest = (query: string) => {
@@ -146,19 +154,19 @@ export default function NewBookingPage() {
     setPhone("");
     setEmail("");
     setNationality("Nepalese");
-    toast.info("Write details to create a new profile.");
+    toast.info(locale === "ne" ? "नयाँ प्रोफाइल सिर्जना गर्न थप विवरणहरू भर्नुहोस्।" : "Write details to create a new profile.");
   };
 
   const handleNextStep = async () => {
     if (step === 1) {
       if (!selectedRoomId) {
-        toast.error("Please select a room to proceed.");
+        toast.error(locale === "ne" ? "कृपया अगाडि बढ्न कोठा चयन गर्नुहोस्।" : "Please select a room to proceed.");
         return;
       }
       setStep(2);
     } else if (step === 2) {
       if (!firstName || !lastName || !phone) {
-        toast.error("Please fill in first name, last name, and phone number.");
+        toast.error(locale === "ne" ? "कृपया पहिलो नाम, अन्तिम नाम र फोन नम्बर भर्नुहोस्।" : "Please fill in first name, last name, and phone number.");
         return;
       }
 
@@ -176,11 +184,11 @@ export default function NewBookingPage() {
             id_number: idNumber,
           });
           setGuestId(res.data.id);
-          toast.success("Guest profile created successfully!");
+          toast.success(locale === "ne" ? "पाहुना प्रोफाइल सफलतापूर्वक सिर्जना भयो!" : "Guest profile created successfully!");
           setStep(3);
         } catch (err: any) {
           console.error(err);
-          toast.error(err.response?.data?.error || "Failed to create guest profile.");
+          toast.error(err.response?.data?.error || (locale === "ne" ? "पाहुना प्रोफाइल सिर्जना गर्न असफल भयो।" : "Failed to create guest profile."));
           return;
         } finally {
           setIsCreatingGuest(false);
@@ -204,11 +212,11 @@ export default function NewBookingPage() {
         special_requests: specialRequests,
         status: "confirmed", // staff reservations are auto-confirmed by default
       });
-      toast.success("Stay reservation confirmed successfully!");
+      toast.success(locale === "ne" ? "बसाई बुकिङ सफलतापूर्वक पुष्टि भयो!" : "Stay reservation confirmed successfully!");
       router.push("/bookings/calendar");
     } catch (err: any) {
       console.error(err);
-      toast.error(err.response?.data?.error || "Failed to confirm reservation.");
+      toast.error(err.response?.data?.error || (locale === "ne" ? "बुकिङ पुष्टि गर्न असफल भयो।" : "Failed to confirm reservation."));
     } finally {
       setIsSubmitting(false);
     }
@@ -218,7 +226,7 @@ export default function NewBookingPage() {
     return (
       <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center space-y-4">
         <Loader2 className="h-10 w-10 animate-spin text-cyan-400" />
-        <p className="text-slate-400 text-xs font-medium">Loading stay configuration...</p>
+        <p className="text-slate-400 text-xs font-medium">{locale === "ne" ? "बसाई सेटिङ लोड हुँदैछ..." : "Loading stay configuration..."}</p>
       </div>
     );
   }
@@ -230,14 +238,14 @@ export default function NewBookingPage() {
         <Link href="/bookings/calendar">
           <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-slate-400 hover:text-white px-2">
             <ArrowLeft className="h-4 w-4" />
-            Back to calendar
+            {locale === "ne" ? "पात्रोमा फर्कनुहोस्" : "Back to calendar"}
           </Button>
         </Link>
       </div>
 
       <div className="border-b border-slate-900 pb-4">
-        <h1 className="text-2xl font-bold text-white tracking-tight">Stay Reservation Builder</h1>
-        <p className="text-slate-400 text-sm">Create a new booking reservation for a guest.</p>
+        <h1 className="text-2xl font-bold text-white tracking-tight">{t("new_booking_title")}</h1>
+        <p className="text-slate-400 text-sm">{t("new_booking_subtitle")}</p>
       </div>
 
       {/* Progress Wizard Steps */}
@@ -248,7 +256,7 @@ export default function NewBookingPage() {
           }`}>
             1
           </span>
-          <span className={step >= 1 ? "text-slate-200 font-semibold" : "text-slate-600"}>Dates & Room</span>
+          <span className={step >= 1 ? "text-slate-200 font-semibold" : "text-slate-600"}>{locale === "ne" ? "मिति र कोठा" : "Dates & Room"}</span>
         </div>
         <div className="w-12 h-px bg-slate-900" />
         <div className="flex items-center gap-2">
@@ -257,7 +265,7 @@ export default function NewBookingPage() {
           }`}>
             2
           </span>
-          <span className={step >= 2 ? "text-slate-200 font-semibold" : "text-slate-600"}>Guest Profiles</span>
+          <span className={step >= 2 ? "text-slate-200 font-semibold" : "text-slate-600"}>{t("guest_details")}</span>
         </div>
         <div className="w-12 h-px bg-slate-900" />
         <div className="flex items-center gap-2">
@@ -266,7 +274,7 @@ export default function NewBookingPage() {
           }`}>
             3
           </span>
-          <span className={step >= 3 ? "text-slate-200 font-semibold" : "text-slate-600"}>Confirmation</span>
+          <span className={step >= 3 ? "text-slate-200 font-semibold" : "text-slate-600"}>{tCommon("confirm")}</span>
         </div>
       </div>
 
@@ -274,13 +282,13 @@ export default function NewBookingPage() {
       {step === 1 && (
         <Card className="bg-slate-900/40 border-slate-800 shadow-md">
           <CardHeader>
-            <CardTitle className="text-base text-white">Step 1 — Room & Stay Details</CardTitle>
-            <CardDescription className="text-slate-500 text-xs">Configure stay intervals and query availability.</CardDescription>
+            <CardTitle className="text-base text-white">{locale === "ne" ? "चरण १ — कोठा र बसाई विवरण" : "Step 1 — Room & Stay Details"}</CardTitle>
+            <CardDescription className="text-slate-500 text-xs">{locale === "ne" ? "बसाईको अवधि मिलाउनुहोस् र उपलब्धता जाँच गर्नुहोस्।" : "Configure stay intervals and query availability."}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
               <div className="space-y-2">
-                <Label htmlFor="check-in" className="text-slate-400 font-bold uppercase">Check In Date</Label>
+                <Label htmlFor="check-in" className="text-slate-400 font-bold uppercase">{t("check_in_date")}</Label>
                 <Input
                   type="date"
                   id="check-in"
@@ -291,7 +299,7 @@ export default function NewBookingPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="check-out" className="text-slate-400 font-bold uppercase">Check Out Date</Label>
+                <Label htmlFor="check-out" className="text-slate-400 font-bold uppercase">{t("check_out_date")}</Label>
                 <Input
                   type="date"
                   id="check-out"
@@ -302,7 +310,7 @@ export default function NewBookingPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="room-type" className="text-slate-400 font-bold uppercase">Room Class</Label>
+                <Label htmlFor="room-type" className="text-slate-400 font-bold uppercase">{t("room_type")}</Label>
                 <select
                   id="room-type"
                   value={selectedRoomTypeId}
@@ -311,14 +319,14 @@ export default function NewBookingPage() {
                 >
                   {roomTypes.map((t) => (
                     <option key={t.id} value={t.id}>
-                      {t.name}
+                      {tData(t.name)}
                     </option>
                   ))}
                 </select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="adults" className="text-slate-400 font-bold uppercase">Adults count</Label>
+                <Label htmlFor="adults" className="text-slate-400 font-bold uppercase">{locale === "ne" ? "पाहुना संख्या (वयस्क)" : "Adults count"}</Label>
                 <Input
                   type="number"
                   id="adults"
@@ -338,12 +346,12 @@ export default function NewBookingPage() {
               {checkingAvailability ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
-                  Checking ledger availability...
+                  {locale === "ne" ? "उपलब्धता जाँच हुँदैछ..." : "Checking ledger availability..."}
                 </>
               ) : (
                 <>
                   <Sparkles className="h-4 w-4 text-cyan-400" />
-                  Check Room Availability
+                  {locale === "ne" ? "कोठा उपलब्धता जाँच गर्नुहोस्" : "Check Room Availability"}
                 </>
               )}
             </Button>
@@ -351,7 +359,7 @@ export default function NewBookingPage() {
             {availableRooms.length > 0 && (
               <div className="space-y-4 pt-4 border-t border-slate-900">
                 <div className="space-y-2">
-                  <Label className="text-xs font-bold text-slate-400 uppercase">Select Available Room</Label>
+                  <Label className="text-xs font-bold text-slate-400 uppercase">{t("room_select")}</Label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {availableRooms.map((room) => (
                       <div
@@ -363,7 +371,7 @@ export default function NewBookingPage() {
                             : "bg-slate-950/40 border-slate-900 text-slate-400 hover:border-slate-800"
                         }`}
                       >
-                        Room {room.room_number}
+                        {tFrontDesk("room")} {room.room_number}
                       </div>
                     ))}
                   </div>
@@ -371,18 +379,18 @@ export default function NewBookingPage() {
 
                 {pricingEstimate && (
                   <div className="rounded-xl border border-slate-900 bg-slate-900/10 p-4 space-y-2 text-xs">
-                    <h4 className="font-bold text-slate-400 uppercase tracking-wider">Estimated Rates Breakdown</h4>
+                    <h4 className="font-bold text-slate-400 uppercase tracking-wider">{locale === "ne" ? "अनुमानित दर विवरण" : "Estimated Rates Breakdown"}</h4>
                     <div className="space-y-1">
                       <div className="flex justify-between text-slate-400">
-                        <span>Stay Nights Room Charge</span>
+                        <span>{locale === "ne" ? "कोठा शुल्क" : "Stay Nights Room Charge"}</span>
                         <span>Rs. {Number(pricingEstimate.base_price).toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between text-slate-400">
-                        <span>VAT (13%)</span>
+                        <span>{locale === "ne" ? "भ्याट (१३%)" : "VAT (13%)"}</span>
                         <span>Rs. {Number(pricingEstimate.tax_price).toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between text-sm font-extrabold text-cyan-400 pt-1 border-t border-slate-900">
-                        <span>Total Stay Amount</span>
+                        <span>{t("grand_total")}</span>
                         <span>Rs. {Number(pricingEstimate.total_price).toLocaleString()}</span>
                       </div>
                     </div>
@@ -394,7 +402,7 @@ export default function NewBookingPage() {
                     onClick={handleNextStep}
                     className="bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold gap-2 shadow-lg shadow-cyan-500/20"
                   >
-                    Next Step: Guest Details
+                    {locale === "ne" ? "अर्को चरण: पाहुना विवरण" : "Next Step: Guest Details"}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </div>
@@ -408,20 +416,20 @@ export default function NewBookingPage() {
       {step === 2 && (
         <Card className="bg-slate-900/40 border-slate-800 shadow-md">
           <CardHeader>
-            <CardTitle className="text-base text-white">Step 2 — Guest Ledger Registration</CardTitle>
-            <CardDescription className="text-slate-500 text-xs">Associate stay with guest records.</CardDescription>
+            <CardTitle className="text-base text-white">{locale === "ne" ? "चरण २ — पाहुना दर्ता" : "Step 2 — Guest Ledger Registration"}</CardTitle>
+            <CardDescription className="text-slate-500 text-xs">{locale === "ne" ? "पाहुनाको रेकर्डसँग बसाई आबद्ध गर्नुहोस्।" : "Associate stay with guest records."}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Search Combobox */}
             <div className="space-y-2">
-              <Label className="text-xs font-bold text-slate-500 uppercase">Search Guest Profile</Label>
+              <Label className="text-xs font-bold text-slate-500 uppercase">{t("guest_search")}</Label>
               <GuestSearchInput onSelect={handleSelectExistingGuest} onAddNew={handleAddNewGuest} />
             </div>
 
             {/* Profile fields */}
             <div className="grid grid-cols-2 gap-4 text-xs pt-4 border-t border-slate-900">
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label htmlFor="first-name" className="text-slate-400 font-bold uppercase">First Name</Label>
+                <Label htmlFor="first-name" className="text-slate-400 font-bold uppercase">{t("first_name")}</Label>
                 <Input
                   id="first-name"
                   value={firstName}
@@ -432,7 +440,7 @@ export default function NewBookingPage() {
               </div>
 
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label htmlFor="last-name" className="text-slate-400 font-bold uppercase">Last Name</Label>
+                <Label htmlFor="last-name" className="text-slate-400 font-bold uppercase">{t("last_name")}</Label>
                 <Input
                   id="last-name"
                   value={lastName}
@@ -443,7 +451,7 @@ export default function NewBookingPage() {
               </div>
 
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label htmlFor="phone" className="text-slate-400 font-bold uppercase">Phone Number</Label>
+                <Label htmlFor="phone" className="text-slate-400 font-bold uppercase">{t("phone")}</Label>
                 <Input
                   id="phone"
                   value={phone}
@@ -454,7 +462,7 @@ export default function NewBookingPage() {
               </div>
 
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label htmlFor="email" className="text-slate-400 font-bold uppercase">Email (Optional)</Label>
+                <Label htmlFor="email" className="text-slate-400 font-bold uppercase">{t("email")}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -466,7 +474,7 @@ export default function NewBookingPage() {
               </div>
 
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label htmlFor="nationality" className="text-slate-400 font-bold uppercase">Nationality</Label>
+                <Label htmlFor="nationality" className="text-slate-400 font-bold uppercase">{t("nationality")}</Label>
                 <Input
                   id="nationality"
                   value={nationality}
@@ -476,22 +484,22 @@ export default function NewBookingPage() {
               </div>
 
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label htmlFor="id-type" className="text-slate-400 font-bold uppercase">ID Document Type</Label>
+                <Label htmlFor="id-type" className="text-slate-400 font-bold uppercase">{locale === "ne" ? "परिचयपत्र प्रकार" : "ID Document Type"}</Label>
                 <select
                   id="id-type"
                   value={idType}
                   onChange={(e) => setIdType(e.target.value)}
                   className="w-full rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-sm p-2.5 h-10 outline-none cursor-pointer focus:border-cyan-500"
                 >
-                  <option value="citizenship">Citizenship Card</option>
-                  <option value="passport">Passport</option>
-                  <option value="driving_license">Driving License</option>
-                  <option value="other">Other</option>
+                  <option value="citizenship">{tData("citizenship")}</option>
+                  <option value="passport">{tData("passport")}</option>
+                  <option value="driving_license">{locale === "ne" ? "सवारी चालक अनुमति पत्र" : "Driving License"}</option>
+                  <option value="other">{tData("other")}</option>
                 </select>
               </div>
 
               <div className="space-y-2 col-span-2">
-                <Label htmlFor="id-number" className="text-slate-400 font-bold uppercase">ID Document Number</Label>
+                <Label htmlFor="id-number" className="text-slate-400 font-bold uppercase">{locale === "ne" ? "परिचयपत्र नम्बर" : "ID Document Number"}</Label>
                 <Input
                   id="id-number"
                   value={idNumber}
@@ -505,7 +513,7 @@ export default function NewBookingPage() {
             <div className="flex justify-between pt-4 border-t border-slate-900">
               <Button onClick={() => setStep(1)} variant="ghost" className="border border-slate-800 text-slate-400 hover:text-white h-10 px-4 gap-1">
                 <ArrowLeft className="h-4 w-4" />
-                Previous Step
+                {locale === "ne" ? "अघिल्लो चरण" : "Previous Step"}
               </Button>
 
               <Button
@@ -516,11 +524,11 @@ export default function NewBookingPage() {
                 {isCreatingGuest ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
-                    Creating Profile...
+                    {locale === "ne" ? "प्रोफाइल सिर्जना हुँदैछ..." : "Creating Profile..."}
                   </>
                 ) : (
                   <>
-                    Next Step: Confirm
+                    {locale === "ne" ? "अर्को चरण: पुष्टि गर्नुहोस्" : "Next Step: Confirm"}
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
@@ -534,41 +542,41 @@ export default function NewBookingPage() {
       {step === 3 && (
         <Card className="bg-slate-900/40 border-slate-800 shadow-md">
           <CardHeader>
-            <CardTitle className="text-base text-white">Step 3 — Specials & Complete Booking</CardTitle>
-            <CardDescription className="text-slate-500 text-xs">Verify billing values and write special requests.</CardDescription>
+            <CardTitle className="text-base text-white">{locale === "ne" ? "चरण ३ — विशेष अनुरोध र बुकिङ" : "Step 3 — Specials & Complete Booking"}</CardTitle>
+            <CardDescription className="text-slate-500 text-xs">{locale === "ne" ? "बिलिङ विवरण प्रमाणित गर्नुहोस् र विशेष अनुरोधहरू लेख्नुहोस्।" : "Verify billing values and write special requests."}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6 text-xs">
             {/* Stay Summary review */}
             <div className="rounded-xl border border-slate-900 bg-slate-900/20 p-4 grid grid-cols-2 gap-4">
               <div>
-                <span className="text-slate-500 block">Stay Guest</span>
+                <span className="text-slate-500 block">{t("guest_details")}</span>
                 <span className="font-semibold text-slate-200">{firstName} {lastName}</span>
               </div>
               <div>
-                <span className="text-slate-500 block">Guest Phone</span>
+                <span className="text-slate-500 block">{locale === "ne" ? "पाहुना फोन" : "Guest Phone"}</span>
                 <span className="font-semibold text-slate-200">{phone}</span>
               </div>
               <div>
-                <span className="text-slate-500 block">Check In Date</span>
+                <span className="text-slate-500 block">{t("check_in_date")}</span>
                 <span className="font-semibold text-slate-200">{checkIn}</span>
               </div>
               <div>
-                <span className="text-slate-500 block">Check Out Date</span>
+                <span className="text-slate-500 block">{t("check_out_date")}</span>
                 <span className="font-semibold text-slate-200">{checkOut}</span>
               </div>
               <div>
-                <span className="text-slate-500 block">Assigned Room</span>
-                <span className="font-semibold text-slate-200">Room {availableRooms.find((r) => r.id === selectedRoomId)?.room_number}</span>
+                <span className="text-slate-500 block">{t("assigned_room")}</span>
+                <span className="font-semibold text-slate-200">{tFrontDesk("room")} {availableRooms.find((r) => r.id === selectedRoomId)?.room_number}</span>
               </div>
               <div>
-                <span className="text-slate-500 block">Nights Count</span>
-                <span className="font-semibold text-slate-200">{pricingEstimate?.nights} Nights</span>
+                <span className="text-slate-500 block">{t("nights_count").split(" ")[0]}</span>
+                <span className="font-semibold text-slate-200">{t("nights_count", { count: pricingEstimate?.nights })}</span>
               </div>
             </div>
 
             {/* Special Request Inputs */}
             <div className="space-y-2">
-              <Label htmlFor="special-requests" className="text-slate-400 font-bold uppercase">Special Requests / Requirements</Label>
+              <Label htmlFor="special-requests" className="text-slate-400 font-bold uppercase">{t("notes")}</Label>
               <Input
                 id="special-requests"
                 value={specialRequests}
@@ -581,18 +589,18 @@ export default function NewBookingPage() {
             {/* Pricing Estimates */}
             {pricingEstimate && (
               <div className="rounded-xl border border-slate-900 bg-cyan-950/10 p-4 space-y-2">
-                <h4 className="font-bold text-cyan-400 uppercase tracking-wider">Final Charges Review</h4>
+                <h4 className="font-bold text-cyan-400 uppercase tracking-wider">{locale === "ne" ? "जम्मा शुल्क समीक्षा" : "Final Charges Review"}</h4>
                 <div className="space-y-1">
                   <div className="flex justify-between text-slate-400">
-                    <span>Base stay charges</span>
+                    <span>{t("base_price")}</span>
                     <span>Rs. {Number(pricingEstimate.base_price).toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-slate-400">
-                    <span>VAT (13%)</span>
+                    <span>{locale === "ne" ? "भ्याट (१३%)" : "VAT (13%)"}</span>
                     <span>Rs. {Number(pricingEstimate.tax_price).toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-sm font-extrabold text-white pt-1.5 border-t border-slate-900">
-                    <span>Total Stay Amount</span>
+                    <span>{t("grand_total")}</span>
                     <span>Rs. {Number(pricingEstimate.total_price).toLocaleString()}</span>
                   </div>
                 </div>
@@ -602,7 +610,7 @@ export default function NewBookingPage() {
             <div className="flex justify-between pt-4 border-t border-slate-900">
               <Button onClick={() => setStep(2)} variant="ghost" className="border border-slate-800 text-slate-400 hover:text-white h-10 px-4 gap-1">
                 <ArrowLeft className="h-4 w-4" />
-                Previous Step
+                {locale === "ne" ? "अघिल्लो चरण" : "Previous Step"}
               </Button>
 
               <Button
@@ -613,12 +621,12 @@ export default function NewBookingPage() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
-                    Confirming Reservation...
+                    {t("creating")}
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4" />
-                    Confirm Reservation
+                    {t("create_booking")}
                   </>
                 )}
               </Button>

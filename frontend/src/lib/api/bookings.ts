@@ -1,5 +1,5 @@
 import { apiClient } from "./client";
-import type { Reservation, GuestProfile, PaginatedResponse } from "../types";
+import type { Reservation, GuestProfile, PaginatedResponse, BookingGap } from "../types";
 
 export const bookingsApi = {
   // Availability
@@ -67,4 +67,11 @@ export const bookingsApi = {
       special_requests?: string;
     };
   }) => apiClient.post<Reservation>("/bookings/public/bookings/", data),
+
+  // Booking Gaps Analysis
+  getBookingGaps: (params: {
+    start_date?: string;
+    end_date?: string;
+    room_id?: number;
+  }) => apiClient.get<BookingGap[]>("/bookings/gaps/", { params }),
 };

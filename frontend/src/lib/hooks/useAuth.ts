@@ -17,7 +17,7 @@ export const useAuth = () => {
       const userProfile: UserProfile = response.data.user;
       setUser(userProfile);
       if (userProfile.role === "SUPER_ADMIN") {
-        router.push("/superadmin");
+        router.push("/admin");
       } else {
         router.push("/");
       }

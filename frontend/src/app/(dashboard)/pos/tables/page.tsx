@@ -12,11 +12,17 @@ import { posApi } from "@/lib/api/pos";
 import { usePOSStore } from "@/lib/store/posStore";
 import type { DiningTable, Order } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 export default function TablesPage() {
   const router = useRouter();
   const setTable = usePOSStore((s) => s.setTable);
   const clearCart = usePOSStore((s) => s.clearCart);
+
+  const t = useTranslations("POS");
+  const tData = useTransData();
+  const locale = useLocale();
 
   const [tables, setTables] = useState<DiningTable[]>([]);
   const [activeOrders, setActiveOrders] = useState<Order[]>([]);
@@ -101,21 +107,21 @@ export default function TablesPage() {
             <LayoutGrid className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">Dining Tables Map</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Real-time table occupancy tracker</p>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">{t("tables_title")}</h1>
+            <p className="text-xs text-slate-500 mt-0.5">{t("tables_subtitle")}</p>
           </div>
         </div>
 
         {/* Route Swaps Navigation */}
         <div className="flex items-center gap-2">
           <Link href="/pos">
-            <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-950">
-              <Utensils className="h-4 w-4 mr-1.5" /> Ordering Terminal
+            <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-950 text-xs">
+              <Utensils className="h-4 w-4 mr-1.5" /> {locale === "ne" ? "अर्डर टर्मिनल" : "Ordering Terminal"}
             </Button>
           </Link>
           <Link href="/pos/kds">
-            <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-950">
-              <ChefHat className="h-4 w-4 mr-1.5" /> Kitchen Display (KDS)
+            <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-950 text-xs">
+              <ChefHat className="h-4 w-4 mr-1.5" /> {t("kds_view")}
             </Button>
           </Link>
           <Button
@@ -133,13 +139,21 @@ export default function TablesPage() {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
           <Loader2 className="h-8 w-8 text-cyan-500 animate-spin" />
-          <span className="text-sm font-medium text-slate-400">Loading tables data...</span>
+          <span className="text-sm font-medium text-slate-400">
+            {locale === "ne" ? "टेबल विवरण लोड हुँदैछ..." : "Loading tables data..."}
+          </span>
         </div>
       ) : Object.keys(tablesByArea).length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 border border-dashed border-slate-900 rounded-xl bg-slate-950/20">
           <HelpCircle className="h-12 w-12 text-slate-700 mb-2" />
-          <p className="text-sm text-slate-400 font-semibold">No Dining Areas configured</p>
-          <p className="text-xs text-slate-500 mt-1">Configure Dining Areas and Tables in the admin portal.</p>
+          <p className="text-sm text-slate-400 font-semibold">
+            {locale === "ne" ? "कुनै डाइनिङ क्षेत्र कन्फिगर गरिएको छैन" : "No Dining Areas configured"}
+          </p>
+          <p className="text-xs text-slate-500 mt-1">
+            {locale === "ne"
+              ? "एडमिन पोर्टलमा डाइनिङ क्षेत्र र टेबलहरू कन्फिगर गर्नुहोस्।"
+              : "Configure Dining Areas and Tables in the admin portal."}
+          </p>
         </div>
       ) : (
         <div className="space-y-8">
@@ -147,8 +161,12 @@ export default function TablesPage() {
             <div key={areaName} className="space-y-4">
               <div className="flex items-center gap-2 border-b border-slate-900 pb-2">
                 <Layers className="h-4 w-4 text-cyan-500" />
-                <h2 className="text-sm font-bold uppercase tracking-wider text-slate-300">{areaName}</h2>
-                <span className="text-xs text-slate-500 font-mono">({areaTables.length} tables)</span>
+                <h2 className="text-sm font-bold uppercase tracking-wider text-slate-300">
+                  {locale === "ne" ? tData(areaName) : areaName}
+                </h2>
+                <span className="text-xs text-slate-500 font-mono">
+                  {locale === "ne" ? `(${areaTables.length} टेबलहरू)` : `(${areaTables.length} tables)`}
+                </span>
               </div>
 
               {/* Tables grid */}
@@ -165,20 +183,24 @@ export default function TablesPage() {
                       )}
                     >
                       <div className="flex justify-between items-start w-full gap-2">
-                        <span className="font-extrabold text-base tracking-tight">T-{table.table_number}</span>
+                        <span className="font-extrabold text-base tracking-tight">
+                          {locale === "ne" ? `टेबल ${table.table_number}` : `T-${table.table_number}`}
+                        </span>
                         <Badge className="text-[9px] capitalize px-1.5 py-0 border-slate-800" variant="secondary">
-                          {table.status}
+                          {tData(table.status)}
                         </Badge>
                       </div>
 
                       <div className="space-y-1 mt-2">
                         <span className="text-[10px] text-slate-500 block font-medium">
-                          Capacity: {table.capacity} Pax
+                          {locale === "ne"
+                            ? `क्षमता: ${table.capacity} व्यक्ति`
+                            : `Capacity: ${table.capacity} Pax`}
                         </span>
                         {linkedOrder && (
                           <div className="space-y-0.5">
                             <span className="text-[10px] font-semibold text-slate-300 block truncate">
-                              Order #{linkedOrder.id}
+                              {locale === "ne" ? `अर्डर #${linkedOrder.id}` : `Order #${linkedOrder.id}`}
                             </span>
                             <span className="text-[10px] text-cyan-400 font-extrabold block">
                               Rs. {parseFloat(linkedOrder.total_amount).toFixed(2)}

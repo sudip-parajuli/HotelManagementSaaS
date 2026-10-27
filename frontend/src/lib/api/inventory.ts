@@ -6,6 +6,7 @@ import type {
   PurchaseOrder,
   StockMovement,
   Recipe,
+  RoomAmenityConsumption,
 } from "../types";
 
 export interface CreateItemPayload {
@@ -85,4 +86,10 @@ export const inventoryApi = {
     apiClient.get<Recipe[]>("/inventory/recipes/", { params }),
   createRecipe: (data: { menu_item_id: number; ingredient_id: number; quantity_per_serving: number; unit: string }) =>
     apiClient.post<Recipe>("/inventory/recipes/", data),
+
+  // Room Amenity Consumption
+  logAmenityConsumption: (data: { room_id: number; inventory_item_id: number; quantity: number; is_complimentary?: boolean }) =>
+    apiClient.post<RoomAmenityConsumption>("/inventory/room-consumptions/log_consumption/", data),
+  getRoomConsumptions: (params?: { room?: number }) =>
+    apiClient.get<RoomAmenityConsumption[]>("/inventory/room-consumptions/", { params }),
 };

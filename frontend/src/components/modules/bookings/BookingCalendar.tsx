@@ -5,6 +5,8 @@ import { format, addDays, isSameDay, differenceInDays } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Bed } from "lucide-react";
 import type { Room, Reservation } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 interface BookingCalendarProps {
   rooms: Room[];
@@ -29,6 +31,10 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
   onCellClick,
   onBookingClick,
 }) => {
+  const tSidebar = useTranslations("Sidebar");
+  const tData = useTransData();
+  const locale = useLocale();
+
   // Generate 14 columns of dates
   const dates = Array.from({ length: 14 }).map((_, i) => addDays(startDate, i));
 
@@ -43,11 +49,21 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
           {/* Room info sticky left spacer */}
           <div className="col-span-2 p-3 font-bold text-xs uppercase tracking-wider text-slate-500 flex items-center gap-1.5 border-r border-slate-900 bg-slate-950/80">
             <Bed className="h-3.5 w-3.5 text-cyan-400" />
-            Rooms
+            {tSidebar("rooms")}
           </div>
           {/* Date headers */}
           {dates.map((dateVal, i) => {
             const dayName = format(dateVal, "EEE");
+            const dayMap: Record<string, string> = {
+              Sun: "आइत",
+              Mon: "सोम",
+              Tue: "मङ्गल",
+              Wed: "बुध",
+              Thu: "बिही",
+              Fri: "शुक्र",
+              Sat: "शनि",
+            };
+            const displayDayName = locale === "ne" ? (dayMap[dayName] || dayName) : dayName;
             const dayNum = format(dateVal, "d");
             const isToday = isSameDay(dateVal, new Date());
 
@@ -59,7 +75,7 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
                 }`}
               >
                 <span className="text-[10px] uppercase font-semibold tracking-wider">
-                  {dayName}
+                  {displayDayName}
                 </span>
                 <span className={`text-xs h-5 w-5 rounded-full flex items-center justify-center font-bold ${
                   isToday ? "bg-cyan-500 text-white" : ""
@@ -95,7 +111,7 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
                     {room.room_number}
                   </span>
                   <span className="text-[10px] text-slate-500 truncate">
-                    {room.room_type?.name}
+                    {tData(room.room_type?.name)}
                   </span>
                 </div>
 
@@ -174,7 +190,7 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
 
           {rooms.length === 0 && (
             <div className="p-10 text-center text-slate-500 text-xs">
-              No rooms config mapped to this floor/class filter.
+              {locale === "ne" ? "यो तल्ला/वर्ग फिल्टरमा कुनै कोठाहरू तोकिएका छैनन्।" : "No rooms config mapped to this floor/class filter."}
             </div>
           )}
         </div>

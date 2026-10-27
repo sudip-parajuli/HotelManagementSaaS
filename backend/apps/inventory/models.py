@@ -6,10 +6,23 @@ Defines Category, InventoryItem, Supplier, PurchaseOrder, POItem, StockMovement,
 from django.db import models
 from django.conf import settings
 from apps.restaurant.models import MenuItem
-
+from apps.properties.models import Room
+from apps.bookings.models import Reservation
 
 class Category(models.Model):
+    class CategoryType(models.TextChoices):
+        FNB = "fnb", "Food & Beverage"
+        HOUSEKEEPING = "housekeeping", "Housekeeping Supplies"
+        AMENITY = "amenity", "Room Amenities"
+        OTHER = "other", "Other"
+
     name = models.CharField(max_length=100)
+    category_type = models.CharField(
+        max_length=20,
+        choices=CategoryType.choices,
+        default=CategoryType.FNB,
+        help_text="Used for routing low-stock alerts to correct department managers",
+    )
     parent = models.ForeignKey(
         "self",
         on_delete=models.SET_NULL,
@@ -220,3 +233,43 @@ class Recipe(models.Model):
 
     def __str__(self):
         return f"{self.quantity_per_serving} {self.unit} of {self.ingredient.name} for {self.menu_item.name}"
+
+
+class RoomAmenityConsumption(models.Model):
+    """
+    Tracks consumption of in-room amenities (minibar, toiletries, welcome items).
+    Auto-deducts from InventoryItem stock and charges to guest folio.
+    """
+    room = models.ForeignKey(
+        Room,
+        on_delete=models.CASCADE,
+        related_name="amenity_consumptions",
+    )
+    inventory_item = models.ForeignKey(
+        InventoryItem,
+        on_delete=models.PROTECT,
+        related_name="room_consumptions",
+    )
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    consumed_at = models.DateTimeField(auto_now_add=True)
+    logged_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="logged_amenities",
+    )
+    reservation = models.ForeignKey(
+        Reservation,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="amenity_charges",
+    )
+    is_complimentary = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "Room Amenity Consumption"
+        verbose_name_plural = "Room Amenity Consumptions"
+
+    def __str__(self):
+        return f"{self.quantity} {self.inventory_item.name} consumed in Room {self.room.room_number}"

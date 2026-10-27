@@ -11,6 +11,8 @@ import { posApi } from "@/lib/api/pos";
 import { frontdeskApi } from "@/lib/api/frontdesk";
 import { PaymentModal } from "./PaymentModal";
 import type { Order, DiningTable, Reservation, OrderType, OrderItemStatus } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 interface OrderPanelProps {
   activeOrder: Order | null;
@@ -39,6 +41,10 @@ export function OrderPanel({
     clearCart,
     totalAmount: cartTotalAmount,
   } = usePOSStore();
+
+  const t = useTranslations("POS");
+  const tData = useTransData();
+  const locale = useLocale();
 
   const [orderType, setOrderType] = useState<OrderType>("dine_in");
   const [discountAmount, setDiscountAmount] = useState<string>("0");
@@ -78,7 +84,7 @@ export function OrderPanel({
       const updatedOrder = await posApi.getOrder(activeOrder.id);
       onOrderUpdated(updatedOrder.data);
     } catch (err) {
-      alert("Failed to update item status.");
+      alert(locale === "ne" ? "सामग्री स्थिति अपडेट गर्न असफल भयो।" : "Failed to update item status.");
     }
   };
 
@@ -107,7 +113,7 @@ export function OrderPanel({
       onOrderCreated(res.data);
     } catch (err: any) {
       console.error(err);
-      alert(err.response?.data?.error || "Failed to place order.");
+      alert(err.response?.data?.error || (locale === "ne" ? "अर्डर राख्न असफल भयो।" : "Failed to place order."));
     } finally {
       setIsSubmitting(false);
     }
@@ -129,7 +135,7 @@ export function OrderPanel({
       clearCart();
       onOrderUpdated(res.data);
     } catch (err: any) {
-      alert(err.response?.data?.error || "Failed to add items.");
+      alert(err.response?.data?.error || (locale === "ne" ? "सामग्रीहरू थप्न असफल भयो।" : "Failed to add items."));
     } finally {
       setIsSubmitting(false);
     }
@@ -150,7 +156,7 @@ export function OrderPanel({
       setIsPaymentOpen(false);
       onOrderPaid(res.data);
     } catch (err: any) {
-      alert(err.response?.data?.error || "Failed to process payment.");
+      alert(err.response?.data?.error || (locale === "ne" ? "भुक्तानी प्रक्रिया गर्न असफल भयो।" : "Failed to process payment."));
     } finally {
       setIsSubmitting(false);
     }
@@ -165,7 +171,7 @@ export function OrderPanel({
       setIsVoiding(false);
       onOrderVoided();
     } catch (err: any) {
-      alert(err.response?.data?.error || "Failed to void order.");
+      alert(err.response?.data?.error || (locale === "ne" ? "अर्डर खारेज गर्न असफल भयो।" : "Failed to void order."));
     } finally {
       setIsSubmitting(false);
     }
@@ -185,27 +191,33 @@ export function OrderPanel({
           {activeOrder ? (
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="font-bold text-slate-100 text-base">Order #{activeOrder.id}</h2>
+                <h2 className="font-bold text-slate-100 text-base">
+                  {locale === "ne" ? `अर्डर #${activeOrder.id}` : `Order #${activeOrder.id}`}
+                </h2>
                 <Badge className="bg-cyan-500/10 text-cyan-400 capitalize text-[10px] border-cyan-500/20">
-                  {activeOrder.status}
+                  {tData(activeOrder.status)}
                 </Badge>
               </div>
               <span className="text-xs text-slate-500 block mt-0.5">
-                {activeOrder.table_number ? `Dining Table ${activeOrder.table_number}` : "Takeaway / Service"}
+                {activeOrder.table_number 
+                  ? (locale === "ne" ? `डाइनिङ टेबल ${activeOrder.table_number}` : `Dining Table ${activeOrder.table_number}`) 
+                  : (locale === "ne" ? "पैक गर्ने / कोठा सेवा" : "Takeaway / Service")}
               </span>
             </div>
           ) : (
             <div>
-              <h2 className="font-bold text-slate-100 text-base">New Order</h2>
+              <h2 className="font-bold text-slate-100 text-base">{locale === "ne" ? "नयाँ अर्डर" : "New Order"}</h2>
               <span className="text-xs text-slate-500 block mt-0.5">
-                {selectedTable ? `Dine-In Table ${selectedTable.table_number}` : "Cart Checkout"}
+                {selectedTable 
+                  ? (locale === "ne" ? `डाइन-इन टेबल ${selectedTable.table_number}` : `Dine-In Table ${selectedTable.table_number}`) 
+                  : (locale === "ne" ? "कार्ट चेकआउट" : "Cart Checkout")}
               </span>
             </div>
           )}
         </div>
         {activeOrder && (
           <Button variant="ghost" size="sm" onClick={onCancelActiveView} className="text-slate-400 hover:text-slate-200">
-            Exit View
+            {locale === "ne" ? "निकास" : "Exit View"}
           </Button>
         )}
       </div>
@@ -215,20 +227,22 @@ export function OrderPanel({
         <div className="p-4 border-b border-slate-900 space-y-3.5 bg-slate-900/10">
           {/* Order Type */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-slate-400 font-semibold tracking-wide">Order Type</Label>
+            <Label className="text-xs text-slate-400 font-semibold tracking-wide">{locale === "ne" ? "अर्डर प्रकार" : "Order Type"}</Label>
             <Select
               value={orderType}
               onValueChange={(val) => setOrderType(val as OrderType)}
               disabled={!!selectedTable}
             >
               <SelectTrigger className="bg-slate-900/60 border-slate-800 text-slate-200 text-sm">
-                <SelectValue placeholder="Select order type" />
+                <SelectValue placeholder={locale === "ne" ? "अर्डर प्रकार छान्नुहोस्" : "Select order type"}>
+                  {(value) => value ? tData(value) : (locale === "ne" ? "अर्डर प्रकार छान्नुहोस्" : "Select order type")}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-slate-900 border-slate-800 text-slate-200">
-                <SelectItem value="dine_in">Dine-In</SelectItem>
-                <SelectItem value="takeaway">Takeaway</SelectItem>
-                <SelectItem value="room_service">Room Service</SelectItem>
-                <SelectItem value="bar">Bar tab</SelectItem>
+                <SelectItem value="dine_in">{tData("dine_in")}</SelectItem>
+                <SelectItem value="takeaway">{tData("takeaway")}</SelectItem>
+                <SelectItem value="room_service">{tData("room_service")}</SelectItem>
+                <SelectItem value="bar">{tData("bar")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -237,17 +251,30 @@ export function OrderPanel({
           {(orderType === "room_service" || orderType === "bar") && (
             <div className="space-y-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
               <Label className="text-xs text-slate-400 font-semibold tracking-wide flex items-center gap-1">
-                <User className="h-3 w-3 text-cyan-400" /> Linked Room Guest
+                <User className="h-3 w-3 text-cyan-400" /> {locale === "ne" ? "लिङ्क गरिएको कोठा पाहुना" : "Linked Room Guest"}
               </Label>
               <Select value={selectedResId} onValueChange={(val) => setSelectedResId(val || "none")}>
                 <SelectTrigger className="bg-slate-900/60 border-slate-800 text-slate-200 text-xs">
-                  <SelectValue placeholder="Select active check-in guest" />
+                  <SelectValue placeholder={locale === "ne" ? "सक्रिय चेक-इन पाहुना छान्नुहोस्" : "Select active check-in guest"}>
+                    {(value) => {
+                      if (value === "none") return locale === "ne" ? "वाक-इन पाहुना (कुनै कोठा ट्याब छैन)" : "Walk-in Guest (No Room Tab)";
+                      const res = inHouseList.find((r) => r.id.toString() === value);
+                      if (res) {
+                        return locale === "ne"
+                          ? `कोठा ${res.room?.room_number || "N/A"} - ${res.guest.first_name} ${res.guest.last_name}`
+                          : `Room ${res.room?.room_number || "N/A"} - ${res.guest.first_name} ${res.guest.last_name}`;
+                      }
+                      return value || "";
+                    }}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent className="bg-slate-900 border-slate-800 text-slate-200">
-                  <SelectItem value="none">Walk-in Guest (No Room Tab)</SelectItem>
+                  <SelectItem value="none">{locale === "ne" ? "वाक-इन पाहुना (कुनै कोठा ट्याब छैन)" : "Walk-in Guest (No Room Tab)"}</SelectItem>
                   {inHouseList.map((res) => (
                     <SelectItem key={res.id} value={res.id.toString()}>
-                      Room {res.room?.room_number || "N/A"} - {res.guest.first_name} {res.guest.last_name}
+                      {locale === "ne"
+                        ? `कोठा ${res.room?.room_number || "N/A"} - ${res.guest.first_name} ${res.guest.last_name}`
+                        : `Room ${res.room?.room_number || "N/A"} - ${res.guest.first_name} ${res.guest.last_name}`}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -263,14 +290,14 @@ export function OrderPanel({
         {activeOrder && activeOrder.items.length > 0 && (
           <div className="space-y-2">
             <h3 className="text-xs text-slate-500 font-semibold uppercase tracking-wider flex items-center gap-1.5 mb-2.5">
-              <Utensils className="h-3.5 w-3.5" /> Placed Items
+              <Utensils className="h-3.5 w-3.5" /> {locale === "ne" ? "अर्डर गरिएका सामग्रीहरू" : "Placed Items"}
             </h3>
             {activeOrder.items.map((item) => (
               <div key={item.id} className="p-2.5 rounded-lg bg-slate-900/40 border border-slate-900 flex justify-between items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-xs text-slate-200 block truncate">
-                      {item.menu_item.name}
+                      {tData(item.menu_item.name)}
                     </span>
                     <span className="text-[10px] text-slate-500">x{item.quantity}</span>
                   </div>
@@ -289,7 +316,7 @@ export function OrderPanel({
                         : "bg-slate-900 text-slate-500 border-slate-800"
                     }`}
                   >
-                    {item.status}
+                    {tData(item.status)}
                   </Badge>
                   {item.status === "pending" && (
                     <Button
@@ -297,7 +324,7 @@ export function OrderPanel({
                       onClick={() => handleUpdateItemStatus(item.id, "preparing")}
                       className="h-5 px-1.5 text-[9px] bg-slate-800 hover:bg-slate-700 text-slate-300"
                     >
-                      Prep
+                      {locale === "ne" ? "तयारी" : "Prep"}
                     </Button>
                   )}
                   {item.status === "preparing" && (
@@ -306,7 +333,7 @@ export function OrderPanel({
                       onClick={() => handleUpdateItemStatus(item.id, "ready")}
                       className="h-5 px-1.5 text-[9px] bg-amber-600/30 hover:bg-amber-600/50 text-amber-300"
                     >
-                      Ready
+                      {locale === "ne" ? "तयार" : "Ready"}
                     </Button>
                   )}
                   {item.status === "ready" && (
@@ -315,7 +342,7 @@ export function OrderPanel({
                       onClick={() => handleUpdateItemStatus(item.id, "served")}
                       className="h-5 px-1.5 text-[9px] bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300"
                     >
-                      Serve
+                      {locale === "ne" ? "पस्कनुहोस्" : "Serve"}
                     </Button>
                   )}
                 </div>
@@ -328,22 +355,22 @@ export function OrderPanel({
         <div className="space-y-2">
           {activeOrder && cartItems.length > 0 && (
             <h3 className="text-xs text-amber-500 font-semibold uppercase tracking-wider flex items-center gap-1.5 mt-4 mb-2.5">
-              <Clipboard className="h-3.5 w-3.5" /> Pending Additions
+              <Clipboard className="h-3.5 w-3.5" /> {locale === "ne" ? "पेन्डिङ थपहरू" : "Pending Additions"}
             </h3>
           )}
           {cartItems.length === 0 ? (
             !activeOrder && (
               <div className="flex flex-col items-center justify-center h-48 border border-dashed border-slate-900 rounded-xl bg-slate-950/10">
                 <Receipt className="h-9 w-9 text-slate-700 mb-2" />
-                <p className="text-xs text-slate-500 font-medium">Your cart is empty.</p>
-                <p className="text-[10px] text-slate-600">Select items from the menu grid.</p>
+                <p className="text-xs text-slate-500 font-medium">{t("empty_cart")}</p>
+                <p className="text-[10px] text-slate-600">{locale === "ne" ? "मेनु ग्रिडबाट सामग्रीहरू छान्नुहोस्।" : "Select items from the menu grid."}</p>
               </div>
             )
           ) : (
             cartItems.map((c) => (
               <div key={c.id} className="p-2.5 rounded-lg bg-slate-900/70 border border-slate-800/60 flex justify-between items-center gap-3">
                 <div className="flex-1 min-w-0">
-                  <span className="font-semibold text-xs text-slate-200 block truncate">{c.name}</span>
+                  <span className="font-semibold text-xs text-slate-200 block truncate">{tData(c.name)}</span>
                   <span className="text-[10px] text-cyan-400 font-medium">Rs. {c.price.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
@@ -382,17 +409,17 @@ export function OrderPanel({
       <div className="p-4 border-t border-slate-900 bg-slate-950 space-y-3.5">
         <div className="space-y-1.5 text-xs text-slate-400">
           <div className="flex justify-between">
-            <span>Subtotal</span>
+            <span>{locale === "ne" ? "उप-योग" : "Subtotal"}</span>
             <span className="text-slate-200 font-medium">Rs. {subtotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
-            <span>VAT (13%)</span>
+            <span>{locale === "ne" ? "भ्याट (१३%)" : "VAT (13%)"}</span>
             <span className="text-slate-200 font-medium">Rs. {tax.toFixed(2)}</span>
           </div>
           
           {/* Discount input or display */}
           <div className="flex justify-between items-center">
-            <span>Discount (Rs.)</span>
+            <span>{locale === "ne" ? "छुट (रु.)" : "Discount (Rs.)"}</span>
             {activeOrder ? (
               <span className="text-emerald-400 font-medium">- Rs. {discount.toFixed(2)}</span>
             ) : (
@@ -407,7 +434,7 @@ export function OrderPanel({
           </div>
 
           <div className="border-t border-slate-900 pt-2 flex justify-between font-bold text-sm text-slate-100">
-            <span>Grand Total</span>
+            <span>{t("total")}</span>
             <span className="text-cyan-400">Rs. {total.toFixed(2)}</span>
           </div>
         </div>
@@ -415,10 +442,12 @@ export function OrderPanel({
         {/* Order overall Notes (Only for draft) */}
         {!activeOrder && cartItems.length > 0 && (
           <div className="space-y-1.5">
-            <Label htmlFor="order-notes" className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Order Instructions</Label>
+            <Label htmlFor="order-notes" className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">
+              {locale === "ne" ? "अर्डर निर्देशनहरू" : "Order Instructions"}
+            </Label>
             <Textarea
               id="order-notes"
-              placeholder="E.g. No onions, Extra spicy..."
+              placeholder={locale === "ne" ? "उदा. प्याज नहाल्नुहोला, पिरो..." : "E.g. No onions, Extra spicy..."}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               className="min-h-[44px] bg-slate-900 border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus-visible:ring-cyan-500"
@@ -433,15 +462,15 @@ export function OrderPanel({
               <Button
                 variant="outline"
                 onClick={() => setIsVoiding(true)}
-                className="flex-1 border-slate-800 text-red-400 hover:bg-red-500/10 hover:text-red-300 font-medium"
+                className="flex-1 border-slate-800 text-red-400 hover:bg-red-500/10 hover:text-red-300 font-medium text-xs"
               >
-                Void Order
+                {locale === "ne" ? "अर्डर खारेज" : "Void Order"}
               </Button>
               <Button
                 onClick={() => setIsPaymentOpen(true)}
-                className="flex-1 bg-emerald-600 text-white hover:bg-emerald-500 font-semibold"
+                className="flex-1 bg-emerald-600 text-white hover:bg-emerald-500 font-semibold text-xs"
               >
-                Settle Pay
+                {t("settle_payment")}
               </Button>
             </div>
           ) : cartItems.length > 0 ? (
@@ -449,16 +478,16 @@ export function OrderPanel({
               <Button
                 variant="outline"
                 onClick={clearCart}
-                className="border-slate-800 text-slate-400 hover:bg-slate-900 hover:text-slate-200 font-medium"
+                className="border-slate-800 text-slate-400 hover:bg-slate-900 hover:text-slate-200 font-medium text-xs"
               >
-                Clear
+                {locale === "ne" ? "साफ गर्नुहोस्" : "Clear"}
               </Button>
               <Button
-                onClick={selectedTable ? handlePlaceOrder : handlePlaceOrder}
+                onClick={handlePlaceOrder}
                 disabled={isSubmitting}
-                className="flex-1 bg-cyan-600 text-white hover:bg-cyan-500 font-semibold"
+                className="flex-1 bg-cyan-600 text-white hover:bg-cyan-500 font-semibold text-xs"
               >
-                {isSubmitting ? "Placing..." : selectedTable ? "Place Order" : "Place Order"}
+                {isSubmitting ? (locale === "ne" ? "राख्दै..." : "Placing...") : (locale === "ne" ? "अर्डर राख्नुहोस्" : "Place Order")}
               </Button>
             </div>
           ) : null}
@@ -468,9 +497,9 @@ export function OrderPanel({
             <Button
               onClick={handleAddItemsToActive}
               disabled={isSubmitting}
-              className="w-full bg-amber-600 text-white hover:bg-amber-500 font-semibold flex items-center gap-1.5"
+              className="w-full bg-amber-600 text-white hover:bg-amber-500 font-semibold flex items-center justify-center gap-1.5 text-xs"
             >
-              Add {cartItems.length} items to Order
+              {locale === "ne" ? `अर्डरमा ${cartItems.length} सामग्रीहरू थप्नुहोस्` : `Add ${cartItems.length} items to Order`}
             </Button>
           )}
         </div>
@@ -492,16 +521,16 @@ export function OrderPanel({
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 max-w-[380px] w-full space-y-4">
             <h3 className="font-bold text-slate-100 flex items-center gap-2 text-sm">
-              <ShieldAlert className="h-5 w-5 text-red-500" /> Void Active Order
+              <ShieldAlert className="h-5 w-5 text-red-500" /> {locale === "ne" ? "सक्रिय अर्डर खारेज गर्नुहोस्" : "Void Active Order"}
             </h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Voiding an order cancels it completely. A valid reason must be logged for auditing.
+              {locale === "ne" ? "अर्डर खारेज गर्दा यो पूर्ण रूपमा रद्द हुन्छ। अडिटिङको लागि मान्य कारण दर्ता गर्नुपर्छ।" : "Voiding an order cancels it completely. A valid reason must be logged for auditing."}
             </p>
             <div className="space-y-1.5">
-              <Label htmlFor="void-reason" className="text-xs text-slate-400">Reason for Void</Label>
+              <Label htmlFor="void-reason" className="text-xs text-slate-400">{locale === "ne" ? "खारेजीको कारण" : "Reason for Void"}</Label>
               <Input
                 id="void-reason"
-                placeholder="E.g. Customer changed mind, Duplicate order"
+                placeholder={locale === "ne" ? "उदा. ग्राहकको सोच बदलियो, दोहोरो अर्डर" : "E.g. Customer changed mind, Duplicate order"}
                 value={voidReason}
                 onChange={(e) => setVoidReason(e.target.value)}
                 className="bg-slate-950 border-slate-800 text-xs"
@@ -509,7 +538,7 @@ export function OrderPanel({
             </div>
             <div className="flex justify-end gap-2 text-xs">
               <Button size="sm" variant="outline" onClick={() => setIsVoiding(false)} className="border-slate-800">
-                Cancel
+                {locale === "ne" ? "रद्द" : "Cancel"}
               </Button>
               <Button
                 size="sm"
@@ -517,7 +546,7 @@ export function OrderPanel({
                 disabled={isSubmitting || !voidReason.trim()}
                 className="bg-red-600 hover:bg-red-500 text-white"
               >
-                Confirm Void
+                {locale === "ne" ? "खारेजी पुष्टि गर्नुहोस्" : "Confirm Void"}
               </Button>
             </div>
           </div>

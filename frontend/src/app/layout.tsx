@@ -16,8 +16,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "SIA Enterprises Hotel Management System",
-  description: "Enterprise SaaS Hotel Management Platform",
+  title: { default: "Staywired | Hospitality, beautifully connected", template: "%s | Staywired" },
+  description: "Rooms, reservations, front desk and guest experiences in one connected workspace. Hospitality management powered by Techwired Solutions.",
 };
 
 export default function RootLayout({

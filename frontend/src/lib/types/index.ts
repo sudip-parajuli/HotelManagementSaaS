@@ -59,8 +59,39 @@ export interface Tenant {
   contact_email: string;
   contact_phone?: string;
   is_active: boolean;
+  business_type?: number | null;
+  business_type_name?: string | null;
+  business_type_key?: string | null;
+  business_description?: string;
   subscription_plan?: string;
+  notes?: string;
+  onboarded_at?: string;
   created_on: string;
+  active_module_count?: number;
+}
+
+export interface TenantUsage {
+  tenant: string;
+  plan: string | null;
+  status: string | null;
+  rooms_used: number;
+  rooms_limit: number | null;
+  staff_used: number;
+  staff_limit: number | null;
+}
+
+export interface TenantFeatureItem {
+  key: string;
+  in_plan: boolean;
+  manually_granted: boolean;
+  grant_expires_at: string | null;
+  grant_reason: string;
+  grant_id: number | null;
+}
+
+export interface TenantFeaturesResponse {
+  features: TenantFeatureItem[];
+  plan: string | null;
 }
 
 export interface Domain {
@@ -222,6 +253,9 @@ export interface Invoice {
   service_charge_amount: string;
   tax_rate: string;
   tax_amount: string;
+  vat_amount: string;
+  digital_rebate_amount: string;
+  net_payable_amount: string;
   total_amount: string;
   paid_amount: string;
   balance_due: string;
@@ -433,10 +467,46 @@ export interface HousekeepingBoardRoom {
 }
 
 export interface CreateMaintenancePayload {
-  room_id: number;
-  category: MaintenanceCategory;
-  description: string;
-}
+   room_id: number;
+   category: MaintenanceCategory;
+   description: string;
+ }
+
+ export interface RoomDiscrepancy {
+   id: number;
+   room: number;
+   room_number: string;
+   system_status: RoomStatus;
+   physical_status_found: RoomStatus;
+   reported_by: number;
+   reported_by_name: string | null;
+   reported_at: string;
+   resolved: boolean;
+   resolution_notes: string | null;
+ }
+
+ export interface LostFoundItem {
+   id: number;
+   room: number;
+   room_number: string;
+   found_by: number;
+   found_by_name: string | null;
+   description: string;
+   photo: string | null;
+   found_at: string;
+   status: "stored" | "claimed" | "disposed";
+   claimed_by_guest_id: number | null;
+   claimed_by_guest_name: string | null;
+   claimed_at: string | null;
+ }
+
+ export interface BookingGap {
+   date: string;
+   room_id: number;
+   room_number: string;
+   is_available: boolean;
+   reservation_id: number | null;
+ }
 
 // ─────────────────────────────
 // Inventory (Phase 5)
@@ -536,6 +606,19 @@ export interface Recipe {
   ingredient_name: string;
   quantity_per_serving: string;
   unit: string;
+}
+
+export interface RoomAmenityConsumption {
+  id: number;
+  room: number;
+  room_number: string;
+  inventory_item: number;
+  item_name: string;
+  quantity: string;
+  consumed_at: string;
+  logged_by: number;
+  is_complimentary: boolean;
+  reservation?: number;
 }
 
 // ─────────────────────────────
@@ -940,14 +1023,103 @@ export interface SubscriptionInvoice {
   created_at: string;
 }
 
+export interface AddonModule {
+  id: number;
+  key: string;
+  name: string;
+  description: string;
+  icon_name: string;
+  price_monthly: string | null;
+  price_yearly: string | null;
+  category: string;
+  is_core: boolean;
+  depends_on_keys: string[];
+  recommended_for: string[];
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TenantModuleSubAdmin {
+  id: number;
+  module_key: string;
+  module_name: string;
+  module_category: string;
+  status: string;
+  billing_cycle: string;
+  price_at_activation: string;
+  activated_at: string | null;
+  cancelled_at: string | null;
+  next_billing_date: string | null;
+}
+
+export interface ModuleRevenueItem {
+  key: string;
+  name: string;
+  category: string;
+  icon_name: string;
+  price_monthly: string;
+  price_yearly: string | null;
+  is_core: boolean;
+  active_tenants: number;
+  cancelled_tenants: number;
+  mrr: number;
+}
+
+export interface ModuleRevenueResponse {
+  modules: ModuleRevenueItem[];
+  total_mrr: number;
+  trends: Record<string, Record<string, { name: string; count: number }>>;
+}
+
+export interface AddonRequest {
+  id: number;
+  tenant: number;
+  tenant_name: string;
+  addon: number;
+  addon_name: string;
+  requested_by: number | null;
+  requested_by_name: string;
+  status: "pending" | "approved" | "rejected" | "active";
+  message: string;
+  rejection_reason: string;
+  reviewed_by: number | null;
+  reviewed_by_name: string;
+  requested_at: string;
+  reviewed_at: string | null;
+}
+
 export interface SuperAdminMetrics {
   active_hotels: number;
+  active_tenants: number;
   trial_hotels: number;
+  trial_tenants: number;
   mrr: number;
+  plan_mrr: number;
+  module_mrr: number;
   pending_invoices: number;
   growth_data: Array<{
     month: string;
     revenue: number;
+  }>;
+  total_tenants: number;
+  trial_ending_soon: number;
+  churn_this_month: number;
+  plan_distribution: Record<string, number>;
+  tenant_health: Array<{
+    id: number;
+    name: string;
+    plan: string;
+    status: string;
+    last_active: string;
+    days_since_signup: number;
+    activity_status: "healthy" | "low_activity" | "at_risk";
+  }>;
+  recent_events: Array<{
+    id: string;
+    timestamp: string;
+    type: "signup" | "impersonation" | "payment" | "support";
+    message: string;
   }>;
 }
 
@@ -957,7 +1129,7 @@ export interface ClientOnboardPayload {
   subdomain: string;
   admin_email: string;
   admin_password: string;
-  plan_slug: string;
+  business_type?: string;
   contact_phone?: string;
 }
 

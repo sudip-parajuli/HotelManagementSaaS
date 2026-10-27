@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Loader2, ChefHat, RefreshCw, LayoutGrid, Utensils, Wifi, WifiOff, AlertCircle } from "lucide-react";
+import { Loader2, ChefHat, RefreshCw, LayoutGrid, Utensils, Wifi, WifiOff, AlertCircle, BarChart as BarChartIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +11,8 @@ import { posApi } from "@/lib/api/pos";
 import { useWebSocket } from "@/lib/hooks/useWebSocket";
 import type { KOT, KOTStation } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 const STATIONS = [
   { value: "hot_kitchen", label: "Hot Kitchen" },
@@ -19,11 +21,22 @@ const STATIONS = [
   { value: "pastry", label: "Pastry" },
 ] as const;
 
+const STATIONS_NEPALESE: Record<string, string> = {
+  hot_kitchen: "तातो भान्सा",
+  cold_prep: "चिसो तयारी",
+  bar: "बार",
+  pastry: "पेस्ट्री",
+};
+
 export default function KDSPage() {
   const [selectedStation, setSelectedStation] = useState<KOTStation>("hot_kitchen");
   const [kots, setKots] = useState<KOT[]>([]);
   const [loading, setLoading] = useState(true);
   const [isConnected, setIsConnected] = useState(false);
+
+  const t = useTranslations("POS");
+  const tData = useTransData();
+  const locale = useLocale();
 
   // Load KOTs initially
   const loadKOTs = useCallback(async () => {
@@ -106,7 +119,7 @@ export default function KDSPage() {
       // Remove local copy immediately
       setKots((prev) => prev.filter((k) => k.id !== kotId));
     } catch (err) {
-      alert("Failed to complete KOT ticket.");
+      alert(locale === "ne" ? "KOT टिकट सम्पन्न गर्न असफल भयो।" : "Failed to complete KOT ticket.");
     }
   };
 
@@ -133,7 +146,7 @@ export default function KDSPage() {
         })
       );
     } catch (err) {
-      alert("Failed to update item status.");
+      alert(locale === "ne" ? "सामग्री स्थिति अपडेट गर्न असफल भयो।" : "Failed to update item status.");
     }
   };
 
@@ -147,62 +160,75 @@ export default function KDSPage() {
           </div>
           <div>
             <h1 className="text-base font-bold text-slate-100 flex items-center gap-2">
-              <span>Kitchen Display Board (KDS)</span>
+              <span>{locale === "ne" ? "भान्सा प्रदर्शन बोर्ड (KDS)" : "Kitchen Display Board (KDS)"}</span>
               {isConnected ? (
                 <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-                  <Wifi className="h-3 w-3" /> Live
+                  <Wifi className="h-3 w-3" /> {locale === "ne" ? "सक्रिय" : "Live"}
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1 text-[10px] text-slate-500 font-semibold bg-slate-900 border border-slate-800 px-2 py-0.5 rounded-full">
-                  <WifiOff className="h-3 w-3" /> Reconnecting
+                  <WifiOff className="h-3 w-3" /> {locale === "ne" ? "पुनः जडान..." : "Reconnecting"}
                 </span>
               )}
             </h1>
-            <p className="text-[10px] text-slate-500">Live order ticket prep routing</p>
+            <p className="text-[10px] text-slate-500">{locale === "ne" ? "अर्डर टिकट तयारी अनुगमन" : "Live order ticket prep routing"}</p>
           </div>
         </div>
 
         {/* Station filter dropdown */}
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="flex items-center gap-2 flex-1 sm:flex-initial">
-            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider whitespace-nowrap">Prep Station:</span>
+            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider whitespace-nowrap">
+              {locale === "ne" ? "तयारी स्टेशन:" : "Prep Station:"}
+            </span>
             <Select
               value={selectedStation}
               onValueChange={(val) => setSelectedStation(val as KOTStation)}
             >
               <SelectTrigger className="w-[160px] bg-slate-900 border-slate-800 text-slate-200 text-xs">
-                <SelectValue placeholder="Select station" />
+                <SelectValue placeholder={locale === "ne" ? "स्टेशन छान्नुहोस्" : "Select station"}>
+                  {(value) => {
+                    const s = STATIONS.find((item) => item.value === value);
+                    if (s) return locale === "ne" ? STATIONS_NEPALESE[s.value] : s.label;
+                    return value || "";
+                  }}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-slate-900 border-slate-800 text-slate-200">
                 {STATIONS.map((s) => (
                   <SelectItem key={s.value} value={s.value} className="text-xs">
-                    {s.label}
+                    {locale === "ne" ? STATIONS_NEPALESE[s.value] : s.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          <div className="flex gap-2">
-            <Link href="/pos">
-              <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-900 text-xs">
-                <Utensils className="h-4 w-4 mr-1.5" /> POS Terminal
-              </Button>
-            </Link>
-            <Link href="/pos/tables">
-              <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-900 text-xs">
-                <LayoutGrid className="h-4 w-4 mr-1.5" /> Tables Map
-              </Button>
-            </Link>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={loadKOTs}
-              className="text-slate-400 hover:text-slate-100 hover:bg-slate-900 h-8 w-8"
-            >
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          </div>
+<div className="flex gap-2">
+             <Link href="/pos">
+               <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-900 text-xs">
+                 <Utensils className="h-4 w-4 mr-1.5" /> {locale === "ne" ? "POS टर्मिनल" : "POS Terminal"}
+               </Button>
+             </Link>
+             <Link href="/pos/tables">
+               <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-900 text-xs">
+                 <LayoutGrid className="h-4 w-4 mr-1.5" /> {locale === "ne" ? "टेबलहरूको नक्सा" : "Tables Map"}
+               </Button>
+             </Link>
+             <Link href="/pos/insights">
+               <Button variant="outline" size="sm" className="border-slate-800 text-slate-300 hover:bg-slate-900 text-xs">
+                 <BarChartIcon className="h-4 w-4 mr-1.5" /> {locale === "ne" ? "बिक्रम विश्लेषण" : "Sales Analytics"}
+               </Button>
+             </Link>
+             <Button
+               variant="ghost"
+               size="icon"
+               onClick={loadKOTs}
+               className="text-slate-400 hover:text-slate-100 hover:bg-slate-900 h-8 w-8"
+             >
+               <RefreshCw className="h-4 w-4" />
+             </Button>
+           </div>
         </div>
       </div>
 
@@ -211,14 +237,18 @@ export default function KDSPage() {
         {loading ? (
           <div className="flex flex-col items-center justify-center h-full gap-3">
             <Loader2 className="h-8 w-8 text-cyan-500 animate-spin" />
-            <span className="text-sm text-slate-400 font-medium">Loading ticket queue...</span>
+            <span className="text-sm text-slate-400 font-medium">{locale === "ne" ? "टिकट लाम लोड हुँदैछ..." : "Loading ticket queue..."}</span>
           </div>
         ) : kots.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full max-w-md mx-auto text-center border border-dashed border-slate-900 rounded-2xl bg-slate-950/20 p-8">
             <ChefHat className="h-12 w-12 text-slate-700 mb-3 animate-bounce" />
-            <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wide">All Clear in Kitchen</h3>
+            <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wide">{locale === "ne" ? "भान्सामा कुनै अर्डर छैन" : "All Clear in Kitchen"}</h3>
             <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
-              No pending cooking orders routed to the <span className="font-semibold text-cyan-400">{STATIONS.find(s=>s.value===selectedStation)?.label}</span>.
+              {locale === "ne" ? (
+                <>यस <span className="font-semibold text-cyan-400">{STATIONS_NEPALESE[selectedStation] || selectedStation}</span> मा कुनै पेन्डिङ कुकिङ अर्डरहरू छैनन्।</>
+              ) : (
+                <>No pending cooking orders routed to the <span className="font-semibold text-cyan-400">{STATIONS.find(s=>s.value===selectedStation)?.label}</span>.</>
+              )}
             </p>
           </div>
         ) : (

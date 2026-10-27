@@ -19,12 +19,19 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 export default function PurchaseOrderPage() {
   const [pos, setPos] = useState<PurchaseOrder[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const t = useTranslations("Inventory");
+  const tCommon = useTranslations("Common");
+  const tData = useTransData();
+  const locale = useLocale();
 
   // Dialogs
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -166,10 +173,10 @@ export default function PurchaseOrderPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-            Purchase Orders & GRN
+            {t("po_title")}
           </h1>
           <p className="text-muted-foreground text-sm">
-            Draft and send orders to suppliers, and audit deliveries via Goods Receipt Notes (GRN).
+            {t("po_subtitle")}
           </p>
         </div>
         <div>
@@ -181,7 +188,7 @@ export default function PurchaseOrderPage() {
             className="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white flex items-center gap-2"
           >
             <Plus className="h-4 w-4" />
-            Create Purchase Order
+            {t("create_po")}
           </Button>
         </div>
       </div>
@@ -196,20 +203,20 @@ export default function PurchaseOrderPage() {
           ) : pos.length === 0 ? (
             <div className="text-center py-16 space-y-3">
               <FileText className="h-12 w-12 text-slate-650 mx-auto" />
-              <p className="text-slate-400 font-medium">No purchase orders found</p>
-              <p className="text-xs text-slate-500">Create a purchase order to start stock procurement.</p>
+              <p className="text-slate-400 font-medium">{t("no_pos_found")}</p>
+              <p className="text-xs text-slate-500">{t("create_po_desc")}</p>
             </div>
           ) : (
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-slate-800 text-slate-400 font-semibold bg-slate-950/20">
-                  <th className="py-3 px-4">PO Code</th>
-                  <th className="py-3 px-4">Supplier</th>
-                  <th className="py-3 px-4">Order Date</th>
-                  <th className="py-3 px-4">Expected Date</th>
-                  <th className="py-3 px-4">Total Amount</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4 text-right">Action</th>
+                  <th className="py-3 px-4">{t("po_code")}</th>
+                  <th className="py-3 px-4">{t("supplier")}</th>
+                  <th className="py-3 px-4">{t("order_date")}</th>
+                  <th className="py-3 px-4">{t("expected_date")}</th>
+                  <th className="py-3 px-4">{t("total_amount")}</th>
+                  <th className="py-3 px-4">{t("status")}</th>
+                  <th className="py-3 px-4 text-right">{t("action")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -223,7 +230,9 @@ export default function PurchaseOrderPage() {
                     <td className="py-3 px-4 text-slate-400">
                       {po.expected_date ? new Date(po.expected_date).toLocaleDateString() : "-"}
                     </td>
-                    <td className="py-3 px-4 text-slate-300 font-bold">Rs. {parseFloat(po.total_amount).toLocaleString()}</td>
+                    <td className="py-3 px-4 text-slate-300 font-bold">
+                      {locale === "ne" ? `रु. ${parseFloat(po.total_amount).toLocaleString()}` : `Rs. ${parseFloat(po.total_amount).toLocaleString()}`}
+                    </td>
                     <td className="py-3 px-4">
                       <Badge className={
                         po.status === "sent" ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" :
@@ -232,7 +241,7 @@ export default function PurchaseOrderPage() {
                         po.status === "cancelled" ? "bg-rose-500/20 text-rose-400 border border-rose-500/30" :
                         "bg-slate-500/20 text-slate-400 border border-slate-500/30"
                       }>
-                        {po.status.toUpperCase()}
+                        {tData(po.status).toUpperCase()}
                       </Badge>
                     </td>
                     <td className="py-3 px-4 text-right">
@@ -243,7 +252,7 @@ export default function PurchaseOrderPage() {
                           variant="ghost" 
                           className="h-8 text-emerald-500 hover:bg-slate-800/80 hover:text-white"
                         >
-                          Receive Goods (GRN)
+                          {t("receive_goods")}
                         </Button>
                       )}
                     </td>
@@ -261,13 +270,13 @@ export default function PurchaseOrderPage() {
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-white flex items-center gap-2">
               <FileText className="h-5 w-5 text-indigo-500" />
-              Build Purchase Order
+              {t("build_po")}
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleCreateSubmit} className="space-y-4 pt-2">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <Label htmlFor="supplier">Supplier *</Label>
+                <Label htmlFor="supplier">{t("supplier")} *</Label>
                 <select 
                   id="supplier"
                   value={newPO.supplier_id}
@@ -275,14 +284,14 @@ export default function PurchaseOrderPage() {
                   className="w-full h-10 px-3 rounded-md bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary"
                   required
                 >
-                  <option value="">Select supplier</option>
+                  <option value="">{t("select_supplier")}</option>
                   {suppliers.map((s) => (
                     <option key={s.id} value={s.id}>{s.name}</option>
                   ))}
                 </select>
               </div>
               <div className="space-y-1">
-                <Label htmlFor="exp_date">Expected Date</Label>
+                <Label htmlFor="exp_date">{t("expected_date")}</Label>
                 <Input 
                   id="exp_date"
                   type="date"
@@ -294,12 +303,12 @@ export default function PurchaseOrderPage() {
             </div>
 
             <div className="space-y-1">
-              <Label htmlFor="notes">Order Specifications / Notes</Label>
+              <Label htmlFor="notes">{t("order_notes")}</Label>
               <Textarea 
                 id="notes"
                 value={newPO.notes}
                 onChange={(e) => setNewPO({ ...newPO, notes: e.target.value })}
-                placeholder="Include payment milestones, logistics arrangements, etc."
+                placeholder={t("order_notes_placeholder")}
                 className="bg-slate-950 border-slate-800 text-white text-xs h-16"
               />
             </div>
@@ -307,9 +316,9 @@ export default function PurchaseOrderPage() {
             {/* Items rows */}
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <Label className="text-slate-300 font-bold">Line Items Checklist</Label>
+                <Label className="text-slate-300 font-bold">{t("line_items_checklist")}</Label>
                 <Button type="button" size="sm" onClick={addPOItemRow} className="bg-slate-800 hover:bg-slate-700 h-7 text-xs">
-                  + Add Line
+                  {t("add_line")}
                 </Button>
               </div>
               <div className="space-y-2">
@@ -322,9 +331,9 @@ export default function PurchaseOrderPage() {
                         className="w-full h-9 px-2 rounded-md bg-slate-950 border border-slate-800 text-white text-xs"
                         required
                       >
-                        <option value="">Select Stock Item</option>
+                        <option value="">{t("select_stock_item")}</option>
                         {items.map((i) => (
-                          <option key={i.id} value={i.id}>{i.name} ({i.unit})</option>
+                          <option key={i.id} value={i.id}>{i.name} ({tData(i.unit)})</option>
                         ))}
                       </select>
                     </div>
@@ -332,7 +341,7 @@ export default function PurchaseOrderPage() {
                       <Input 
                         type="number"
                         step="any"
-                        placeholder="Qty"
+                        placeholder={locale === "ne" ? "मात्रा" : "Qty"}
                         value={poRow.quantity}
                         onChange={(e) => updatePOItemRow(index, "quantity", e.target.value)}
                         className="h-9 bg-slate-950 border-slate-800 text-white text-xs"
@@ -343,7 +352,7 @@ export default function PurchaseOrderPage() {
                       <Input 
                         type="number"
                         step="any"
-                        placeholder="Rate"
+                        placeholder={locale === "ne" ? "दर" : "Rate"}
                         value={poRow.unit_price}
                         onChange={(e) => updatePOItemRow(index, "unit_price", e.target.value)}
                         className="h-9 bg-slate-950 border-slate-800 text-white text-xs"
@@ -366,10 +375,10 @@ export default function PurchaseOrderPage() {
 
             <div className="flex justify-end gap-3 pt-4 border-t border-slate-800 mt-6">
               <Button type="button" variant="ghost" onClick={() => setIsCreateOpen(false)} className="h-9 hover:bg-slate-800 text-slate-400">
-                Cancel
+                {tCommon("cancel")}
               </Button>
               <Button type="submit" className="h-9 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white">
-                Submit Purchase Order
+                {t("submit_po")}
               </Button>
             </div>
           </form>
@@ -382,21 +391,21 @@ export default function PurchaseOrderPage() {
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-white flex items-center gap-2">
               <ClipboardCheck className="h-5 w-5 text-emerald-500" />
-              Goods Receipt Note (GRN) Registry
+              {t("grn_registry")}
             </DialogTitle>
           </DialogHeader>
           {selectedPO && (
             <form onSubmit={handleReceiveSubmit} className="space-y-4 pt-2">
               <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs grid grid-cols-2 gap-2">
-                <div>PO Reference: <span className="font-mono font-bold text-white">#PO-{selectedPO.id}</span></div>
-                <div>Supplier: <span className="font-bold text-white">{selectedPO.supplier_name}</span></div>
+                <div>{t("po_reference")} <span className="font-mono font-bold text-white">#PO-{selectedPO.id}</span></div>
+                <div>{t("supplier")}: <span className="font-bold text-white">{selectedPO.supplier_name}</span></div>
                 <div className="col-span-2 text-slate-400 mt-1">
-                  Instructions: Input physical quantity received on arrival. Unchecked or zero items will not affect inventory.
+                  {t("grn_instructions")}
                 </div>
               </div>
 
               <div className="space-y-3">
-                <Label className="text-slate-300 font-bold">Line Items Received Check</Label>
+                <Label className="text-slate-300 font-bold">{t("line_items_received_check")}</Label>
                 <div className="space-y-2">
                   {selectedPO.items.map((poItem) => {
                     const balance = parseFloat(poItem.quantity) - parseFloat(poItem.received_qty);
@@ -405,7 +414,7 @@ export default function PurchaseOrderPage() {
                         <div className="col-span-6 text-xs">
                           <div className="font-bold text-white">{poItem.item_name}</div>
                           <div className="text-slate-500 mt-0.5">
-                            Ordered: {parseFloat(poItem.quantity).toFixed(1)} | Recvd: {parseFloat(poItem.received_qty).toFixed(1)}
+                            {locale === "ne" ? "अर्डर गरिएको:" : "Ordered:"} {parseFloat(poItem.quantity).toFixed(1)} | {locale === "ne" ? "प्राप्त:" : "Recvd:"} {parseFloat(poItem.received_qty).toFixed(1)}
                           </div>
                         </div>
                         <div className="col-span-6 flex items-center gap-2">
@@ -413,7 +422,7 @@ export default function PurchaseOrderPage() {
                             type="number"
                             step="any"
                             max={balance.toString()}
-                            placeholder={`Balance: ${balance}`}
+                            placeholder={locale === "ne" ? `बाँकी: ${balance}` : `Balance: ${balance}`}
                             value={receiveQuantities[poItem.id] || ""}
                             onChange={(e) => setReceiveQuantities({
                               ...receiveQuantities,
@@ -421,7 +430,7 @@ export default function PurchaseOrderPage() {
                             })}
                             className="h-9 bg-slate-950 border-slate-800 text-white text-xs text-right"
                           />
-                          <span className="text-[10px] text-slate-500 w-8">{poItem.item_unit}</span>
+                          <span className="text-[10px] text-slate-500 w-8">{tData(poItem.item_unit)}</span>
                         </div>
                       </div>
                     );
@@ -431,10 +440,10 @@ export default function PurchaseOrderPage() {
 
               <div className="flex justify-end gap-3 pt-4 border-t border-slate-800 mt-6">
                 <Button type="button" variant="ghost" onClick={() => setIsReceiveOpen(false)} className="h-9 hover:bg-slate-800 text-slate-400">
-                  Cancel
+                  {tCommon("cancel")}
                 </Button>
                 <Button type="submit" className="h-9 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white">
-                  Validate Receipt (GRN)
+                  {t("validate_receipt")}
                 </Button>
               </div>
             </form>

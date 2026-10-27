@@ -11,6 +11,7 @@ from .views import (
     ChangePasswordView,
     UserListCreateView,
     UserDetailView,
+    UserFeaturesView,
 )
 
 urlpatterns = [
@@ -21,6 +22,8 @@ urlpatterns = [
     # Current user profile
     path("me/", MeView.as_view(), name="auth-me"),
     path("change-password/", ChangePasswordView.as_view(), name="auth-change-password"),
+    # Tenant features for current user
+    path("features/", UserFeaturesView.as_view(), name="auth-features"),
     # Staff user management
     path("users/", UserListCreateView.as_view(), name="user-list"),
     path("users/<int:pk>/", UserDetailView.as_view(), name="user-detail"),

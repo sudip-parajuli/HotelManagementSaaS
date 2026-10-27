@@ -19,42 +19,59 @@ import {
   ChevronLeft,
   ChevronRight,
   Award,
+  Gamepad2,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useTranslations } from "next-intl";
 
-const navItems = [
+interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ComponentType<any>;
+  key: string;
+  featureKey?: string;
+}
+
+const ALL_FEATURES = "__all__";
+
+const navItems: NavItem[] = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard, key: "dashboard" },
-  { label: "Rooms", href: "/rooms", icon: Bed, key: "rooms" },
-  { label: "Bookings", href: "/bookings", icon: CalendarCheck, key: "bookings" },
-  { label: "Front Desk", href: "/frontdesk", icon: UserCheck, key: "frontdesk" },
-  { label: "Restaurant / POS", href: "/pos", icon: UtensilsCrossed, key: "pos" },
-  { label: "Housekeeping", href: "/housekeeping", icon: Paintbrush, key: "housekeeping" },
-  { label: "Billing", href: "/billing", icon: FileText, key: "billing" },
-  { label: "CRM & Loyalty", href: "/crm", icon: Award, key: "crm" },
-  { label: "Staff & HR", href: "/staff", icon: Users, key: "staff" },
-  { label: "Inventory", href: "/inventory", icon: Package, key: "inventory" },
-  { label: "Analytics", href: "/analytics", icon: TrendingUp, key: "analytics" },
-  { label: "Reports Console", href: "/analytics/reports", icon: FileText, key: "reports" },
-  { label: "Super Admin", href: "/superadmin", icon: ShieldCheck, roles: ["SUPER_ADMIN"], key: "superadmin" },
+  { label: "Rooms", href: "/rooms", icon: Bed, key: "rooms", featureKey: "rooms" },
+  { label: "Bookings", href: "/bookings", icon: CalendarCheck, key: "bookings", featureKey: "bookings" },
+  { label: "Front Desk", href: "/frontdesk", icon: UserCheck, key: "frontdesk", featureKey: "frontdesk" },
+  { label: "Restaurant / POS", href: "/pos", icon: UtensilsCrossed, key: "pos", featureKey: "pos" },
+  { label: "Housekeeping", href: "/housekeeping", icon: Paintbrush, key: "housekeeping", featureKey: "housekeeping" },
+  { label: "Billing", href: "/billing", icon: FileText, key: "billing", featureKey: "billing" },
+  { label: "CRM & Loyalty", href: "/crm", icon: Award, key: "crm", featureKey: "crm" },
+  { label: "Staff & HR", href: "/staff", icon: Users, key: "staff", featureKey: "staff" },
+  { label: "Inventory", href: "/inventory", icon: Package, key: "inventory", featureKey: "inventory" },
+  { label: "Analytics", href: "/analytics", icon: TrendingUp, key: "analytics", featureKey: "analytics" },
+  { label: "Reports Console", href: "/analytics/reports", icon: FileText, key: "reports", featureKey: "analytics" },
+  { label: "Sessions", href: "/sessions", icon: Gamepad2, key: "sessions", featureKey: "timed_sessions" },
+  { label: "Settings", href: "/settings/modules", icon: Settings, key: "settings" },
 ];
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
+  const features = useAuthStore((s) => s.features);
   const t = useTranslations("Sidebar");
 
-  const visibleItems = navItems.filter(
-    (item) => !item.roles || (user && item.roles.includes(item.roles[0]))
-  );
+  const hasFeature = (item: NavItem): boolean => {
+    if (!item.featureKey) return true;
+    return features.includes(item.featureKey);
+  };
+
+  const visibleItems = navItems.filter(hasFeature);
 
   return (
     <aside
       className={cn(
-        "flex flex-col h-screen sticky top-0 bg-slate-950 border-r border-slate-900 transition-all duration-300",
-        collapsed ? "w-[64px]" : "w-[220px]"
+        "flex flex-col flex-shrink-0 h-screen sticky top-0 bg-slate-950 border-r border-slate-900 transition-all duration-300",
+        collapsed ? "w-[64px]" : "w-[64px] md:w-[220px]"
       )}
     >
       {/* Logo */}
@@ -63,8 +80,8 @@ export function Sidebar() {
           <Hotel className="h-4 w-4 text-white" />
         </div>
         {!collapsed && (
-          <span className="font-bold text-sm tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-            SIA HMS
+          <span className="hidden md:inline font-bold text-sm tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+            Staywired
           </span>
         )}
       </div>
@@ -85,10 +102,12 @@ export function Sidebar() {
                   ? "bg-cyan-500/10 text-cyan-400"
                   : "text-slate-400 hover:text-slate-100 hover:bg-slate-900"
               )}
-              title={collapsed ? translatedLabel : undefined}
+              title={translatedLabel}
+              aria-label={translatedLabel}
+              aria-current={isActive ? "page" : undefined}
             >
               <Icon className={cn("h-4 w-4 flex-shrink-0", isActive ? "text-cyan-400" : "text-slate-500 group-hover:text-slate-300")} />
-              {!collapsed && <span className="truncate">{translatedLabel}</span>}
+              {!collapsed && <span className="hidden md:inline truncate">{translatedLabel}</span>}
             </Link>
           );
         })}

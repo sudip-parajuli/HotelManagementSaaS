@@ -10,8 +10,15 @@ import { Badge } from "@/components/ui/badge";
 import { roomsApi } from "@/lib/api/rooms";
 import { RoomTypeForm } from "@/components/modules/rooms/RoomTypeForm";
 import type { RoomType } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 export default function RoomTypesPage() {
+  const t = useTranslations("Rooms");
+  const tCommon = useTranslations("Common");
+  const tData = useTransData();
+  const locale = useLocale();
+
   const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,7 +33,7 @@ export default function RoomTypesPage() {
       setRoomTypes(res.data.results || []);
     } catch (err) {
       console.error(err);
-      toast.error("Failed to fetch room types catalog.");
+      toast.error(locale === "ne" ? "कोठा क्याटलग लोड गर्न असफल भयो।" : "Failed to fetch room types catalog.");
     } finally {
       setIsLoading(false);
     }
@@ -47,16 +54,20 @@ export default function RoomTypesPage() {
   };
 
   const handleDeleteClick = async (id: number, name: string) => {
-    if (!confirm(`Are you sure you want to delete the room type "${name}"? This action cannot be undone.`)) {
+    const confirmationText = locale === "ne" 
+      ? `के तपाईं निश्चित रूपमा कोठा प्रकार "${tData(name)}" हटाउन चाहनुहुन्छ? यो कार्य फिर्ता गर्न सकिँदैन।`
+      : `Are you sure you want to delete the room type "${name}"? This action cannot be undone.`;
+      
+    if (!confirm(confirmationText)) {
       return;
     }
     try {
       await roomsApi.deleteRoomType(id);
-      toast.success(`Room type "${name}" deleted successfully.`);
+      toast.success(locale === "ne" ? `कोठा प्रकार "${tData(name)}" सफलतापूर्वक हटाइयो।` : `Room type "${name}" deleted successfully.`);
       fetchTypes();
     } catch (err: any) {
       console.error(err);
-      toast.error(err.response?.data?.error || "Failed to delete room type.");
+      toast.error(err.response?.data?.error || (locale === "ne" ? "कोठा प्रकार हटाउन असफल भयो।" : "Failed to delete room type."));
     }
   };
 
@@ -67,16 +78,16 @@ export default function RoomTypesPage() {
         <Link href="/rooms">
           <Button variant="ghost" size="sm" className="h-8 gap-1 hover:text-white px-2">
             <ArrowLeft className="h-4 w-4" />
-            Back to grid
+            {t("back_to_grid") || "Back to grid"}
           </Button>
         </Link>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-white tracking-tight">Room Classes</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">{t("room_classes_title")}</h1>
           <p className="text-slate-400 text-sm">
-            Configure hotel room classifications, occupancies, and rates.
+            {t("room_classes_subtitle")}
           </p>
         </div>
 
@@ -85,7 +96,7 @@ export default function RoomTypesPage() {
           className="bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold gap-2 shadow-lg shadow-cyan-500/20"
         >
           <Plus className="h-4 w-4" />
-          Add Room Class
+          {t("add_room_class")}
         </Button>
       </div>
 
@@ -93,7 +104,7 @@ export default function RoomTypesPage() {
       {isLoading ? (
         <div className="py-20 flex flex-col items-center justify-center space-y-4">
           <Loader2 className="h-10 w-10 animate-spin text-cyan-400" />
-          <p className="text-sm text-slate-400 font-medium">Loading room types catalog...</p>
+          <p className="text-sm text-slate-400 font-medium">{t("loading_catalog")}</p>
         </div>
       ) : roomTypes.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-16 rounded-2xl border border-slate-900 bg-slate-950/40 text-slate-400 space-y-4">
@@ -101,8 +112,8 @@ export default function RoomTypesPage() {
             <Bed className="h-10 w-10" />
           </div>
           <div className="text-center space-y-1">
-            <h3 className="font-semibold text-white">No room classes created</h3>
-            <p className="text-sm">Create room types to set up prices and define layouts.</p>
+            <h3 className="font-semibold text-white">{t("no_classes")}</h3>
+            <p className="text-sm">{t("no_classes_desc")}</p>
           </div>
         </div>
       ) : (
@@ -116,7 +127,7 @@ export default function RoomTypesPage() {
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <CardTitle className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">
-                      {type.name}
+                      {tData(type.name)}
                     </CardTitle>
                     <CardDescription className="text-slate-500 text-xs font-semibold uppercase tracking-wider">
                       {type.slug}
@@ -124,36 +135,36 @@ export default function RoomTypesPage() {
                   </div>
                   <Badge variant="outline" className="py-0.5 px-2 bg-slate-950/80 text-slate-300 border-slate-800">
                     <Users className="h-3 w-3 mr-1 text-cyan-400" />
-                    Max: {type.max_occupancy}
+                    {t("max_guests", { count: type.max_occupancy })}
                   </Badge>
                 </div>
               </CardHeader>
 
               <CardContent className="flex-1 space-y-4">
                 <p className="text-xs text-slate-400 line-clamp-2 h-8">
-                  {type.description || "No description provided."}
+                  {type.description || (locale === "ne" ? "कुनै विवरण उपलब्ध छैन।" : "No description provided.")}
                 </p>
 
                 {/* Price block breakdown */}
                 <div className="grid grid-cols-2 gap-4 rounded-xl border border-slate-900 bg-slate-950/40 p-3.5">
                   <div className="space-y-0.5">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Base Price</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">{t("base_price")}</span>
                     <span className="text-sm font-extrabold text-white">
                       Rs. {Number(type.base_price_per_night).toLocaleString()}
                     </span>
                   </div>
                   {type.weekend_price && (
                     <div className="space-y-0.5">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Weekend Rate</span>
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">{t("weekend_rate")}</span>
                       <span className="text-sm font-extrabold text-white">
                         Rs. {Number(type.weekend_price).toLocaleString()}
                       </span>
                     </div>
                   )}
                   <div className="space-y-0.5 col-span-2 pt-2 border-t border-slate-900">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Extra Person Charge</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">{t("extra_person_charge")}</span>
                     <span className="text-xs font-semibold text-slate-300">
-                      Rs. {Number(type.extra_person_charge || 0).toLocaleString()} / guest
+                      Rs. {Number(type.extra_person_charge || 0).toLocaleString()} / {locale === "ne" ? "पाहुना" : "guest"}
                     </span>
                   </div>
                 </div>
@@ -167,7 +178,7 @@ export default function RoomTypesPage() {
                   className="h-8 gap-1 text-slate-400 hover:text-white"
                 >
                   <Edit className="h-3.5 w-3.5" />
-                  Edit
+                  {tCommon("edit")}
                 </Button>
                 <Button
                   onClick={() => handleDeleteClick(type.id, type.name)}
@@ -176,7 +187,7 @@ export default function RoomTypesPage() {
                   className="h-8 gap-1 text-slate-500 hover:text-rose-400"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                  Delete
+                  {tCommon("delete")}
                 </Button>
               </CardFooter>
             </Card>

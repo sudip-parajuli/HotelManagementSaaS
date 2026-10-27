@@ -29,20 +29,26 @@ export function middleware(request: NextRequest) {
   const isPublicPath =
     cleanPath === "/login" ||
     cleanPath === "/register" ||
-    cleanPath.startsWith("/book") ||
+    (cleanPath === "/book" || cleanPath.startsWith("/book/")) ||
+    cleanPath === "/demo" ||
     cleanPath.startsWith("/_next") ||
     cleanPath.startsWith("/api-auth") ||
     cleanPath === "/favicon.ico";
 
   // 1. PUBLIC DOMAIN ROUTING (No subdomain)
   if (!subdomain) {
-    // If accessing root page '/'
+    // If accessing root page '/':
+    //   - Authenticated users → serve dashboard (pass through)
+    //   - Anonymous users → redirect to /landing/ (avoids client-side chunk mismatch)
     if (cleanPath === "/") {
-      return NextResponse.rewrite(new URL("/landing/", request.url));
+      if (isAuthenticated) {
+        return NextResponse.next();
+      }
+      return NextResponse.redirect(new URL("/landing/", request.url));
     }
     
-    // Allow public pages & superadmin paths
-    if (isPublicPath || cleanPath === "/landing" || cleanPath.startsWith("/superadmin")) {
+    // Allow public pages & admin paths
+    if (isPublicPath || cleanPath === "/landing") {
       return NextResponse.next();
     }
 
@@ -58,7 +64,8 @@ export function middleware(request: NextRequest) {
   // Redirect to main domain if trying to register on a subdomain
   if (cleanPath === "/register") {
     const mainHost = host.includes("localhost") ? "localhost:3000" : "siaenterprises.com.np";
-    return NextResponse.redirect(new URL(`http://${mainHost}/register/`, request.url));
+    const protocol = host.includes("localhost") ? "http" : "https";
+    return NextResponse.redirect(new URL(`${protocol}://${mainHost}/register/`, request.url));
   }
 
   // If trying to access landing page directly on a subdomain, redirect to root

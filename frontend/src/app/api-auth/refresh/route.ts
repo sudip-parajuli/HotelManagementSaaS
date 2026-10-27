@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import axios from "axios";
 
 const BACKEND_URL = process.env.INTERNAL_BACKEND_URL || "http://127.0.0.1:8000";
 
 export async function POST(request: NextRequest) {
-  const cookieStore = cookies();
-  const refreshToken = cookieStore.get("refresh_token")?.value;
+  const refreshToken = request.cookies.get("refresh_token")?.value;
 
   if (!refreshToken) {
     return NextResponse.json(
@@ -31,33 +29,34 @@ export async function POST(request: NextRequest) {
     );
 
     if (response.status !== 200) {
-      // If refresh fails, clear cookies
-      cookieStore.delete("access_token");
-      cookieStore.delete("refresh_token");
-      return NextResponse.json(response.data, { status: response.status });
+      const res = NextResponse.json(response.data, { status: response.status });
+      res.cookies.delete("access_token");
+      res.cookies.delete("refresh_token");
+      return res;
     }
 
     const { access, refresh } = response.data;
+    const res = NextResponse.json({ success: true });
 
-    cookieStore.set("access_token", access, {
+    res.cookies.set("access_token", access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 15 * 60, // 15 minutes
+      maxAge: 15 * 60,
     });
 
     if (refresh) {
-      cookieStore.set("refresh_token", refresh, {
+      res.cookies.set("refresh_token", refresh, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         path: "/",
-        maxAge: 7 * 24 * 60 * 60, // 7 days
+        maxAge: 7 * 24 * 60 * 60,
       });
     }
 
-    return NextResponse.json({ success: true });
+    return res;
   } catch (error) {
     console.error("Refresh route error:", error);
     return NextResponse.json(

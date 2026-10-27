@@ -21,6 +21,23 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
+
+const MONTHS_NE = [
+  "जनवरी", "फेब्रुअरी", "मार्च", "अप्रिल", "मे", "जुन",
+  "जुलाई", "अगस्ट", "सेप्टेम्बर", "अक्टोबर", "नोभेम्बर", "डिसेम्बर"
+];
+
+const dayMap: Record<string, string> = {
+  Sun: "आइत",
+  Mon: "सोम",
+  Tue: "मङ्गल",
+  Wed: "बुध",
+  Thu: "बिही",
+  Fri: "शुक्र",
+  Sat: "शनि",
+};
 
 export default function ShiftSchedulePage() {
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(
@@ -31,6 +48,11 @@ export default function ShiftSchedulePage() {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const t = useTranslations("Staff");
+  const tCommon = useTranslations("Common");
+  const tData = useTransData();
+  const locale = useLocale();
 
   // Dialog: Assign Shift
   const [isAssignOpen, setIsAssignOpen] = useState(false);
@@ -162,10 +184,10 @@ export default function ShiftSchedulePage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-            Shift Schedule Roster
+            {t("schedule_title")}
           </h1>
           <p className="text-muted-foreground text-sm">
-            Planning, verifying, and dispatching weekly employee shifts per department.
+            {t("schedule_subtitle")}
           </p>
         </div>
         
@@ -175,13 +197,19 @@ export default function ShiftSchedulePage() {
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <Button onClick={handleTodayWeek} size="sm" variant="outline" className="border-slate-800 hover:bg-slate-800 text-white font-medium">
-            This Week
+            {t("this_week")}
           </Button>
           <Button onClick={handleNextWeek} size="icon" variant="outline" className="border-slate-800 hover:bg-slate-800 text-white">
             <ChevronRight className="h-4 w-4" />
           </Button>
           <span className="text-xs text-slate-400 font-bold ml-2">
-            {format(currentWeekStart, "MMM d")} – {format(addDays(currentWeekStart, 6), "MMM d, yyyy")}
+            {locale === "ne" ? (
+              `${MONTHS_NE[currentWeekStart.getMonth()]} ${currentWeekStart.getDate()} – ${
+                MONTHS_NE[addDays(currentWeekStart, 6).getMonth()]
+              } ${addDays(currentWeekStart, 6).getDate()}, ${addDays(currentWeekStart, 6).getFullYear()}`
+            ) : (
+              `${format(currentWeekStart, "MMM d")} – ${format(addDays(currentWeekStart, 6), "MMM d, yyyy")}`
+            )}
           </span>
         </div>
       </div>
@@ -197,9 +225,11 @@ export default function ShiftSchedulePage() {
             <table className="w-full border-collapse text-left min-w-[800px]">
               <thead>
                 <tr className="border-b border-slate-800/60 bg-slate-950/20 text-slate-400 text-xs font-semibold">
-                  <th className="py-4 px-4 w-[200px] border-r border-slate-900">Staff Member</th>
+                  <th className="py-4 px-4 w-[200px] border-r border-slate-900">{t("staff_member")}</th>
                   {weekDays.map((day) => {
                     const isToday = format(day, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd");
+                    const dayName = format(day, "eee");
+                    const displayDayName = locale === "ne" ? (dayMap[dayName] || dayName) : dayName;
                     return (
                       <th 
                         key={day.toISOString()} 
@@ -207,8 +237,10 @@ export default function ShiftSchedulePage() {
                           isToday ? "bg-indigo-950/10 text-indigo-400" : ""
                         }`}
                       >
-                        <div className="font-bold">{format(day, "eee")}</div>
-                        <div className="text-[10px] mt-0.5">{format(day, "MMM d")}</div>
+                        <div className="font-bold">{displayDayName}</div>
+                        <div className="text-[10px] mt-0.5">
+                          {locale === "ne" ? `${MONTHS_NE[day.getMonth()]} ${day.getDate()}` : format(day, "MMM d")}
+                        </div>
                       </th>
                     );
                   })}
@@ -220,7 +252,7 @@ export default function ShiftSchedulePage() {
                     {/* Staff name */}
                     <td className="py-3 px-4 font-semibold text-white border-r border-slate-900 bg-slate-950/5">
                       <div className="font-bold text-sm">{staff.full_name}</div>
-                      <div className="text-slate-500 text-[10px]">{staff.designation}</div>
+                      <div className="text-slate-500 text-[10px]">{tData(staff.designation)}</div>
                     </td>
                     
                     {/* Days */}
@@ -248,10 +280,10 @@ export default function ShiftSchedulePage() {
                               </div>
                               <div className="text-[9px] text-slate-500 font-semibold truncate flex items-center justify-center gap-0.5">
                                 <MapPin className="h-2.5 w-2.5 shrink-0" />
-                                {shift.department_name}
+                                {tData(shift.department_name)}
                               </div>
                               {!shift.is_confirmed && (
-                                <div className="text-[9px] text-amber-500 font-medium">Pending</div>
+                                <div className="text-[9px] text-amber-500 font-medium">{t("pending")}</div>
                               )}
                             </div>
                           ) : (
@@ -276,20 +308,42 @@ export default function ShiftSchedulePage() {
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-white flex items-center gap-2">
               <Calendar className="h-5 w-5 text-indigo-400" />
-              {selectedShiftForEdit ? "Edit Scheduled Shift" : "Assign Shift"}
+              {selectedShiftForEdit ? t("edit_shift") : t("assign_shift")}
             </DialogTitle>
           </DialogHeader>
           
           {selectedCell && (
             <form onSubmit={handleShiftSubmit} className="space-y-4 pt-2">
               <div className="bg-slate-950 p-3 rounded-lg border border-slate-850 text-xs space-y-1">
-                <div>Staff: <span className="font-bold text-white">{selectedCell.staff.full_name} ({selectedCell.staff.designation})</span></div>
-                <div>Date: <span className="font-bold text-indigo-400">{format(selectedCell.date, "EEEE, MMMM d, yyyy")}</span></div>
+                <div>
+                  {locale === "ne" ? "कर्मचारी:" : "Staff:"}{" "}
+                  <span className="font-bold text-white">{selectedCell.staff.full_name} ({tData(selectedCell.staff.designation)})</span>
+                </div>
+                <div>
+                  {locale === "ne" ? "मिति:" : "Date:"}{" "}
+                  <span className="font-bold text-indigo-400">
+                    {locale === "ne" ? (
+                      `${
+                        {
+                          Sunday: "आइतबार",
+                          Monday: "सोमबार",
+                          Tuesday: "मङ्गलबार",
+                          Wednesday: "बुधबार",
+                          Thursday: "बिहीबार",
+                          Friday: "शुक्रबार",
+                          Saturday: "शनिबार",
+                        }[format(selectedCell.date, "EEEE")] || format(selectedCell.date, "EEEE")
+                      }, ${MONTHS_NE[selectedCell.date.getMonth()]} ${selectedCell.date.getDate()}, ${selectedCell.date.getFullYear()}`
+                    ) : (
+                      format(selectedCell.date, "EEEE, MMMM d, yyyy")
+                    )}
+                  </span>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <Label htmlFor="start">Start Time</Label>
+                  <Label htmlFor="start">{t("start_time")}</Label>
                   <Input 
                     id="start"
                     type="time"
@@ -300,7 +354,7 @@ export default function ShiftSchedulePage() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label htmlFor="end">End Time</Label>
+                  <Label htmlFor="end">{t("end_time")}</Label>
                   <Input 
                     id="end"
                     type="time"
@@ -313,7 +367,7 @@ export default function ShiftSchedulePage() {
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="sdept">Roster Department</Label>
+                <Label htmlFor="sdept">{t("roster_department")}</Label>
                 <select 
                   id="sdept"
                   value={formData.department}
@@ -322,18 +376,18 @@ export default function ShiftSchedulePage() {
                   required
                 >
                   {departments.map((d) => (
-                    <option key={d.id} value={d.id}>{d.name}</option>
+                    <option key={d.id} value={d.id}>{tData(d.name)}</option>
                   ))}
                 </select>
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="snotes">Shift Instructions</Label>
+                <Label htmlFor="snotes">{t("shift_instructions")}</Label>
                 <Input 
                   id="snotes"
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  placeholder="e.g. Cover receptionist lunch breaks"
+                  placeholder={t("shift_notes_placeholder")}
                   className="bg-slate-950 border-slate-800 text-white text-xs" 
                 />
               </div>
@@ -346,14 +400,14 @@ export default function ShiftSchedulePage() {
                   onChange={(e) => setFormData({ ...formData, is_confirmed: e.target.checked })}
                   className="w-4 h-4 accent-indigo-500 rounded border-slate-800 bg-slate-950"
                 />
-                <Label htmlFor="shift_conf" className="cursor-pointer select-none">Publish & Confirm Shift</Label>
+                <Label htmlFor="shift_conf" className="cursor-pointer select-none">{t("publish_confirm")}</Label>
               </div>
 
               <div className="flex justify-between gap-3 pt-4 border-t border-slate-800">
                 {selectedShiftForEdit ? (
                   <Button type="button" onClick={handleShiftDelete} variant="destructive" className="h-9 flex items-center gap-1.5">
                     <Trash2 className="h-4 w-4" />
-                    Delete
+                    {tCommon("delete")}
                   </Button>
                 ) : (
                   <div />
@@ -361,10 +415,10 @@ export default function ShiftSchedulePage() {
                 
                 <div className="flex gap-2">
                   <Button type="button" variant="ghost" onClick={() => setIsAssignOpen(false)} className="h-9 hover:bg-slate-800 text-slate-400">
-                    Cancel
+                    {tCommon("cancel")}
                   </Button>
                   <Button type="submit" className="h-9 bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white">
-                    Save Shift
+                    {t("save_shift")}
                   </Button>
                 </div>
               </div>

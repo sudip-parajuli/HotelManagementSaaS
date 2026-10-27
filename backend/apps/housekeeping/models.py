@@ -5,7 +5,7 @@ Defines HousekeepingTask and MaintenanceRequest.
 
 from django.db import models
 from django.conf import settings
-from apps.properties.models import Room
+from apps.properties.models import Room, RoomStatus
 
 
 class HousekeepingStatus(models.TextChoices):
@@ -149,3 +149,78 @@ class MaintenanceRequest(models.Model):
 
     def __str__(self):
         return f"{self.get_category_display()} Issue in Room {self.room.room_number} ({self.status})"
+
+
+class RoomDiscrepancy(models.Model):
+    """
+    Logs discrepancies between system room status and physical status found by housekeeping staff.
+    Used for audit-conscious properties to track skip-guests and early checkouts.
+    """
+    room = models.ForeignKey(
+        Room,
+        on_delete=models.CASCADE,
+        related_name="discrepancies",
+    )
+    system_status = models.CharField(max_length=20, choices=RoomStatus.choices)
+    physical_status_found = models.CharField(max_length=20, choices=RoomStatus.choices)
+    reported_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="reported_discrepancies",
+    )
+    reported_at = models.DateTimeField(auto_now_add=True)
+    resolved = models.BooleanField(default=False)
+    resolution_notes = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "Room Discrepancy"
+        verbose_name_plural = "Room Discrepancies"
+        ordering = ["-reported_at"]
+
+    def __str__(self):
+        return f"Discrepancy in Room {self.room.room_number}: {self.system_status} vs {self.physical_status_found}"
+
+
+class LostFoundItem(models.Model):
+    """
+    Tracks lost and found items in the hotel.
+    """
+    room = models.ForeignKey(
+        Room,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="lost_found_items",
+    )
+    found_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="found_items",
+    )
+    description = models.TextField()
+    photo = models.CharField(max_length=255, blank=True, help_text="MinIO path for item photo")
+    found_at = models.DateTimeField(auto_now_add=True)
+    
+    class Status(models.TextChoices):
+        STORED = "stored", "Stored"
+        CLAIMED = "claimed", "Claimed"
+        DISPOSED = "disposed", "Disposed"
+    
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.STORED)
+    claimed_by_guest = models.ForeignKey(
+        "bookings.GuestProfile",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="claimed_items",
+    )
+    claimed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Lost & Found Item"
+        verbose_name_plural = "Lost & Found Items"
+        ordering = ["-found_at"]
+
+    def __str__(self):
+        return f"{self.description} ({self.status})"

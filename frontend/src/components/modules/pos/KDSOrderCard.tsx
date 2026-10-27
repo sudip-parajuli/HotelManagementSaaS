@@ -4,6 +4,8 @@ import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { KOT } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 interface KDSOrderCardProps {
   kot: KOT;
@@ -14,6 +16,10 @@ interface KDSOrderCardProps {
 export function KDSOrderCard({ kot, onComplete, onItemStatusChange }: KDSOrderCardProps) {
   const [elapsedMinutes, setElapsedMinutes] = useState(0);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  const t = useTranslations("POS");
+  const tData = useTransData();
+  const locale = useLocale();
 
   useEffect(() => {
     const calculateElapsed = () => {
@@ -56,13 +62,17 @@ export function KDSOrderCard({ kot, onComplete, onItemStatusChange }: KDSOrderCa
         <div className="space-y-1">
           <div className="flex items-center gap-1.5">
             <span className="font-bold text-slate-100 text-sm">
-              Table {kot.table_number || "N/A"}
+              {locale === "ne" ? `टेबल ${kot.table_number || "N/A"}` : `Table ${kot.table_number || "N/A"}`}
             </span>
             <Badge className={`text-[9px] px-1.5 py-0 capitalize ${getOrderTypeBadgeColor()}`} variant="outline">
-              {kot.order_type}
+              {tData(kot.order_type)}
             </Badge>
           </div>
-          <span className="text-[10px] text-slate-500 block">KOT #{kot.id} / Order #{kot.order_id}</span>
+          <span className="text-[10px] text-slate-500 block">
+            {locale === "ne"
+              ? `KOT #${kot.id} / अर्डर #${kot.order_id}`
+              : `KOT #${kot.id} / Order #${kot.order_id}`}
+          </span>
         </div>
 
         {/* Elapsed Timer */}
@@ -88,11 +98,11 @@ export function KDSOrderCard({ kot, onComplete, onItemStatusChange }: KDSOrderCa
                 </span>
                 <div>
                   <span className={`text-xs font-semibold text-slate-200 ${item.status === "ready" || item.status === "served" ? "line-through text-slate-500" : ""}`}>
-                    {item.name}
+                    {tData(item.name)}
                   </span>
                   {item.notes && (
                     <span className="text-[10px] text-amber-400 block font-medium mt-0.5">
-                      Note: {item.notes}
+                      {locale === "ne" ? `टिपोट: ${item.notes}` : `Note: ${item.notes}`}
                     </span>
                   )}
                 </div>
@@ -107,7 +117,7 @@ export function KDSOrderCard({ kot, onComplete, onItemStatusChange }: KDSOrderCa
                       onClick={() => onItemStatusChange(kot.id, item.item_id, "preparing")}
                       className="h-5 px-1.5 text-[9px] bg-slate-800 hover:bg-slate-700 text-slate-300"
                     >
-                      Prep
+                      {locale === "ne" ? "तयारी" : "Prep"}
                     </Button>
                   )}
                   {item.status === "preparing" && (
@@ -116,7 +126,7 @@ export function KDSOrderCard({ kot, onComplete, onItemStatusChange }: KDSOrderCa
                       onClick={() => onItemStatusChange(kot.id, item.item_id, "ready")}
                       className="h-5 px-1.5 text-[9px] bg-amber-600/20 hover:bg-amber-600/40 text-amber-400 border border-amber-600/30"
                     >
-                      Ready
+                      {locale === "ne" ? "तयार" : "Ready"}
                     </Button>
                   )}
                   {(item.status === "ready" || item.status === "served") && (
@@ -138,7 +148,7 @@ export function KDSOrderCard({ kot, onComplete, onItemStatusChange }: KDSOrderCa
           className="w-full bg-cyan-600 text-white hover:bg-cyan-500 font-semibold text-xs py-2 shadow-md shadow-cyan-600/20 flex items-center justify-center gap-1.5"
         >
           <ChefHat className="h-4 w-4" />
-          Mark Ticket Done
+          {locale === "ne" ? "टिकट सम्पन्न भयो" : "Mark Ticket Done"}
         </Button>
       </CardFooter>
     </Card>

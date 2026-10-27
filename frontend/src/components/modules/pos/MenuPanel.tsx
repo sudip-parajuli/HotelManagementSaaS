@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { MenuItemCard } from "./MenuItemCard";
 import type { MenuCategory, MenuItem } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 // Icon mapping dictionary
 const iconMap: Record<string, React.ComponentType<any>> = {
@@ -28,6 +30,10 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [vegOnly, setVegOnly] = useState(false);
   const [veganOnly, setVeganOnly] = useState(false);
+
+  const t = useTranslations("POS");
+  const tData = useTransData();
+  const locale = useLocale();
 
   const categoriesList = useMemo<MenuCategory[]>(() => {
     if (Array.isArray(categories)) return categories;
@@ -94,7 +100,7 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-2.5 h-4.5 w-4.5 text-slate-500" />
           <Input
-            placeholder="Search menu items..."
+            placeholder={t("search_placeholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-slate-900/60 border-slate-800 text-slate-100 placeholder-slate-500 focus-visible:ring-cyan-500"
@@ -115,7 +121,7 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
             )}
           >
             {vegOnly && <Check className="h-3 w-3 mr-1" />}
-            Veg Only
+            {locale === "ne" ? "शाकाहारी मात्र" : "Veg Only"}
           </Button>
           <Button
             variant="outline"
@@ -129,7 +135,7 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
             )}
           >
             {veganOnly && <Check className="h-3 w-3 mr-1" />}
-            Vegan
+            {locale === "ne" ? "विगन मात्र" : "Vegan"}
           </Button>
         </div>
       </div>
@@ -148,7 +154,7 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
           )}
         >
           <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-          All Items
+          {locale === "ne" ? "सबै सामग्री" : "All Items"}
         </Button>
         {categoriesList.map((cat) => (
           <Button
@@ -164,7 +170,7 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
             )}
           >
             {renderCategoryIcon(cat.icon || "utensils")}
-            {cat.name}
+            {tData(cat.name)}
           </Button>
         ))}
       </div>
@@ -174,8 +180,14 @@ export function MenuPanel({ categories, onAddItem }: MenuPanelProps) {
         {filteredItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-48 border border-dashed border-slate-800 rounded-xl bg-slate-950/20">
             <UtensilsCrossed className="h-10 w-10 text-slate-600 mb-2" />
-            <p className="text-sm text-slate-400 font-medium">No menu items found</p>
-            <p className="text-xs text-slate-500">Try adjusting your filters or search query.</p>
+            <p className="text-sm text-slate-400 font-medium">
+              {locale === "ne" ? "कुनै मेनु सामग्री फेला परेन" : "No menu items found"}
+            </p>
+            <p className="text-xs text-slate-500">
+              {locale === "ne"
+                ? "कृपया फिल्टर वा खोज क्वेरी समायोजन गर्ने प्रयास गर्नुहोस्।"
+                : "Try adjusting your filters or search query."}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

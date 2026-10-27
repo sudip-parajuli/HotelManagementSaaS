@@ -63,3 +63,8 @@ minio_data/
 
 # Backup
 *.bak
+
+# Local credentials, runtime state and hosting metadata
+*credentials*.md
+celerybeat-schedule*
+.vercel/

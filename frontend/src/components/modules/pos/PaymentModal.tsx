@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { frontdeskApi } from "@/lib/api/frontdesk";
 import type { Reservation } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -21,6 +23,10 @@ export function PaymentModal({ isOpen, onClose, onConfirm, totalAmount, isSubmit
   const [loadingReservations, setLoadingReservations] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedReservationId, setSelectedReservationId] = useState<number | null>(null);
+
+  const t = useTranslations("POS");
+  const tData = useTransData();
+  const locale = useLocale();
 
   // Fetch in-house guests when room charge is selected or modal opens
   useEffect(() => {
@@ -49,7 +55,11 @@ export function PaymentModal({ isOpen, onClose, onConfirm, totalAmount, isSubmit
   const handleSubmit = () => {
     if (selectedMethod === "room") {
       if (!selectedReservationId) {
-        alert("Please select an active check-in guest room for posting charge.");
+        alert(
+          locale === "ne"
+            ? "कृपया शुल्क प्रविष्ट गर्न होटल भित्र बस्ने सक्रिय पाहुना कोठा छान्नुहोस्।"
+            : "Please select an active check-in guest room for posting charge."
+        );
         return;
       }
       onConfirm("room", selectedReservationId);
@@ -59,12 +69,12 @@ export function PaymentModal({ isOpen, onClose, onConfirm, totalAmount, isSubmit
   };
 
   const paymentMethods = [
-    { id: "cash", label: "Cash", icon: Banknote, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500/50", disabled: false },
-    { id: "card", label: "Card", icon: CreditCard, color: "text-blue-400 bg-blue-500/10 border-blue-500/20 hover:border-blue-500/50", disabled: false },
-    { id: "room", label: "Room Charge", icon: Home, color: "text-amber-400 bg-amber-500/10 border-amber-500/20 hover:border-amber-500/50", disabled: false },
-    { id: "fonepay", label: "Fonepay QR", icon: QrCode, color: "text-red-400 bg-red-500/10 border-red-500/20 hover:border-red-500/50", disabled: true, tag: "Coming Soon" },
-    { id: "esewa", label: "eSewa Wallet", icon: QrCode, color: "text-green-400 bg-green-500/10 border-green-500/20 hover:border-green-500/50", disabled: false },
-    { id: "khalti", label: "Khalti Wallet", icon: QrCode, color: "text-purple-400 bg-purple-500/10 border-purple-500/20 hover:border-purple-500/50", disabled: false },
+    { id: "cash", label: tData("cash"), icon: Banknote, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500/50", disabled: false },
+    { id: "card", label: tData("card"), icon: CreditCard, color: "text-blue-400 bg-blue-500/10 border-blue-500/20 hover:border-blue-500/50", disabled: false },
+    { id: "room", label: tData("room_charge"), icon: Home, color: "text-amber-400 bg-amber-500/10 border-amber-500/20 hover:border-amber-500/50", disabled: false },
+    { id: "fonepay", label: locale === "ne" ? "फोनपे क्यूआर" : "Fonepay QR", icon: QrCode, color: "text-red-400 bg-red-500/10 border-red-500/20 hover:border-red-500/50", disabled: true, tag: locale === "ne" ? "चाँडै आउँदैछ" : "Coming Soon" },
+    { id: "esewa", label: tData("esewa"), icon: QrCode, color: "text-green-400 bg-green-500/10 border-green-500/20 hover:border-green-500/50", disabled: false },
+    { id: "khalti", label: tData("khalti"), icon: QrCode, color: "text-purple-400 bg-purple-500/10 border-purple-500/20 hover:border-purple-500/50", disabled: false },
   ];
 
   return (
@@ -73,10 +83,14 @@ export function PaymentModal({ isOpen, onClose, onConfirm, totalAmount, isSubmit
       <DialogContent className="sm:max-w-[500px] bg-slate-950/95 border-slate-900 text-slate-100 backdrop-blur-xl">
         <DialogHeader className="mb-4">
           <DialogTitle className="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent flex justify-between items-center">
-            <span>Settle POS Payment</span>
+            <span>{locale === "ne" ? "POS भुक्तानी फर्छ्यौट" : "Settle POS Payment"}</span>
           </DialogTitle>
           <DialogDescription className="text-slate-400 text-sm">
-            Select settlement type for order totaling <span className="font-bold text-cyan-400">Rs. {totalAmount.toFixed(2)}</span>
+            {locale === "ne" ? (
+              <>जम्मा <span className="font-bold text-cyan-400">Rs. {totalAmount.toFixed(2)}</span> को अर्डरको लागि भुक्तानी विधि छान्नुहोस्</>
+            ) : (
+              <>Select settlement type for order totaling <span className="font-bold text-cyan-400">Rs. {totalAmount.toFixed(2)}</span></>
+            )}
           </DialogDescription>
         </DialogHeader>
 
@@ -117,13 +131,13 @@ export function PaymentModal({ isOpen, onClose, onConfirm, totalAmount, isSubmit
           {selectedMethod === "room" && (
             <div className="space-y-3 p-4 bg-slate-900/40 border border-slate-800/80 rounded-xl animate-in fade-in slide-in-from-top-2 duration-200">
               <Label htmlFor="room-search" className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-                Select Active In-House Guest Room
+                {locale === "ne" ? "होटल भित्र बस्ने सक्रिय पाहुना कोठा छान्नुहोस्" : "Select Active In-House Guest Room"}
               </Label>
               <div className="relative">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
                 <Input
                   id="room-search"
-                  placeholder="Search room number or guest name..."
+                  placeholder={locale === "ne" ? "कोठा नम्बर वा पाहुनाको नाम खोज्नुहोस्..." : "Search room number or guest name..."}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9 bg-slate-950 border-slate-800 text-sm text-slate-200"
@@ -133,11 +147,11 @@ export function PaymentModal({ isOpen, onClose, onConfirm, totalAmount, isSubmit
               <div className="max-h-[160px] overflow-y-auto space-y-1.5 pr-1 mt-2 scrollbar-thin scrollbar-thumb-slate-800">
                 {loadingReservations ? (
                   <div className="text-center py-6 text-xs text-slate-500 animate-pulse">
-                    Loading occupied rooms...
+                    {locale === "ne" ? "भरिएका कोठाहरू लोड हुँदैछ..." : "Loading occupied rooms..."}
                   </div>
                 ) : filteredReservations.length === 0 ? (
                   <div className="text-center py-6 text-xs text-slate-500">
-                    No active check-in guest found.
+                    {locale === "ne" ? "कुनै सक्रिय चेक-इन पाहुना फेला परेन।" : "No active check-in guest found."}
                   </div>
                 ) : (
                   filteredReservations.map((res) => {
@@ -154,14 +168,14 @@ export function PaymentModal({ isOpen, onClose, onConfirm, totalAmount, isSubmit
                       >
                         <div>
                           <span className="font-semibold text-slate-100">
-                            Room {res.room?.room_number || "N/A"}
+                            {locale === "ne" ? `कोठा ${res.room?.room_number || "N/A"}` : `Room ${res.room?.room_number || "N/A"}`}
                           </span>
                           <span className="text-slate-400 block mt-0.5">
                             {res.guest.first_name} {res.guest.last_name}
                           </span>
                         </div>
                         <span className="text-[10px] text-slate-500">
-                          Res ID: #{res.id}
+                          {locale === "ne" ? `बुकिङ आईडी: #${res.id}` : `Res ID: #${res.id}`}
                         </span>
                       </button>
                     );
@@ -177,16 +191,16 @@ export function PaymentModal({ isOpen, onClose, onConfirm, totalAmount, isSubmit
             variant="outline"
             onClick={onClose}
             disabled={isSubmitting}
-            className="border-slate-800 text-slate-400 hover:bg-slate-900 hover:text-slate-100"
+            className="border-slate-800 text-slate-400 hover:bg-slate-900 hover:text-slate-100 text-xs"
           >
-            Cancel
+            {locale === "ne" ? "रद्द" : "Cancel"}
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting || (selectedMethod === "room" && !selectedReservationId)}
-            className="bg-cyan-600 text-white hover:bg-cyan-500 font-semibold transition-all px-6"
+            className="bg-cyan-600 text-white hover:bg-cyan-500 font-semibold transition-all px-6 text-xs"
           >
-            {isSubmitting ? "Processing..." : "Complete Payment"}
+            {isSubmitting ? (locale === "ne" ? "प्रशोधन हुँदैछ..." : "Processing...") : (locale === "ne" ? "भुक्तानी सम्पन्न" : "Complete Payment")}
           </Button>
         </div>
       </DialogContent>

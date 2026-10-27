@@ -47,7 +47,13 @@ class PaymentGatewayViewSet(viewsets.ViewSet):
         if invoice.balance_due <= 0:
             return Response({"error": "Invoice is already fully settled."}, status=status.HTTP_400_BAD_REQUEST)
 
-        amount = invoice.balance_due
+        # Apply digital payment VAT rebate if gateway is digital
+        if gateway in ["esewa", "khalti", "fonepay"]:
+            amount = invoice.net_payable_amount - invoice.paid_amount
+            if amount < Decimal("0.00"):
+                amount = Decimal("0.00")
+        else:
+            amount = invoice.balance_due
         
         # 1. Create pending transaction
         tx = PaymentTransaction.objects.create(

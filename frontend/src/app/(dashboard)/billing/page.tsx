@@ -11,7 +11,9 @@ import { crmApi } from "@/lib/api/crm";
 import type { Invoice, LoyaltyAccount } from "@/lib/types";
 import { FileText, Printer, ShieldAlert, BadgeCent, Search, Filter, HelpCircle, DollarSign, Wallet, QrCode } from "lucide-react";
 import PaymentModal from "@/components/modules/billing/PaymentModal";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 export default function BillingPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -19,6 +21,11 @@ export default function BillingPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  const t = useTranslations("Billing");
+  const tCommon = useTranslations("Common");
+  const tData = useTransData();
+  const locale = useLocale();
 
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [isPayOpen, setIsPayOpen] = useState(false);
@@ -55,20 +62,21 @@ export default function BillingPage() {
   }, [search, statusFilter]);
 
   const handleVoidInvoice = async (id: number) => {
-    if (!confirm("Are you sure you want to void this invoice? This action cannot be undone.")) return;
+    const confirmMsg = t("void_confirm");
+    if (!confirm(confirmMsg)) return;
     try {
       await billingApi.voidInvoice(id);
       fetchBillingData();
     } catch (err) {
       console.error(err);
-      alert("Cannot void invoice. Check if it's already paid.");
+      alert(t("void_error"));
     }
   };
 
   // Open points redemption drawer
   const openRedeemDrawer = async (invoice: Invoice) => {
     if (!invoice.reservation) {
-      alert("Loyalty point redemption is only available for guests with active bookings.");
+      alert(t("active_booking_only"));
       return;
     }
     setRedeemInvoice(invoice);
@@ -81,11 +89,11 @@ export default function BillingPage() {
         setLoyaltyAccount(account);
         setIsRedeemOpen(true);
       } else {
-        alert("This guest does not have an active loyalty account.");
+        alert(t("active_loyalty_only"));
       }
     } catch (err) {
       console.error(err);
-      alert("Could not load loyalty account.");
+      alert(t("loyalty_load_error"));
     }
   };
 
@@ -93,12 +101,12 @@ export default function BillingPage() {
     if (!loyaltyAccount || !redeemInvoice) return;
     try {
       await crmApi.redeemPoints(loyaltyAccount.id, redeemInvoice.id, redeemPoints);
-      alert("Points successfully redeemed and applied as discount.");
+      alert(t("redeem_success"));
       setIsRedeemOpen(false);
       fetchBillingData();
     } catch (err) {
       console.error(err);
-      alert("Points redemption failed. Verify point balance limits.");
+      alert(t("redeem_failed"));
     }
   };
 
@@ -122,8 +130,8 @@ export default function BillingPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-white tracking-tight">Billing & Invoices</h1>
-          <p className="text-slate-400 text-sm">Manage itemized bills, tax splits, digital gateways, and loyalty settlements.</p>
+          <h1 className="text-2xl font-bold text-white tracking-tight">{t("title")}</h1>
+          <p className="text-slate-400 text-sm">{t("subtitle")}</p>
         </div>
       </div>
 
@@ -132,41 +140,60 @@ export default function BillingPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="bg-slate-900/60 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-xs font-medium text-slate-400 uppercase tracking-wider">Payments Collected Today</CardTitle>
+              <CardTitle className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                {t("payments_collected_today")}
+              </CardTitle>
               <DollarSign className="h-4 w-4 text-emerald-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-white">Rs. {Number(summary.total_payments_collected).toLocaleString()}</div>
+              <div className="text-xl font-bold text-white">
+                {locale === "ne" ? "रु " : "Rs. "}
+                {Number(summary.total_payments_collected).toLocaleString()}
+              </div>
             </CardContent>
           </Card>
 
           <Card className="bg-slate-900/60 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-xs font-medium text-slate-400 uppercase tracking-wider">Invoiced Revenue Today</CardTitle>
+              <CardTitle className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                {t("invoiced_revenue_today")}
+              </CardTitle>
               <FileText className="h-4 w-4 text-cyan-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-white">Rs. {Number(summary.total_invoiced_today).toLocaleString()}</div>
+              <div className="text-xl font-bold text-white">
+                {locale === "ne" ? "रु " : "Rs. "}
+                {Number(summary.total_invoiced_today).toLocaleString()}
+              </div>
             </CardContent>
           </Card>
 
           <Card className="bg-slate-900/60 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-xs font-medium text-slate-400 uppercase tracking-wider">eSewa Settlements Today</CardTitle>
+              <CardTitle className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                {t("esewa_settlements_today")}
+              </CardTitle>
               <Wallet className="h-4 w-4 text-green-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-white">Rs. {Number(summary.payment_by_method?.esewa ?? "0").toLocaleString()}</div>
+              <div className="text-xl font-bold text-white">
+                {locale === "ne" ? "रु " : "Rs. "}
+                {Number(summary.payment_by_method?.esewa ?? "0").toLocaleString()}
+              </div>
             </CardContent>
           </Card>
 
           <Card className="bg-slate-900/60 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-xs font-medium text-slate-400 uppercase tracking-wider">Invoices Issued</CardTitle>
+              <CardTitle className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                {t("invoices_issued")}
+              </CardTitle>
               <BadgeCent className="h-4 w-4 text-violet-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-white">{summary.invoice_count} Bills</div>
+              <div className="text-xl font-bold text-white">
+                {locale === "ne" ? `${summary.invoice_count} बिलहरू` : `${summary.invoice_count} Bills`}
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -176,13 +203,15 @@ export default function BillingPage() {
       <Card className="bg-slate-900/60 border-slate-800">
         <CardHeader className="border-b border-slate-800/80 pb-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <CardTitle className="text-sm font-semibold text-white">Transactions History ledger</CardTitle>
+            <CardTitle className="text-sm font-semibold text-white">
+              {t("transactions_ledger")}
+            </CardTitle>
             <div className="flex items-center gap-2">
               {/* Search */}
               <div className="relative">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
                 <Input
-                  placeholder="Search invoices, phones..."
+                  placeholder={t("search_placeholder")}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="pl-9 bg-slate-950 border-slate-800 text-white w-64 rounded-xl text-xs h-9"
@@ -193,14 +222,16 @@ export default function BillingPage() {
               <Select value={statusFilter} onValueChange={(val) => setStatusFilter(val || "all")}>
                 <SelectTrigger className="bg-slate-950 border-slate-800 text-slate-300 w-40 text-xs h-9 rounded-xl">
                   <Filter className="h-3.5 w-3.5 text-slate-500 mr-2" />
-                  <SelectValue placeholder="All Status" />
+                  <SelectValue placeholder={t("all_status")}>
+                    {(value) => (value ? (value === "all" ? t("all_status") : tData(value)) : t("all_status"))}
+                  </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="bg-slate-950 border-slate-900 text-white">
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="unpaid">Unpaid</SelectItem>
-                  <SelectItem value="partially_paid">Partially Paid</SelectItem>
-                  <SelectItem value="paid">Paid</SelectItem>
-                  <SelectItem value="voided">Voided</SelectItem>
+                <SelectContent className="bg-slate-950 border-slate-905 text-white">
+                  <SelectItem value="all">{t("all_status")}</SelectItem>
+                  <SelectItem value="unpaid">{tData("unpaid")}</SelectItem>
+                  <SelectItem value="partially_paid">{tData("partially_paid")}</SelectItem>
+                  <SelectItem value="paid">{tData("paid")}</SelectItem>
+                  <SelectItem value="voided">{tData("voided")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -212,35 +243,35 @@ export default function BillingPage() {
             <table className="w-full text-slate-300 text-xs">
               <thead className="bg-slate-950/80 border-b border-slate-800 text-slate-400 text-left font-medium tracking-wider">
                 <tr>
-                  <th className="p-4">Invoice #</th>
-                  <th className="p-4">Type</th>
-                  <th className="p-4">Guest</th>
-                  <th className="p-4 text-right">Total</th>
-                  <th className="p-4 text-right">Paid</th>
-                  <th className="p-4 text-right">Balance Due</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4">Created Date</th>
-                  <th className="p-4 text-center">Actions</th>
+                  <th className="p-4">{t("invoice_no")}</th>
+                  <th className="p-4">{t("type")}</th>
+                  <th className="p-4">{t("guest")}</th>
+                  <th className="p-4 text-right">{t("total")}</th>
+                  <th className="p-4 text-right">{t("paid")}</th>
+                  <th className="p-4 text-right">{t("balance")}</th>
+                  <th className="p-4">{t("status")}</th>
+                  <th className="p-4">{t("date")}</th>
+                  <th className="p-4 text-center">{t("actions")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {loading ? (
                   <tr>
                     <td colSpan={9} className="text-center p-8 text-slate-500">
-                      Loading billing records...
+                      {locale === "ne" ? "बिलिङ विवरणहरू लोड हुँदैछ..." : "Loading billing records..."}
                     </td>
                   </tr>
                 ) : invoices.length === 0 ? (
                   <tr>
                     <td colSpan={9} className="text-center p-8 text-slate-500">
-                      No invoices found.
+                      {locale === "ne" ? "कुनै बिल फेला परेन।" : "No invoices found."}
                     </td>
                   </tr>
                 ) : (
                   invoices.map((inv) => (
                     <tr key={inv.id} className="hover:bg-slate-900/40 transition-colors">
                       <td className="p-4 font-mono font-semibold text-slate-200">{inv.invoice_number}</td>
-                      <td className="p-4 capitalize">{inv.invoice_type}</td>
+                      <td className="p-4 capitalize">{tData(inv.invoice_type)}</td>
                       <td className="p-4">
                         {inv.reservation ? (
                           <div>
@@ -249,17 +280,26 @@ export default function BillingPage() {
                           </div>
                         ) : (
                           <div>
-                            <p className="font-semibold text-slate-200">{inv.walk_in_guest_name || "Walk-In Guest"}</p>
+                            <p className="font-semibold text-slate-200">{inv.walk_in_guest_name || (locale === "ne" ? "वाक-इन पाहुना" : "Walk-In Guest")}</p>
                             <p className="text-[10px] text-slate-500">{inv.walk_in_guest_phone || "N/A"}</p>
                           </div>
                         )}
                       </td>
-                      <td className="p-4 text-right font-mono font-semibold text-white">Rs. {Number(inv.total_amount).toLocaleString()}</td>
-                      <td className="p-4 text-right font-mono text-emerald-400">Rs. {Number(inv.paid_amount).toLocaleString()}</td>
-                      <td className="p-4 text-right font-mono text-rose-400">Rs. {Number(inv.balance_due).toLocaleString()}</td>
+                      <td className="p-4 text-right font-mono font-semibold text-white">
+                        {locale === "ne" ? "रु " : "Rs. "}
+                        {Number(inv.total_amount).toLocaleString()}
+                      </td>
+                      <td className="p-4 text-right font-mono text-emerald-400">
+                        {locale === "ne" ? "रु " : "Rs. "}
+                        {Number(inv.paid_amount).toLocaleString()}
+                      </td>
+                      <td className="p-4 text-right font-mono text-rose-400">
+                        {locale === "ne" ? "रु " : "Rs. "}
+                        {Number(inv.balance_due).toLocaleString()}
+                      </td>
                       <td className="p-4">
                         <Badge className={`${getStatusBadgeColor(inv.status)} border text-[10px] uppercase font-semibold`}>
-                          {inv.status}
+                          {tData(inv.status)}
                         </Badge>
                       </td>
                       <td className="p-4 text-slate-500">{new Date(inv.created_at).toLocaleDateString()}</td>
@@ -273,14 +313,14 @@ export default function BillingPage() {
                               }}
                               className="bg-cyan-500 hover:bg-cyan-600 text-slate-950 px-3 py-1 h-7 text-[10px] font-semibold"
                             >
-                              Settle
+                              {t("settle")}
                             </Button>
 
                             <Button
                               onClick={() => openRedeemDrawer(inv)}
                               className="bg-purple-600 hover:bg-purple-700 text-white px-2 py-1 h-7 text-[10px] font-semibold"
                             >
-                              Redeem Points
+                              {t("redeem_points")}
                             </Button>
                           </>
                         )}
@@ -330,35 +370,40 @@ export default function BillingPage() {
             <DialogHeader>
               <DialogTitle className="text-white flex items-center gap-2">
                 <BadgeCent className="h-5 w-5 text-purple-400" />
-                Redeem Loyalty Points
+                {t("redeem_points")}
               </DialogTitle>
               <DialogDescription className="text-slate-400 text-xs">
-                Redeem points for invoice credit. 100 points = NPR 50 discount.
+                {locale === "ne" 
+                  ? "रसिद भुक्तानी क्रेडिटको लागि पाहुनाको अङ्क साट्नुहोस्। १०० अङ्क = रु ५० छुट।"
+                  : "Redeem points for invoice credit. 100 points = NPR 50 discount."}
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 py-3">
               <div className="bg-slate-900/60 border border-slate-850 p-4 rounded-xl space-y-2 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Guest Name:</span>
+                  <span className="text-slate-400">{t("guest_name")}</span>
                   <span className="font-semibold text-white">{loyaltyAccount.guest.full_name}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Current Points Balance:</span>
+                  <span className="text-slate-400">{t("points_balance")}</span>
                   <span className="font-semibold text-purple-400">{loyaltyAccount.points_balance} pts</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Current Tier Status:</span>
-                  <span className="font-semibold text-cyan-400 capitalize">{loyaltyAccount.tier}</span>
+                  <span className="text-slate-400">{t("tier_status")}</span>
+                  <span className="font-semibold text-cyan-400 capitalize">{tData(loyaltyAccount.tier)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Invoice Due:</span>
-                  <span className="font-semibold text-rose-400">Rs. {Number(redeemInvoice.balance_due).toLocaleString()}</span>
+                  <span className="text-slate-400">{t("invoice_due")}</span>
+                  <span className="font-semibold text-rose-400">
+                    {locale === "ne" ? "रु " : "Rs. "}
+                    {Number(redeemInvoice.balance_due).toLocaleString()}
+                  </span>
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs text-slate-400">Points to Redeem</label>
+                <label className="text-xs text-slate-400">{t("points_to_redeem")}</label>
                 <Input
                   type="number"
                   min={100}
@@ -368,16 +413,16 @@ export default function BillingPage() {
                   className="bg-slate-950 border-slate-800 text-white"
                 />
                 <p className="text-[10px] text-slate-500">
-                  Value: NPR {redeemPoints * 0.5} discount on subtotal.
+                  {t("redeem_value_desc", { val: redeemPoints * 0.5 })}
                 </p>
               </div>
 
               <div className="flex gap-2">
                 <Button variant="outline" onClick={() => setIsRedeemOpen(false)} className="w-1/2 border-slate-800 hover:bg-slate-800 text-slate-300">
-                  Cancel
+                  {tCommon("cancel")}
                 </Button>
                 <Button onClick={submitRedeemPoints} className="w-1/2 bg-purple-600 hover:bg-purple-700 text-white font-semibold">
-                  Apply Discount
+                  {locale === "ne" ? "छुट लागू गर्नुहोस्" : "Apply Discount"}
                 </Button>
               </div>
             </div>

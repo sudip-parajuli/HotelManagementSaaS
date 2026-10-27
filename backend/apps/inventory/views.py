@@ -4,6 +4,7 @@ SIA HMS — Inventory Views
 
 from decimal import Decimal
 from django.db import transaction
+from django.utils import timezone
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -11,7 +12,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from apps.accounts.permissions import IsInventoryManager, IsAnyStaff, IsPropertyManager
-from .models import Category, InventoryItem, Supplier, PurchaseOrder, POItem, StockMovement, Recipe
+from apps.accounts.permissions import IsHousekeeping
+from apps.properties.models import Room
+from apps.bookings.models import ReservationStatus
+from apps.billing.models import Invoice, InvoiceItem, InvoiceItemType, InvoiceStatus
+from .models import Category, InventoryItem, Supplier, PurchaseOrder, POItem, StockMovement, Recipe, RoomAmenityConsumption
 from .serializers import (
     CategorySerializer,
     InventoryItemSerializer,
@@ -20,6 +25,7 @@ from .serializers import (
     POItemSerializer,
     StockMovementSerializer,
     RecipeSerializer,
+    RoomAmenityConsumptionSerializer,
 )
 
 
@@ -246,3 +252,77 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.action in ["list", "retrieve"]:
             self.permission_classes = [IsAuthenticated, IsAnyStaff]
         return super().get_permissions()
+
+
+class RoomAmenityConsumptionViewSet(viewsets.ModelViewSet):
+    queryset = RoomAmenityConsumption.objects.all().select_related("room", "inventory_item", "logged_by", "reservation")
+    serializer_class = RoomAmenityConsumptionSerializer
+    permission_classes = [IsAuthenticated, IsHousekeeping | IsPropertyManager]
+    pagination_class = None
+
+    @action(detail=False, methods=["post"])
+    def log_consumption(self, request):
+        """
+        Log room amenity consumption (minibar, toiletries, welcome items).
+        Auto-deducts from InventoryItem stock and charges to guest folio if not complimentary.
+        Body: { room_id, inventory_item_id, quantity, is_complimentary }
+        """
+        from apps.housekeeping.models import HousekeepingTask
+        from apps.billing.models import Invoice, InvoiceItem, InvoiceItemType
+
+        room_id = request.data.get("room_id")
+        item_id = request.data.get("inventory_item_id")
+        quantity = request.data.get("quantity")
+        is_complimentary = request.data.get("is_complimentary", False)
+
+        try:
+            room = Room.objects.get(pk=room_id)
+            inv_item = InventoryItem.objects.select_for_update().get(pk=item_id)
+        except (Room.DoesNotExist, InventoryItem.DoesNotExist):
+            return Response({"error": "Room or inventory item not found."}, status=404)
+
+        with transaction.atomic():
+            # Create consumption record
+            consumption = RoomAmenityConsumption.objects.create(
+                room=room,
+                inventory_item=inv_item,
+                quantity=Decimal(str(quantity)),
+                logged_by=request.user,
+                is_complimentary=is_complimentary,
+            )
+
+            # Auto-deduct from stock
+            inv_item.current_stock -= Decimal(str(quantity))
+            inv_item.save()
+
+            # Record stock movement
+            StockMovement.objects.create(
+                item=inv_item,
+                movement_type=StockMovement.MovementType.MANUAL_OUT,
+                quantity=Decimal(quantity),
+                notes=f"Consumed in Room {room.room_number}",
+                created_by=request.user,
+            )
+
+            # Auto-charge to folio if not complimentary
+            if not is_complimentary:
+                reservation = room.reservations.filter(
+                    status=ReservationStatus.CHECKED_IN,
+                    check_out_date__gte=timezone.now().date()
+                ).first()
+
+                if reservation:
+                    invoice, _ = Invoice.objects.get_or_create(
+                        reservation=reservation,
+                        status=InvoiceStatus.UNPAID,
+                        defaults={"invoice_type": InvoiceType.HOTEL}
+                    )
+                    InvoiceItem.objects.create(
+                        invoice=invoice,
+                        description=f"{inv_item.name} - Room consumption",
+                        quantity=Decimal(quantity),
+                        unit_price=inv_item.cost_price,
+                        item_type=InvoiceItemType.EXTRA_CHARGE,
+                    )
+
+        return Response(RoomAmenityConsumptionSerializer(consumption).data)

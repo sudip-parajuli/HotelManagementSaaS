@@ -19,6 +19,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { roomsApi } from "@/lib/api/rooms";
 import type { RoomType, Property } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
+import { useTransData } from "@/lib/hooks/useTransData";
 
 interface RoomTypeFormProps {
   roomType: RoomType | null;
@@ -46,6 +48,11 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
   onOpenChange,
   onSuccess,
 }) => {
+  const t = useTranslations("Rooms");
+  const tCommon = useTranslations("Common");
+  const tData = useTransData();
+  const locale = useLocale();
+
   const [properties, setProperties] = useState<Property[]>([]);
   const [amenities, setAmenities] = useState<any[]>([]);
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
@@ -94,14 +101,14 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
         }
       } catch (err) {
         console.error("Failed to load form metadata", err);
-        toast.error("Failed to load properties or amenities details.");
+        toast.error(locale === "ne" ? "आवश्यक विवरण लोड गर्न असफल भयो।" : "Failed to load properties or amenities details.");
       } finally {
         setIsLoadingMetadata(false);
       }
     };
 
     loadMetadata();
-  }, [open, roomType, setValue]);
+  }, [open, roomType, setValue, locale]);
 
   // Sync form values if editing
   useEffect(() => {
@@ -160,16 +167,16 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
     try {
       if (roomType) {
         await roomsApi.updateRoomType(roomType.id, values);
-        toast.success("Room type updated successfully!");
+        toast.success(locale === "ne" ? "कोठा प्रकार सफलतापूर्वक अद्यावधिक भयो!" : "Room type updated successfully!");
       } else {
         await roomsApi.createRoomType(values);
-        toast.success("Room type created successfully!");
+        toast.success(locale === "ne" ? "कोठा प्रकार सफलतापूर्वक सिर्जना भयो!" : "Room type created successfully!");
       }
       onSuccess();
       onOpenChange(false);
     } catch (err: any) {
       console.error(err);
-      toast.error(err.response?.data?.error || "An error occurred while saving the room type.");
+      toast.error(err.response?.data?.error || (locale === "ne" ? "विवरण बचत गर्दा त्रुटि भयो।" : "An error occurred while saving the room type."));
     } finally {
       setIsSubmitting(false);
     }
@@ -180,22 +187,22 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
       <DialogContent className="sm:max-w-lg bg-slate-950 border border-slate-900 text-slate-100 p-6 rounded-xl overflow-hidden max-h-[90vh] flex flex-col">
         <DialogHeader className="mb-4">
           <DialogTitle className="text-xl font-bold text-white">
-            {roomType ? "Edit Room Type" : "Add Room Type"}
+            {roomType ? t("edit_room_type") : t("add_room_type")}
           </DialogTitle>
           <DialogDescription className="text-slate-400 text-xs">
-            {roomType ? "Update rates and features of this room type." : "Create a new class of hotel/villa rooms."}
+            {roomType ? t("update_rates_desc") : t("create_class_desc")}
           </DialogDescription>
         </DialogHeader>
 
         {isLoadingMetadata ? (
           <div className="flex-1 flex flex-col items-center justify-center p-8 space-y-2">
             <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-            <p className="text-xs text-slate-400">Loading form configuration...</p>
+            <p className="text-xs text-slate-400">{t("loading_form")}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-y-auto space-y-4 pr-1">
             <div className="space-y-2">
-              <Label className="text-xs font-bold text-slate-400 uppercase">Property Selection</Label>
+              <Label className="text-xs font-bold text-slate-400 uppercase">{t("property_selection")}</Label>
               <select
                 {...register("property", { valueAsNumber: true })}
                 className="w-full rounded-lg bg-slate-900 border border-slate-800 text-sm text-slate-100 p-2.5 outline-none focus:border-cyan-500 transition-colors"
@@ -211,7 +218,7 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label className="text-xs font-bold text-slate-400 uppercase">Name</Label>
+                <Label className="text-xs font-bold text-slate-400 uppercase">{t("room_type_name")}</Label>
                 <Input
                   {...register("name")}
                   placeholder="e.g. Deluxe Double Room"
@@ -221,7 +228,7 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
               </div>
 
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label className="text-xs font-bold text-slate-400 uppercase">Max Occupancy</Label>
+                <Label className="text-xs font-bold text-slate-400 uppercase">{t("max_occupancy")}</Label>
                 <Input
                   type="number"
                   {...register("max_occupancy", { valueAsNumber: true })}
@@ -232,7 +239,7 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs font-bold text-slate-400 uppercase">Description</Label>
+              <Label className="text-xs font-bold text-slate-400 uppercase">{t("description")}</Label>
               <Input
                 {...register("description")}
                 placeholder="Brief details about style, bed configuration, views..."
@@ -242,7 +249,7 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
 
             <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2 col-span-3 sm:col-span-1">
-                <Label className="text-xs font-bold text-slate-400 uppercase">Base Price (NPR)</Label>
+                <Label className="text-xs font-bold text-slate-400 uppercase">{t("base_price")} (NPR)</Label>
                 <Input
                   {...register("base_price_per_night")}
                   placeholder="8500"
@@ -254,7 +261,7 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
               </div>
 
               <div className="space-y-2 col-span-3 sm:col-span-1">
-                <Label className="text-xs font-bold text-slate-400 uppercase">Weekend Price (NPR)</Label>
+                <Label className="text-xs font-bold text-slate-400 uppercase">{t("weekend_rate")} (NPR)</Label>
                 <Input
                   {...register("weekend_price")}
                   placeholder="9500 (Optional)"
@@ -263,7 +270,7 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
               </div>
 
               <div className="space-y-2 col-span-3 sm:col-span-1">
-                <Label className="text-xs font-bold text-slate-400 uppercase">Extra Person (NPR)</Label>
+                <Label className="text-xs font-bold text-slate-400 uppercase">{locale === "ne" ? "अतिरिक्त व्यक्ति शुल्क" : "Extra Person (NPR)"}</Label>
                 <Input
                   {...register("extra_person_charge")}
                   className="bg-slate-900 border-slate-800 text-slate-100"
@@ -273,7 +280,7 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
 
             {/* Amenities Checklist */}
             <div className="space-y-2">
-              <Label className="text-xs font-bold text-slate-400 uppercase">Select Amenities</Label>
+              <Label className="text-xs font-bold text-slate-400 uppercase">{t("select_amenities")}</Label>
               <div className="grid grid-cols-2 gap-2 max-h-[140px] overflow-y-auto p-3 bg-slate-900/40 rounded-lg border border-slate-900">
                 {amenities.map((a) => (
                   <div key={a.id} className="flex items-center space-x-2">
@@ -285,12 +292,12 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
                       className="h-4 w-4 rounded border-slate-800 bg-slate-900 text-cyan-500 focus:ring-cyan-500"
                     />
                     <label htmlFor={`am-${a.id}`} className="text-xs text-slate-300 cursor-pointer">
-                      {a.name}
+                      {tData(a.name)}
                     </label>
                   </div>
                 ))}
                 {amenities.length === 0 && (
-                  <p className="text-[11px] text-slate-600 col-span-2">No amenities available in catalog</p>
+                  <p className="text-[11px] text-slate-600 col-span-2">{t("no_amenities")}</p>
                 )}
               </div>
             </div>
@@ -302,7 +309,7 @@ export const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
                 className="w-full bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold gap-2 shadow-lg shadow-cyan-500/20"
               >
                 <Save className="h-4 w-4" />
-                {isSubmitting ? "Saving Room Type..." : "Save Room Type"}
+                {isSubmitting ? t("saving_room_type") : t("save_room_type")}
               </Button>
             </DialogFooter>
           </form>

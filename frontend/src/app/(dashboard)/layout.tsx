@@ -26,25 +26,28 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { user, setUser, clearAuth } = useAuthStore();
+  const { user, setUser, setFeatures, clearAuth } = useAuthStore();
   const [loading, setLoading] = useState(true);
   const [impersonatedName, setImpersonatedName] = useState<string | null>(null);
   const [impersonatedReason, setImpersonatedReason] = useState<string | null>(null);
   const [stoppingImpersonation, setStoppingImpersonation] = useState(false);
 
   useEffect(() => {
-    // Check for active impersonation indicator cookie
     const activeImpersonation = getCookie("impersonated_tenant_name");
     setImpersonatedName(activeImpersonation);
 
     const activeReason = getCookie("impersonated_tenant_reason");
     setImpersonatedReason(activeReason);
 
-    // Hydrate user profile on mount
     authClient
       .get("/me")
       .then((res) => {
         setUser(res.data);
+        return authClient.get("/features").catch(() => ({ data: { features: [] } }));
+      })
+      .then((featRes: any) => {
+        const { features } = featRes.data;
+        setFeatures(features ?? []);
       })
       .catch(() => {
         clearAuth();
@@ -59,7 +62,7 @@ export default function DashboardLayout({
       const res = await superAdminApi.stopImpersonating();
       if (res.success) {
         // Redirect back to the super admin panel
-        window.location.href = "/superadmin";
+        window.location.href = "/admin";
       }
     } catch (err) {
       console.error("Failed to stop impersonating", err);
@@ -92,7 +95,7 @@ export default function DashboardLayout({
     <NextIntlClientProvider locale={locale} messages={messages}>
       <div className="flex h-screen bg-slate-950 text-slate-100 overflow-hidden">
         <Sidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="min-w-0 flex-1 flex flex-col overflow-hidden">
           {/* Impersonation Warning Banner */}
           {impersonatedName && (
             <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white px-6 py-2.5 flex items-center justify-between text-xs font-semibold shadow-md animate-in slide-in-from-top duration-300 relative z-10 border-b border-orange-500/20">
@@ -101,7 +104,7 @@ export default function DashboardLayout({
                   Impersonation Context Active
                 </span>
                 <span>
-                  SIA Enterprises support is currently viewing this account as <strong className="text-white underline">{impersonatedName}</strong>
+                  Techwired Solutions support is currently viewing this account as <strong className="text-white underline">{impersonatedName}</strong>
                   {impersonatedReason && (
                     <span className="text-amber-100 ml-2">
                       (Reason: <span className="italic">{impersonatedReason}</span>)
