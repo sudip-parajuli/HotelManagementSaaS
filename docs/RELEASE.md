@@ -37,6 +37,6 @@ The checkout already contained extensive local changes to POS, billing, subscrip
 
 The public demo is isolated from live hotel data and works on Vercel without backend credentials. It does not process payments or send notifications. Its room-only quotes are not tax invoices.
 
-Production Django services, Redis, workers and storage must be configured separately. Supabase provisioning requires a confirmed connection to the requested account (`sudipparajuli800@gmail.com`). No project should be created under the other account. Deployment completion and the verified live URL are reported in the final delivery; this file does not claim that an unconnected Supabase project exists.
+Production Django services, Redis, workers and storage must be configured separately. Supabase provisioning requires a confirmed connection to the requested account (`sudipparajuli800@gmail.com`). No project should be created under the other account. The Vercel production deployment is **READY** and verified at [staywired.vercel.app](https://staywired.vercel.app), with the [public demo](https://staywired.vercel.app/demo/). Source commit: `79c095e898b573e208d6e5aff860ce80ff5e6242`. Browser checks confirmed the homepage, demo, mobile overflow containment, and anonymous `/bookings/` redirect to `/login/`. The Supabase project and live Django service are **not yet provisioned** for this deployment.
 
 See [deployment guide](DEPLOYMENT.md) for runtime topology, connection settings, migrations, smoke checks, backups and rollback.

@@ -6,6 +6,8 @@ Staywired connects reservations, rooms, front desk, housekeeping and guest balan
 
 ## Try the demo
 
+**Live:** [Staywired](https://staywired.vercel.app) · [Interactive hotel demo](https://staywired.vercel.app/demo/)
+
 Run the frontend and open [http://localhost:3000/demo/](http://localhost:3000/demo/). The public demo needs no database or login and uses fictional hotel data. Create a reservation, check a guest in, settle a sample balance, check out and mark the room ready. Changes persist in that browser. No real payments are processed.
 
 ```bash

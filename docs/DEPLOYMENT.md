@@ -16,6 +16,8 @@ Vercel plus Supabase is sufficient to serve the **public demo**. It is not a rep
 
 ## 1. Vercel frontend and demo
 
+Verified public deployment: [staywired.vercel.app](https://staywired.vercel.app), demo [here](https://staywired.vercel.app/demo/). Vercel project: `staywired`, ID `prj_3RdzywmcI5FgFfv6HHB7BdoYy3gP`, team `sudip-2000s-projects`. The production deployment is ready; Supabase and the live backend remain pending account/service configuration.
+
 1. Import `sudip-parajuli/HotelManagementSaaS` into the intended Vercel team.
 2. Name the project **staywired** and select root directory `frontend`.
 3. Framework: Next.js. Node: 22.x. Install: `npm ci`. Build: `npm run build`.
