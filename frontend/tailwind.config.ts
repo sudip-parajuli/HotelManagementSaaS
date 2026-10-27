@@ -51,7 +51,7 @@ const config: Config = {
         ring: "rgb(var(--ring-rgb) / <alpha-value>)",
       },
       borderRadius: {
-        lg: "rgb(var(--radius-rgb) / <alpha-value>)",
+        lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
